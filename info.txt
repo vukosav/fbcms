@@ -18,4 +18,6 @@ Table POSTS:
 
         Privremeno obustavljanje objavljivanja posta 
         Nastavljanje objavljivanja 
+
+bla bla 
         
