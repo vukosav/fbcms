@@ -21,4 +21,9 @@ Table POSTS:
 
 bla bla 
 vuko dodao
+
+
+PITANJA:
+    1. Da li reakcije u zadnja 72h predstavljaju reakcije na postove od 72h ili na sve postove ikad objavljene?
+    2. 
         
