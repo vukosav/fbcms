@@ -1,0 +1,21 @@
+Table POSTS:
+    title
+    content
+    Image
+    Video
+    URL
+    status
+    status fb
+    datum scheduled
+    datum odustajanja
+    datum brisanja
+
+    Akcije:
+        Previev
+        Sacuvaj kao draft
+        Schedule POSTS
+        Objavi momentalno
+
+        Privremeno obustavljanje objavljivanja posta 
+        Nastavljanje objavljivanja 
+        
