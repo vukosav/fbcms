@@ -27,3 +27,7 @@ PITANJA:
     1. Da li reakcije u zadnja 72h predstavljaju reakcije na postove od 72h ili na sve postove ikad objavljene?
     2. 
         
+
+
+Problemi:
+    1. Na post.php ne prikazuje html glyphicon u tabeli u koloni Operations
