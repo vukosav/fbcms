@@ -20,7 +20,7 @@ class Dashboard extends CI_Controller {
     //     // print_r($this->database->db['default']);
     // }
     public function get($slug = NULL){
-        print_r($this->news_model->get_news($slug));
+        $data['news'] = $this->news_model->get_news();
       
 
     }
