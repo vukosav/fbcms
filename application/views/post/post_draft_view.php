@@ -1,17 +1,17 @@
-<?php include 'includes/heder.php'; ?>
+<?php $this->load->view('includes/header'); ?>
 
 <!-- HEADER MOBILE-->
-<?php include 'includes/headermenu.php'; ?>
+<?php $this->load->view('includes/headermobile'); ?>
 <!-- END HEADER MOBILE-->
 
 <!-- MENU SIDEBAR-->
-<?php include 'includes/leftmenu.php'; ?>
+<?php $this->load->view('includes/leftmenu'); ?>
 <!-- END MENU SIDEBAR-->
 
 <!-- PAGE CONTAINER-->
 <div class="page-container">
     <!-- HEADER DESKTOP-->
-    <?php include 'includes/headerDesktop.php'; ?>
+    <?php $this->load->view('includes/headerDesktop'); ?>
     <!-- END HEADER DESKTOP-->
 
     <!-- MAIN CONTENT-->
@@ -146,20 +146,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <span class="fa fa-adjust"></span>
-                                        <span class="fa fa-pause"></span>
-                                        <br>43/90
-                                        <br>
-                                        <a href="#">
-                                            <span class="badge badge-success">1 errors</span>
-                                        </a>
-                                    </td>
-                                    <td>Lorem ipsum dolor sit amet</td>
-                                    <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod
-                                        bibendum laoreet...</td>
-                                    <td>2018-09-29 05:57 <br>--------<br>User1</td>
+                            <?php foreach ($draft as $q): ?>
+                            <tr>
+                                    <td>Draft</td>
+                                    <td><?php echo $q['title']; ?></td>
+                                    <td><?php echo substr($q['content'], 0, 100) ."..."; ?></td>
+                                    <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
                                     <td>Group1<br>Group2</td>
                                     <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
                                     <td>
@@ -167,92 +159,21 @@
                                             <span class="fa fa-edit"></span>
                                         </a>
                                         <a href="#">
-                                            <span class="fa fa-play"></span>
-                                        </a>
-                                        <br>
-                                        <a href="#">
                                             <span class="fa fa-copy"></span>
                                         </a>
                                         <a href="#">
                                             <span class="fa fa-trash"></span>
                                         </a>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="fa fa-circle-o"></span>
-                                        <br>0/30
-                                    </td>
-                                    <td>Lorem ipsum dolor sit amet</td>
-                                    <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod
-                                        bibendum laoreet...</td>
-                                    <td>2018-09-29 05:57 <br>--------<br>User1</td>
-                                    <td>Group1<br>Group2</td>
-                                    <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
-                                    <td>
-                                        <a href="#">
-                                            <span class="fa fa-edit"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-times"></span>
-                                        </a>
-                                        <br>
-                                        <a href="#">
-                                            <span class="fa fa-copy"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-trash"></span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="fa fa-adjust"></span>
-
-                                        <span class="fa fa-play"></span>
-                                        <br>43/90
-                                    </td>
-                                    <td>Lorem ipsum dolor sit amet</td>
-                                    <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod
-                                        bibendum laoreet...</td>
-                                    <td>2018-09-29 05:57 <br>--------<br>User1</td>
-                                    <td>Group1<br>Group2</td>
-                                    <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
-                                    <td>
-                                        <a href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-pause"></span>
-                                        </a>
-                                        <br>
-                                        <a href="#">
-                                            <span class="fa fa-copy"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-trash"></span>
-                                        </a>
-                                    </td>
-                                </tr>
+                            </tr>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
                     <!-- END DATA TABLE-->
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="copyright">
-                        <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<?php include 'includes/footer.php'; ?>
+<?php $this->load->view('includes/footer'); ?>
 
 
 

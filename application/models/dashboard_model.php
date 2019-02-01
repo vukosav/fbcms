@@ -2,42 +2,33 @@
 
 class Dashboard_model extends CI_Model{
     
-    // public function __construct(){
-    //     $this->load->database();
-    // }
+    public function __construct()
+    {
+            // $this->load->database();
+    }
     /**
      * @usage
-     * Single:
-     * All:
-     * Custom:
+     * Single: page statistic
+     * All: page statistic
+     * Custom: page statistic
      */
-    // public function get_news($id = null){
-    //     if($id === null){
-    //         $query = $this->db->get('page_statistic');
-    //     }elseif(is_array($id)){
-    //         $query = $this->db->get_where('page_statistic', ['id' => $id]);
-    //     }else{
-    //         $query = $this->db->get('page_statistic', $id);
-    //     }
-    //     return $query->result_array();
-    // }
-
-    public function get_news($slug = FALSE){
-        if ($slug === FALSE){
-            $query = $this->db->get('news');
-            return $query->result_array();
+    public function get($id = null){
+        if($id === null){
+            $query = $this->db->get('page_statistic');
+        }elseif(is_array($id)){
+            $query = $this->db->get_where('page_statistic', ['id' => $id]);
+        }else{
+            $query = $this->db->get('page_statistic', $id);
         }
+        return $query->result_array();
     }
 
-    public function insert(){
-
-    }
-
-    public function update(){
-
-    }
-
-    public function delete(){
-
+        /**
+     * @usage
+     * All: global statistic
+     */
+    public function get_gstatistic(){
+        $query = $this->db->get('global_statistic');
+        return $query->result_array();
     }
 }

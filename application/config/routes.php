@@ -53,5 +53,17 @@ $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['test'] = 'dashboard/test';
-$route['get'] = 'dashboard/get';
+$route['posting'] = 'post/index';
+$route['draft'] = 'post/draft';
+$route['sent'] = 'post/sent';
+$route['addpost'] = 'post/addpost';
+
+// $route['test'] = 'dashboard/test';
+// $route['get'] = 'dashboard/get';
+
+
+// $route['news'] = 'news/index';
+// $route['create'] = 'news/create';
+// $route['news/(:any)'] = 'news/view/$1';
+// $route['(:any)'] = 'pages/view/$1';
+// $route['default_controller'] = 'pages/view';
