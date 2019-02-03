@@ -2,3 +2,5 @@ Iz view brisati news
 Iz models brisati news_model
 
 
+Za sve redove ukoliko je null rezultat upita da ne vrati gresku na stranici
+
