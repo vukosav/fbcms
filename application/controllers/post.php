@@ -39,4 +39,15 @@ class Post extends CI_Controller {
         $s_post['title'] = 'Add new posts';
         $this->load->view('post/post_add_post_view',$s_post);
     }
+
+    public function post_queued_view(){
+        $this->load->helper('form');
+        //$this->load->library('form_validation');
+
+        $q_post['title'] = 'Queued posts';
+        $q_post['queued'] = $this->post_model->find_que();
+        //$q_post['queued'] = $this->post_model->get_queued($data);
+        $this->load->view('post/index', $q_post);
+    }
+
 }

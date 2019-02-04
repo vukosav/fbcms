@@ -42,12 +42,13 @@
                     </div>
                 </div>
 
+                <?php echo form_open('post/post_queued_view'); ?>
                 <div class="row form-group">
                     <div class="col col-sm-3">
-                        <input type="text" placeholder="Filter by working title & post text" class="form-control">
+                        <input type="text" name="working_title" placeholder="Filter by working title & post text" class="form-control">
                     </div>
                     <div class="col-12 col-md-3">
-                        <select name="select" id="select" class="form-control">
+                        <select name="group" id="group" class="form-control">
                             <option value="0">Filter by group</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
@@ -55,7 +56,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-3">
-                        <select name="select" id="select" class="form-control">
+                        <select name="fbpage" id="fbpage" class="form-control">
                             <option value="0">Filter by page</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
@@ -69,13 +70,13 @@
 
                 <div class="row form-group">
                     <div class="col col-sm-3">
-                        <input type="date" placeholder="Filter by date (from)" class="form-control">
+                        <input type="date" name="date_from" placeholder="Filter by date (from)" class="form-control">
                     </div>
                     <div class="col col-sm-3">
-                        <input type="date" placeholder="Filter by date (to)" class="form-control">
+                        <input type="date" name="date_to" placeholder="Filter by date (to)" class="form-control">
                     </div>
                     <div class="col-12 col-md-3">
-                        <select name="select" id="select" class="form-control">
+                        <select name="user" id="select" class="form-control">
                             <option value="0">Filter by user</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
@@ -125,6 +126,7 @@
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
 
 
@@ -195,33 +197,3 @@
 
 
 <?php $this->load->view('includes/footer'); ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

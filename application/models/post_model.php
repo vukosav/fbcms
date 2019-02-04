@@ -95,4 +95,22 @@ class Post_model extends CI_Model{
         return $this->db->affected_rows();
     }
     //-------------END CRUS--------------------
+
+
+
+
+    public function find_que(){
+        $this->load->helper('url');
+
+        $data = array(
+            'working_title' => $this->input->post('working_title')
+            //'group' => $this->input->post('group'),
+            // 'fbpage' => $this->input->post('fbpage'),
+            // 'date_from' => $this->input->post('date_from'),
+            // 'date_to' => $this->input->post('date_to'),
+            // 'user' => $this->input->post('user')
+        );
+
+        return $this->db->get_queued($data);
+    }
 }

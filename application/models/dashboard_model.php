@@ -29,6 +29,10 @@ class Dashboard_model extends CI_Model{
      */
     public function get_gstatistic(){
         $query = $this->db->get('global_statistic');
-        return $query->result_array();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
     }
 }
