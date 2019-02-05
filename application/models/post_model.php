@@ -15,14 +15,16 @@ class Post_model extends CI_Model{
      * Custom:
      */
     public function get_queued($id = null){
-        $this->db->where('PostStatus =', 2);
-        $this->db->or_where('PostStatus =', 3);
+        $where = "(PostStatus = 2 or PostStatus = 3)";
+        $this->db->where($where);
+        // $this->db->where('PostStatus =', 2);
+        // $this->db->or_where('PostStatus =', 3);
         if($id === null){
             $query = $this->db->get('posts');
         }elseif(is_array($id)){
-            $query = $this->db->get_where('posts', ['id' => $id]);
+            $query = $this->db->get_where('posts', $id);
         }else{
-            $query = $this->db->get('posts', $id);
+            $query = $this->db->get('posts', ['id' => $id]);
         }
         return $query->result_array();
     }
@@ -113,4 +115,23 @@ class Post_model extends CI_Model{
 
         return $this->db->get_queued($data);
     }
+
+    function search($keyword)
+    {
+        $this->load->helper('url');
+
+        $data = array(
+            'working_title' => $this->input->post('working_title')
+            //'group' => $this->input->post('group'),
+            // 'fbpage' => $this->input->post('fbpage'),
+            // 'date_from' => $this->input->post('date_from'),
+            // 'date_to' => $this->input->post('date_to'),
+            // 'user' => $this->input->post('user')
+        );
+        //$this->db->where($keyword);
+        $query  =   $this->db->get('posts');
+        $query  =   $this->db->get_where('posts', $keyword);
+        return $query->result_array();
+    }
+
 }

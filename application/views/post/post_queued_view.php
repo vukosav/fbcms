@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <?php echo form_open('post/post_queued_view'); ?>
+                <?php echo form_open('post/search_keyword'); ?>
                 <div class="row form-group">
                     <div class="col col-sm-3">
                         <input type="text" name="working_title" placeholder="Filter by working title & post text" class="form-control">
