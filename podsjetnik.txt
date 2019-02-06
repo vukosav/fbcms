@@ -4,3 +4,6 @@ Iz models brisati news_model
 
 Za sve redove ukoliko je null rezultat upita da ne vrati gresku na stranici
 
+checkbox da se implementira kod search
+
+

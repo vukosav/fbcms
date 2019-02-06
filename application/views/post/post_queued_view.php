@@ -18,6 +18,7 @@
     <div class="main-content">
         <div class="section__content section__content--p30">
             <div class="container-fluid">
+            <?php echo form_open('post/search_keyword'); ?>
                 <div class="row m-t-30">
                     <div class="col-lg-4">
                         <section class="card">
@@ -42,14 +43,15 @@
                     </div>
                 </div>
 
-                <?php echo form_open('post/search_keyword'); ?>
+
                 <div class="row form-group">
                     <div class="col col-sm-3">
-                        <input type="text" name="working_title" placeholder="Filter by working title & post text" class="form-control">
+                        <input type="text" name="working_title" placeholder="Filter by working title & post text" class="form-control"  value="<?php echo set_value('working_title') ?>">
                     </div>
                     <div class="col-12 col-md-3">
                         <select name="group" id="group" class="form-control">
-                            <option value="0">Filter by group</option>
+                        <option value="<?php echo set_value('group') ?>"><?php echo set_value('group') ?></option>"
+                            <option value="">Filter by group</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
                             <option value="3">Option #3</option>
@@ -57,7 +59,8 @@
                     </div>
                     <div class="col-12 col-md-3">
                         <select name="fbpage" id="fbpage" class="form-control">
-                            <option value="0">Filter by page</option>
+                            <option value="<?php echo set_value('fbpage') ?>"><?php echo set_value('fbpage') ?></option>"
+                            <option value="">Filter by page</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
                             <option value="3">Option #3</option>
@@ -70,14 +73,15 @@
 
                 <div class="row form-group">
                     <div class="col col-sm-3">
-                        <input type="date" name="date_from" placeholder="Filter by date (from)" class="form-control">
+                        <input type="date" name="date_from" placeholder="Filter by date (from)" class="form-control" value="<?php echo set_value('date_from') ?>">
                     </div>
                     <div class="col col-sm-3">
-                        <input type="date" name="date_to" placeholder="Filter by date (to)" class="form-control">
+                        <input type="date" name="date_to" placeholder="Filter by date (to)" class="form-control" value="<?php echo set_value('date_to') ?>">
                     </div>
                     <div class="col-12 col-md-3">
                         <select name="user" id="select" class="form-control">
-                            <option value="0">Filter by user</option>
+                        <option value="<?php echo set_value('user') ?>"><?php echo set_value('user') ?></option>"
+                            <option value="">Filter by user</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
                             <option value="3">Option #3</option>
@@ -88,44 +92,44 @@
                     </div>
                 </div>
 
-                <div class="table-responsive m-t-30">
-                    <div class="form-check-inline form-check">
-                        <div class="col col-sm-2">
-                            <label for="all" class="form-check-label ">
-                                <input type="checkbox" id="" value="" class="form-check-input" name="all">All posts
-                            </label>
-                        </div>
-                        <div class="col col-sm-3">
-                            <label for="scheduled" class="form-check-label ">
-                                <input type="checkbox" id="" value="" class="form-check-input" name="scheduled">Scheduled
-                                posts
-                            </label>
-                        </div>
-                        <div class="col col-sm-3">
-                            <label for="inProgres" class="form-check-label ">
-                                <input type="checkbox" id="" value="" class="form-check-input" name="inProgres">In
-                                progres posts
-                            </label>
-                        </div>
-                        <div class="col col-sm-2">
-                            <label for="paused" class="form-check-label ">
-                                <input type="checkbox" id="" value="" class="form-check-input" name="paused">Paused
-                                posts
-                            </label>
-                        </div>
-                        <div class="col col-sm-3">
-                            <label for="errors" class="form-check-label ">
-                                <input type="checkbox" id="" value="" class="form-check-input" name="errors">Posts with
-                                errors
-                            </label>
-                        </div>
-                        <div class="col col-sm-2">
-                            <label for="archived" class="form-check-label ">
-                                <input type="checkbox" id="" value="" class="form-check-input" name="archived">Archivedposts
-                            </label>
+                    <div class="table-responsive m-t-30">
+                        <div class="form-check-inline form-check">
+                            <div class="col col-sm-2">
+                                <label for="all" class="form-check-label ">
+                                    <input type="checkbox" id="" value="1 and 2" class="form-check-input" name="all">All posts
+                                </label>
+                            </div>
+                            <div class="col col-sm-3">
+                                <label for="scheduled" class="form-check-label ">
+                                    <input type="checkbox" id="" value="" class="form-check-input" name="scheduled">Scheduled
+                                    posts
+                                </label>
+                            </div>
+                            <div class="col col-sm-3">
+                                <label for="inProgres" class="form-check-label ">
+                                    <input type="checkbox" id="" value="" class="form-check-input" name="inProgres">In
+                                    progres posts
+                                </label>
+                            </div>
+                            <div class="col col-sm-2">
+                                <label for="paused" class="form-check-label ">
+                                    <input type="checkbox" id="" value="" class="form-check-input" name="paused">Paused
+                                    posts
+                                </label>
+                            </div>
+                            <div class="col col-sm-3">
+                                <label for="errors" class="form-check-label ">
+                                    <input type="checkbox" id="" value="" class="form-check-input" name="errors">Posts with
+                                    errors
+                                </label>
+                            </div>
+                            <div class="col col-sm-2">
+                                <label for="archived" class="form-check-label ">
+                                    <input type="checkbox" id="" value="" class="form-check-input" name="archived">Archivedposts
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </form>
             </div>
 

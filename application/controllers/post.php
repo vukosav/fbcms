@@ -45,6 +45,10 @@ class Post extends CI_Controller {
         $data = null;
         $this->input->post('working_title')? $data['title'] = $this->input->post('working_title'):false;
         $this->input->post('user')? $data['created_by'] = $this->input->post('user'):false;
+        $this->input->post('date_from')? $data['created_date'] = $this->input->post('date_from'):false;
+        $this->input->post('date_to')? $data['created_date'] = $this->input->post('date_to'):false;
+        $this->input->post('all')? $data['IsActive'] = $this->input->post('all'):false;
+        //$this->input->post('user')? $data['ActionStatus'] = $this->input->post('all'):false;
         // $data = array(
         //     'title' => $this->input->post('working_title'),
         //     //'group' => $this->input->post('group'),
@@ -56,7 +60,7 @@ class Post extends CI_Controller {
 
         $q_post['queued'] = $this->post_model->get_queued($data);
         $q_post['title'] = 'Queued posts';
-        //$this->output->enable_profiler();
+        $this->output->enable_profiler();
         $this->load->view('post/post_queued_view', $q_post);
 
     }

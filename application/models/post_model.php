@@ -101,20 +101,21 @@ class Post_model extends CI_Model{
 
 
 
-    public function find_que(){
-        $this->load->helper('url');
-
-        $data = array(
-            'working_title' => $this->input->post('working_title')
-            //'group' => $this->input->post('group'),
-            // 'fbpage' => $this->input->post('fbpage'),
-            // 'date_from' => $this->input->post('date_from'),
-            // 'date_to' => $this->input->post('date_to'),
-            // 'user' => $this->input->post('user')
-        );
-
-        return $this->db->get_queued($data);
-    }
+    // public function get_queued_search($id = null){
+    //     $where = "(PostStatus = 2 or PostStatus = 3)";
+    //     $this->db->where($where);
+    //     // $this->db->where('PostStatus =', 2);
+    //     // $this->db->or_where('PostStatus =', 3);
+    //     if($id === null){
+    //         $query = $this->db->get('posts');
+    //     }elseif(is_array($id)){
+    //         $query = $this->db->like($id);
+    //         $query = $this->db->get('posts');
+    //     }else{
+    //         $query = $this->db->get('posts', ['id' => $id]);
+    //     }
+    //     return $query->result_array();
+    // }
 
     function search($keyword)
     {
