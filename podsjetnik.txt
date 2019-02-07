@@ -6,4 +6,10 @@ Za sve redove ukoliko je null rezultat upita da ne vrati gresku na stranici
 
 checkbox da se implementira kod search
 
+chackbox all post ne treba. To je kad nista nije cekirano.
+chackbox scheduled post da vidimo koja je ta situacija 
+chackbox post with error da vidimo kako te postove vratiti
+chackbox paused i in progres treba jedan drugog da iskuljucuju
+
+
 

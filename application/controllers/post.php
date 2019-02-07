@@ -17,8 +17,22 @@ class Post extends CI_Controller {
     }
 
     public function index(){
-        $q_post['queued'] = $this->post_model->get_queued();
+
+        $this->load->helper('url');
+        
+        $data = null;
+        $this->input->post('working_title')? $data['title like '] = $this->input->post('working_title')."%":false;
+        $this->input->post('user')? $data['created_by'] = $this->input->post('user'):false;
+        $this->input->post('date_from')? $data['created_date >='] = $this->input->post('date_from')." 00:00:00":false;
+        $this->input->post('date_to')? $data['created_date <='] = $this->input->post('date_to')." 23:59:59":false;
+        $this->input->post('archived')? $data['IsActive'] = $this->input->post('archived'):false;
+        $this->input->post('inProgres')? $data['ActionStatus'] = $this->input->post('inProgres'):false;
+        $this->input->post('paused')? $data['ActionStatus'] = $this->input->post('paused'):false;
+        
+
+        $q_post['queued'] = $this->post_model->get_queued($data);
         $q_post['title'] = 'Queued posts';
+        $this->output->enable_profiler();
         $this->load->view('post/post_queued_view', $q_post);
     }
 
@@ -38,31 +52,6 @@ class Post extends CI_Controller {
         // $s_post['sent'] = $this->post_model->get_sent();
         $s_post['title'] = 'Add new posts';
         $this->load->view('post/post_add_post_view',$s_post);
-    }
-
-    function search_keyword()
-    {
-        $data = null;
-        $this->input->post('working_title')? $data['title'] = $this->input->post('working_title'):false;
-        $this->input->post('user')? $data['created_by'] = $this->input->post('user'):false;
-        $this->input->post('date_from')? $data['created_date'] = $this->input->post('date_from'):false;
-        $this->input->post('date_to')? $data['created_date'] = $this->input->post('date_to'):false;
-        $this->input->post('all')? $data['IsActive'] = $this->input->post('all'):false;
-        //$this->input->post('user')? $data['ActionStatus'] = $this->input->post('all'):false;
-        // $data = array(
-        //     'title' => $this->input->post('working_title'),
-        //     //'group' => $this->input->post('group'),
-        //     // 'fbpage' => $this->input->post('fbpage'),
-        //     // 'date_from' => $this->input->post('date_from'),
-        //     // 'date_to' => $this->input->post('date_to'),
-        //     'created_by	' => $this->input->post('user')
-        // );
-
-        $q_post['queued'] = $this->post_model->get_queued($data);
-        $q_post['title'] = 'Queued posts';
-        $this->output->enable_profiler();
-        $this->load->view('post/post_queued_view', $q_post);
-
     }
 
 }
