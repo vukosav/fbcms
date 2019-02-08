@@ -1,44 +1,52 @@
-</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="copyright">
-                                    <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-</div>
+      
+      <div class="kt-footer">
+        <span>Copyright &copy;. All Rights Reserved. Katniss Responsive Bootstrap 4 Admin Dashboard.</span>
+        <span>Created by: ThemePixels, Inc.</span>
+      </div><!-- kt-footer -->
+    </div><!-- kt-mainpanel -->
 
-</div>
+    <script src="<?=base_url()?>theme/lib/jquery/jquery.js"></script>
+    <script src="<?=base_url()?>theme/lib/popper.js/popper.js"></script>
+    <script src="<?=base_url()?>theme/lib/bootstrap/bootstrap.js"></script>
+    <script src="<?=base_url()?>theme/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+    <script src="<?=base_url()?>theme/lib/moment/moment.js"></script>
+    <script src="<?=base_url()?>theme/lib/highlightjs/highlight.pack.js"></script>
+    <script src="<?=base_url()?>theme/lib/datatables/jquery.dataTables.js"></script>
+    <script src="<?=base_url()?>theme/lib/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="<?=base_url()?>theme/lib/select2/js/select2.min.js"></script>
+    <script src="<?=base_url()?>theme/lib/d3/d3.js"></script>
+    <script src="<?=base_url()?>theme/lib/rickshaw/rickshaw.min.js"></script>
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyAEt_DBLTknLexNbTVwbXyq2HSf2UbRBU8"></script>
+    <script src="<?=base_url()?>theme/lib/gmaps/gmaps.js"></script>
+    <script src="<?=base_url()?>theme/lib/chart.js/Chart.js"></script>
 
-<!-- Jquery JS-->
-<script src="<?=base_url()?>theme/vendor/jquery-3.2.1.min.js"></script>
-<!-- Bootstrap JS-->
-<script src="<?=base_url()?>theme/vendor/bootstrap-4.1/popper.min.js"></script>
-<script src="<?=base_url()?>theme/vendor/bootstrap-4.1/bootstrap.min.js"></script>
-<!-- Vendor JS       -->
-<script src="<?=base_url()?>theme/vendor/slick/slick.min.js">
-</script>
-<script src="<?=base_url()?>theme/vendor/wow/wow.min.js"></script>
-<script src="<?=base_url()?>theme/vendor/animsition/animsition.min.js"></script>
-<script src="<?=base_url()?>theme/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
-</script>
-<script src="<?=base_url()?>theme/vendor/counter-up/jquery.waypoints.min.js"></script>
-<script src="<?=base_url()?>theme/vendor/counter-up/jquery.counterup.min.js">
-</script>
-<script src="<?=base_url()?>theme/vendor/circle-progress/circle-progress.min.js"></script>
-<script src="<?=base_url()?>theme/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-<script src="<?=base_url()?>theme/vendor/chartjs/Chart.bundle.min.js"></script>
-<script src="<?=base_url()?>theme/vendor/select2/select2.min.js">
-</script>
+    <script src="<?=base_url()?>theme/js/katniss.js"></script>
+    <script>
+      $(function(){
+        'use strict';
 
-<!-- Main JS-->
-<script src="<?=base_url()?>theme/js/main.js"></script>
+        $('#datatable1').DataTable({
+          responsive: true,
+          language: {
+            searchPlaceholder: 'Search...',
+            sSearch: '',
+            lengthMenu: '_MENU_ items/page',
+          }
+        });
 
-</body>
+        $('#datatable2').DataTable({
+          bLengthChange: false,
+          searching: false,
+          responsive: true
+        });
 
+        // Select2
+        $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
+
+      });
+    </script>
+    <script src="<?=base_url()?>theme/js/ResizeSensor.js"></script>
+    <script src="<?=base_url()?>theme/js/dashboard.js"></script>
+
+  </body>
 </html>
-<!-- end document-->

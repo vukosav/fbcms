@@ -1,50 +1,25 @@
 <?php $this->load->view('includes/header'); ?>
+<!-- ##### SIDEBAR MENU ##### -->
+<?php $this->load->view('includes/sidebar'); ?>
+<!-- kt-sideleft -->
 
-<!-- HEADER MOBILE-->
-<?php $this->load->view('includes/headermobile'); ?>
-<!-- END HEADER MOBILE-->
+<!-- ##### HEAD PANEL ##### -->
+<?php $this->load->view('includes/headPanel'); ?>
+<!-- kt-breadcrumb -->
 
-<!-- MENU SIDEBAR-->
-<?php $this->load->view('includes/leftmenu'); ?>
-<!-- END MENU SIDEBAR-->
+<!-- ##### MAIN PANEL ##### -->
+<div class="kt-mainpanel">
+    <div class="kt-pagetitle">
+        <h5>Queued posts</h5>
+    </div><!-- kt-pagetitle -->
 
-<!-- PAGE CONTAINER-->
-<div class="page-container">
-    <!-- HEADER DESKTOP-->
-    <?php $this->load->view('includes/headerDesktop'); ?>
-    <!-- END HEADER DESKTOP-->
+    <div class="kt-pagebody">
 
-    <!-- MAIN CONTENT-->
-    <div class="main-content">
-        <div class="section__content section__content--p30">
-            <div class="container-fluid">
+        <div class="card pd-20 pd-sm-40 mg-t-50">
+
+            <div class="table-wrapper">
             <?php echo form_open('posting', 'id='.'myform'); ?>
-                <div class="row m-t-30">
-                    <div class="col-lg-4">
-                        <section class="card">
-                            <button class="btn btn-primary">
-                                <div class="card-body text-black">Queued posts</div>
-                            </button>
-                        </section>
-                    </div>
-                    <div class="col-lg-4">
-                        <section class="card">
-                            <button class="btn btn-default">
-                                <div class="card-body text-black">Draft posts</div>
-                            </button>
-                        </section>
-                    </div>
-                    <div class="col-lg-4">
-                        <section class="card">
-                            <button class="btn btn-default">
-                                <div class="card-body text-black">Sent posts</div>
-                            </button>
-                        </section>
-                    </div>
-                </div>
-
-
-                <div class="row form-group">
+            <div class="row form-group">
                     <div class="col col-sm-3">
                         <input type="text" id="" name="working_title" placeholder="Filter by working title & post text" class="form-control"  value="<?php echo set_value('working_title') ?>">
                     </div>
@@ -70,7 +45,6 @@
                             <input id="button" onclick="resetform()" type="button" name="reset" value="Reset"><!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
                     </div>
                 </div>
-
                 <div class="row form-group">
                     <div class="col col-sm-3">
                         <input type="date" id="" name="date_from" placeholder="Filter by date (from)" class="form-control" value="<?php echo set_value('date_from') ?>">
@@ -79,7 +53,7 @@
                         <input type="date" id="" name="date_to" placeholder="Filter by date (to)" class="form-control" value="<?php echo set_value('date_to') ?>">
                     </div>
                     <div class="col-12 col-md-3">
-                        <select name="user" id="" class="form-control">
+                        <select name="user" id="myform" class="form-control">
                         <option value="<?php echo set_value('user') ?>"><?php echo set_value('user') ?></option>"
                             <option value="">Filter by user</option>
                             <option value="1">Option #1</option>
@@ -92,8 +66,7 @@
                     </div>
                 </div>
 
-                    <div class="m-t-30">
-                        <div class="form-check-inline form-check">
+                        <div class="row form-group">
                             <!-- <div class="col col-sm-2">
                                 <label for="all" class="form-check-label ">
                                     <input type="checkbox" id="" value="" class="form-check-input" name="all" <?php //echo (set_value('all') ? 'checked' : '') ?>>All posts
@@ -105,12 +78,12 @@
                                     posts
                                 </label>
                             </div> -->
-                            <div class="col col-sm-4">
+                            <div class="col col-sm">
                                 <label for="inProgres" class="form-check-label ">
                                     <input type="checkbox" id="" value="1" class="form-check-input" name="inProgres" <?php echo (set_value('inProgres') ? 'checked' : '') ?>>In progres posts
                                 </label>
                             </div>
-                            <div class="col col-sm-4">
+                            <div class="col col-sm">
                                 <label for="paused" class="form-check-label ">
                                     <input type="checkbox" id="" value="2" class="form-check-input" name="paused" <?php echo (set_value('paused') ? 'checked' : '') ?>>Paused posts
                                 </label>
@@ -126,33 +99,33 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    
                 </form>
-            </div>
+            </div><!-- table-wrapper -->
+        </div><!-- card -->
 
+        <div class="card pd-20 pd-sm-40">
+            <h6 class="card-body-title">Basic Responsive DataTable</h6>
+            <p class="mg-b-20 mg-sm-b-30">Searching, ordering and paging goodness will be immediately added to the
+                table, as shown in this example.</p>
 
-            <div class="row m-t-30">
-                <div class="col-md-12">
-                    <!-- DATA TABLE-->
-                    <div class="table-responsive m-b-40">
-
-                        <table class="table table-borderless table-data3">
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Working title</th>
-                                    <th>Post text</th>
-                                    <th>Date / created by</th>
-                                    <th>Groups</th>
-                                    <th>Pages</th>
-                                    <th>Operations</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            
-                            <?php foreach ($queued as $q): ?>
-                            <tr>
-                                    <?php if($q['PostStatus'] ==2 ){
+            <div class="table-wrapper">
+                <table id="datatable1" class="table display responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th class="wd-15p">Status</th>
+                            <th class="wd-15p">Working title</th>
+                            <th class="wd-20p">Post text</th>
+                            <th class="wd-15p">Date / created by</th>
+                            <th class="wd-10p">Groups</th>
+                            <th class="wd-25p">Pages</th>
+                            <th class="wd-25p">Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($queued as $q): ?>
+                        <tr>
+                            <?php if($q['PostStatus'] ==2 ){
                                         echo "<td><span class='fa fa-circle-o'></span>";
                                         echo "<br>0/90</td>";
                                         
@@ -161,7 +134,7 @@
                                     echo "<span class='fa fa-pause'></span>";
                                     echo "<br>0/90</td>";
                                     } ?>
-                                    <!-- <td>
+                            <!-- <td>
                                         <span class="fa fa-adjust"></span>
                                         <span class="fa fa-pause"></span>
                                         <span class="fa fa-circle-o"></span>
@@ -172,42 +145,45 @@
                                             <span class="badge badge-success">1 errors</span>
                                         </a>
                                     </td> -->
-                                    <td><?php echo $q['title']; ?></td>
-                                    <td><?php echo substr($q['content'], 0, 100) ."..."; ?></td>
-                                    <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
-                                    <td>Group1<br>Group2</td>
-                                    <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
-                                    <td>
-                                        <a href="#">
-                                            <span class="fa fa-edit"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-play"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-copy"></span>
-                                        </a>
-                                        <br>
-                                        <a href="#">
-                                            <span class="fa fa-trash"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-times"></span>
-                                        </a>
-                                        <a href="#">
-                                            <span class="fa fa-pause"></span>
-                                        </a>
-                                    </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- END DATA TABLE-->
+                            <td><?php echo $q['title']; ?></td>
+                            <td><?php echo substr($q['content'], 0, 100) ."..."; ?></td>
+                            <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
+                            <td>Group1<br>Group2</td>
+                            <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
+                            <td>
+                                <a href="#">
+                                    <span class="fa fa-edit"></span>
+                                </a>
+                                <a href="#">
+                                    <span class="fa fa-copy"></span>
+                                </a>
+                                <?php 
+                                 if($q['PostStatus']==2){
+                                    echo "<a href='#'><span class='fa fa-calendar-o'></span></a>";
+                                }
+                                else{
+                                    if($q['ActionStatus']==1){
+                                    echo "<a href='#'><span class='fa fa-pause'></span></a> ";
+                                    }
+                                    if($q['ActionStatus']==2){
+                                        echo "<a href='#'><span class='fa fa-pause'></span></a> ";
+                                    }
+                                } ?>
+                                <a href="#">
+                                    <span class="fa fa-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div><!-- table-wrapper -->
+        </div><!-- card -->
 
-<?php $this->load->view('includes/footer'); ?>
+    </div><!-- kt-pagebody -->
 
-<script>
+    <?php $this->load->view('includes/footer'); ?>
+    <script>
 function resetform() {
 document.getElementById("myform").reset();
 }

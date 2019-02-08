@@ -57,6 +57,7 @@ $route['posting'] = 'post/index';
 $route['draft'] = 'post/draft';
 $route['sent'] = 'post/sent';
 $route['addpost'] = 'post/addpost';
+$route['addusers'] = 'users/addusr';
 
 // $route['test'] = 'dashboard/test';
 // $route['get'] = 'dashboard/get';

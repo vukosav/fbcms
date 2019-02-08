@@ -20,7 +20,7 @@ class Post extends CI_Controller {
 
         $this->load->helper('url');
         
-        $data = null;
+        $data['IsActive'] = true;
         $this->input->post('working_title')? $data['title like '] = $this->input->post('working_title')."%":false;
         $this->input->post('user')? $data['created_by'] = $this->input->post('user'):false;
         $this->input->post('date_from')? $data['created_date >='] = $this->input->post('date_from')." 00:00:00":false;
