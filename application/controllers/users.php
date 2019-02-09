@@ -2,22 +2,19 @@
 
 class Users extends CI_Controller {
 
-    //  public function __construct()
-    // {
-    //     parent::__construct();
-    //     $this->load->model('dashboard_model');
-    //     $this->load->helper('url_helper');
-    // }
-
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('post_model');
+            $this->load->model('users_model');
             $this->load->helper('url_helper');
     }
 
     public function index(){
-
+        $status['IsActive'] = true;
+        $data['users'] = $this->users_model->get_users();
+        $data['title'] = 'Users';
+        $this->output->enable_profiler();
+        $this->load->view('users/users_view', $data);
         // $this->load->helper('url');
         
         // $data['IsActive'] = true;
@@ -37,9 +34,32 @@ class Users extends CI_Controller {
     }
 
     public function addusr(){
+
+        
+        // $q_post['title'] = 'Queued posts';
+        // $this->output->enable_profiler();
+        // $this->load->view('post/post_queued_view', $q_post);
+
         // $s_post['sent'] = $this->post_model->get_sent();
         $s_post['title'] = 'Add new user';
         $this->load->view('users/singup',$s_post);
     }
+    
+    public function createusr(){
+        $this->load->helper('url');
 
+        $this->input->post('email')? $data['email'] = $this->input->post('email'):false;
+        $this->input->post('fullname')? $data['name'] = $this->input->post('fullname'):false;
+        $data['dateCreated'] = date('Y-m-d h:i:s', time());
+        $this->input->post('username')? $data['username'] = $this->input->post('username'):false;
+        $this->input->post('password')? $data['password'] = $this->input->post('password'):false;
+        $this->input->post('role')? $data['roleid'] = $this->input->post('role'):false;
+        $data['IsActive'] = true;
+        $data['createdBy']=1;
+        $q_post['queued'] = $this->users_model->insert($data);
+        $data['title'] = 'Users';
+        $this->output->enable_profiler();
+        redirect('/users/index');
+        // $this->load->view('users/users_view', $data);
+    }
 }

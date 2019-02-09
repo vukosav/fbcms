@@ -19,7 +19,7 @@
           </ul>
         </li><!-- nav-item -->
         <li class="nav-item">
-          <a href="<?=base_url()?>addusers" class="nav-link active">
+          <a href="<?=base_url()?>users" class="nav-link active">
             <i class="icon ion-ios-users"></i>
             <span>Users</span>
           </a>

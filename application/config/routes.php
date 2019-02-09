@@ -58,6 +58,8 @@ $route['draft'] = 'post/draft';
 $route['sent'] = 'post/sent';
 $route['addpost'] = 'post/addpost';
 $route['addusers'] = 'users/addusr';
+$route['users'] = 'users/index';
+$route['createuesrs'] = 'users/createusr';
 
 // $route['test'] = 'dashboard/test';
 // $route['get'] = 'dashboard/get';

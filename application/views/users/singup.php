@@ -11,6 +11,7 @@
 <div class="kt-mainpanel">
 
     <div class="signpanel-wrapper">
+    <?php echo form_open('createuesrs'); ?>
         <div class="signbox signup">
             <div class="signbox-header">
                 <h4>katniss</h4>
@@ -22,20 +23,17 @@
                     <input type="email" name="email" class="form-control" placeholder="Type email address">
                 </div><!-- form-group -->
 
-                <div class="row row-xs">
-                    <div class="col-sm">
-                        <div class="form-group">
-                            <label class="form-control-label">Firstname:</label>
-                            <input type="text" name="firstname" class="form-control" placeholder="Type firstname">
-                        </div><!-- form-group -->
-                    </div><!-- col -->
-                    <div class="col-sm">
-                        <div class="form-group">
-                            <label class="form-control-label">Lastname:</label>
-                            <input type="text" name="lastname" class="form-control" placeholder="Type lastname">
-                        </div><!-- form-group -->
-                    </div><!-- col -->
-                </div><!-- row -->
+                <div class="form-group">
+                    <label class="form-control-label">Full Name:</label>
+                    <input type="text" name="fullname" class="form-control" placeholder="Type full name">
+                </div><!-- form-group -->
+
+
+                <div class="form-group">
+                    <label class="form-control-label">Usernamename:</label>
+                    <input type="text" name="username" class="form-control" placeholder="Type username">
+                </div><!-- form-group -->
+
 
                 <div class="row row-xs">
                     <div class="col-sm">
@@ -53,18 +51,21 @@
                     </div><!-- col -->
                 </div><!-- row -->
 
-                <div class="form-group">
-                    <label class="form-control-label">Company Name:</label>
-                    <input type="text" name="company" class="form-control" placeholder="Type company name">
-                </div><!-- form-group -->
+                <div class="form-group mg-b-10-force">
+                    <label class="form-control-label">Role: <span class="tx-danger">*</span></label>
+                    <select class="form-control select2" name="role" data-placeholder="Choose role">
+                        <option label="Choose role"></option>
+                        <option value="1">Admin</option>
+                        <option value="2">Editor</option>
+                    </select>
+                </div>
 
-                <div class="form-group mg-b-20 tx-12">By clicking Sign Up button below you agree to our <a href="">Terms
-                        of Use</a> and our <a href="">Privacy Policy</a></div>
-
-                <button type="submit" class="btn btn-dark btn-block">Sign Up</button>
-                <div class="tx-center bd pd-10 mg-t-40">Already a member? <a href="page-signin.html">Sign In</a></div>
+              
+                <button type="submit" class="btn btn-dark btn-block">Create user</button>
+                <!-- <div class="tx-center bd pd-10 mg-t-40">Already a member? <a href="page-signin.html">Sign In</a></div> -->
             </div><!-- signbox-body -->
         </div><!-- signbox -->
+        </form>
     </div><!-- signpanel-wrapper -->
 
     <?php $this->load->view('includes/footer'); ?>
