@@ -20,9 +20,9 @@
         </li><!-- nav-item -->
         <li class="nav-item">
           <a href="<?=base_url()?>users" class="nav-link active">
-            <i class="icon ion-ios-users"></i>
+            <i class="icon ion-ios-person-outline"></i>
             <span>Users</span>
           </a>
         </li><!-- nav-item -->
       </ul>
-    </div>
+    </div><ion-icon name="contacts"></ion-icon>

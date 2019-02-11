@@ -44,10 +44,10 @@
                             <td><?php echo $user['addedby']; ?></td>
                             <td><?php echo $user['rname']; ?></td>
                             <td>
-                                <a href="#">
+                                <a href="<?=base_url()?>">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a href="#">
+                                <a href="<?=base_url()?>deleteusr/<?php echo $user['id']; ?>">
                                     <span class="fa fa-trash"></span>
                                 </a>
                             </td>
@@ -55,7 +55,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div><!-- table-wrapper -->
+            </><!-- table-wrapper -->
         </div><!-- card -->
 
     </div><!-- kt-pagebody -->

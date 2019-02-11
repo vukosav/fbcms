@@ -46,20 +46,91 @@ class Users extends CI_Controller {
     }
     
     public function createusr(){
-        $this->load->helper('url');
+        
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
 
-        $this->input->post('email')? $data['email'] = $this->input->post('email'):false;
-        $this->input->post('fullname')? $data['name'] = $this->input->post('fullname'):false;
-        $data['dateCreated'] = date('Y-m-d h:i:s', time());
-        $this->input->post('username')? $data['username'] = $this->input->post('username'):false;
-        $this->input->post('password')? $data['password'] = $this->input->post('password'):false;
-        $this->input->post('role')? $data['roleid'] = $this->input->post('role'):false;
-        $data['IsActive'] = true;
-        $data['createdBy']=1;
-        $q_post['queued'] = $this->users_model->insert($data);
-        $data['title'] = 'Users';
-        $this->output->enable_profiler();
-        redirect('/users/index');
+        $this->form_validation->set_rules(
+            'username', 'Username',
+            'trim|required|min_length[5]|max_length[12]|is_unique[users.username]',
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        $this->form_validation->set_rules(
+            'email', 'E-mail',
+            'trim|required|is_unique[users.email]',
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        
+        $this->form_validation->set_rules(
+            'password', 'Password',
+            'trim|required|min_length[6]',
+            array(
+                    'required'      => 'You have not provided %s.'
+            )
+        );
+        
+        $this->form_validation->set_rules(
+            'conpassword', 'Confirm Password',
+            'trim|required|matches[password]',
+            array(
+                    'required'      => 'You have not provided %s.'
+            )
+        );
+
+        $salt = substr(md5(uniqid(rand(), true)), 0, 32);
+        // $password = $this->hash_password($this->password,$salt);
+        // $this->db->set('password', $password);
+        // $this->db->set('salt', $salt);
+
+
+
+
+        $data = array(
+            'username' => $this->input->post('username'),
+            'email' => $this->input->post('email'),
+            'name' => $this->input->post('fullname'),
+            'dateCreated' => date('Y-m-d h:i:s', time()),
+            'password' => $this->hash_password($this->input->post('password'), $salt),
+            'roleid' => $this->input->post('role'),
+            'IsActive' => true,
+            'createdBy' => 1,
+            'salt' => $salt
+        );
+      
+        if ($this->form_validation->run() === FALSE){
+            $data['title'] = 'Users';
+            $data['users'] = false;
+            // $this->load->view('templates/header', $data);
+            // $this->load->view('news/create');
+            // $this->load->view('templates/footer');
+            // $this->load->view('users/users_view', $data);
+            $this->load->view('users/singup', $data);
+        }else{
+
+            // $this->input->post('role')? $data['roleid'] = $this->input->post('role'):false;
+
+            $q_post['queued'] = $this->users_model->insert($data);
+            $data['title'] = 'Users';
+            $this->output->enable_profiler();
+            redirect('/users/index');
+        }
+
+       
         // $this->load->view('users/users_view', $data);
+    }
+
+    public function hash_password($password,$salt) {
+        return hash('sha256', $password . $salt);
+    }
+
+    public function delete ($id){
+        $this->users_model->delete($id);
+        redirect('/users/index');
     }
 }

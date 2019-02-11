@@ -59,6 +59,7 @@ $route['sent'] = 'post/sent';
 $route['addpost'] = 'post/addpost';
 $route['addusers'] = 'users/addusr';
 $route['users'] = 'users/index';
+$route['deleteusr/(:any)'] = 'users/delete/$1';
 $route['createuesrs'] = 'users/createusr';
 
 // $route['test'] = 'dashboard/test';
