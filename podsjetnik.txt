@@ -20,3 +20,6 @@ ALTER TABLE `users` ADD `IsActive` INT(1) NULL DEFAULT '1' AFTER `createdBy`;
 ALTER TABLE `users` ADD COLUMN `salt` VARCHAR(250) NOT NULL AFTER `password`;
 
 ////----------END UPDATE BAZE ---------------/////
+
+PROBLEMI
+Ako se dva puta klikne na dugme dok vrti insertova dva reda.

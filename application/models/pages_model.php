@@ -1,6 +1,6 @@
 <?php
 
-class Users_model extends CI_Model{
+class Pages_model extends CI_Model{
     
     public function __construct()
     {
@@ -13,31 +13,28 @@ class Users_model extends CI_Model{
      * All:
      * Custom:
      */
-    public function get_users($id = null){
+    public function get_pages($id = null){
         if($id === null){
-            $this->db->where('users.IsActive = ', 1);
-            $this->db->select('users.*, roles.name as rname, uu.username as addedby');
-            $this->db->from('users');
-            $this->db->join('roles', 'roles.id = users.roleId');
-            $this->db->join('users as uu', 'uu.id = users.createdBy', 'left outer');
+            $this->db->where('pages.IsActive = ', 1);
+            $this->db->select('pages.*, users.username as addedby');
+            $this->db->from('pages');
+            $this->db->join('users', 'users.id = pages.userId');
             // $this->db->where('IsActive', 1);
             $query = $this->db->get();
         }elseif(is_array($id)){
-            $this->db->where('users.IsActive = ', 1);
+            $this->db->where('pages.IsActive = ', 1);
             $this->db->where($id);
-            $this->db->select('users.*, roles.name as rname, uu.username as addedby');
-            $this->db->from('users');
-            $this->db->join('roles', 'roles.id = users.roleId');
-            $this->db->join('users as uu', 'uu.id = users.createdBy', 'left outer');
+            $this->db->select('pages.*, users.username as addedby');
+            $this->db->from('pages');
+            $this->db->join('users', 'users.id = pages.userId');
             $query = $this->db->get();
             // $query = $this->db->get();
         }else{
-            $this->db->where('users.IsActive = ', 1);
-            $this->db->select('users.*, roles.name as rname, uu.username as addedby');
-            $this->db->from('users');
-            $this->db->join('roles', 'roles.id = users.roleId');
-            $this->db->join('users as uu', 'uu.id = users.createdBy', 'left outer');
-            $this->db->where('users.id = ', $id);
+            $this->db->where('pages.IsActive = ', 1);
+            $this->db->select('pages.*, users.username as addedby');
+            $this->db->from('pages');
+            $this->db->join('users', 'users.id = pages.userId');
+            $this->db->where('pages.id = ', $id);
             $query = $this->db->get();
         }
         return $query->result_array();

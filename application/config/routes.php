@@ -54,20 +54,20 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['posting'] = 'post/index';
-$route['draft'] = 'post/draft';
-$route['sent'] = 'post/sent';
-$route['addpost'] = 'post/addpost';
+// $route['draft'] = 'post/draft';
+// $route['sent'] = 'post/sent';
+// $route['addpost'] = 'post/addpost';
 $route['addusers'] = 'users/addusr';
 $route['users'] = 'users/index';
 $route['deleteusr/(:any)'] = 'users/delete/$1';
 $route['createuesrs'] = 'users/createusr';
+$route['groups'] = 'groups/index';
+$route['addgrp'] = 'groups/addgroup';
+$route['creategrp'] = 'groups/creategroup';
+$route['insertPG/(:any)'] = 'groups/insertPagesGroups/1';
+$route['deletegrup/(:any)'] = 'groups/delete/$1';
+$route['editgrup/(:any)'] = 'groups/edit/$1';
 
-// $route['test'] = 'dashboard/test';
-// $route['get'] = 'dashboard/get';
-
-
-// $route['news'] = 'news/index';
-// $route['create'] = 'news/create';
 // $route['news/(:any)'] = 'news/view/$1';
 // $route['(:any)'] = 'pages/view/$1';
 // $route['default_controller'] = 'pages/view';
