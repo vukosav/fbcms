@@ -105,21 +105,17 @@
         </div><!-- card -->
 
         <div class="card pd-20 pd-sm-40">
-            <h6 class="card-body-title">Basic Responsive DataTable</h6>
-            <p class="mg-b-20 mg-sm-b-30">Searching, ordering and paging goodness will be immediately added to the
-                table, as shown in this example.</p>
-
             <div class="table-wrapper">
-                <table id="datatable1" class="table display responsive nowrap">
+                <table id="datatable1" class="table display responsive nowrap"> <!-- ako se izbrise nowrap prikazace se sva polja u tabeli -->
                     <thead>
                         <tr>
-                            <th class="wd-15p">Status</th>
-                            <th class="wd-15p">Working title</th>
-                            <th class="wd-20p">Post text</th>
-                            <th class="wd-15p">Date / created by</th>
-                            <th class="wd-10p">Groups</th>
-                            <th class="wd-25p">Pages</th>
-                            <th class="wd-25p">Operations</th>
+                            <th class="wd-5p">Status</th>
+                            <th class="wd-5p">Working title</th>
+                            <th class="wd-5p">Post text</th>
+                            <th class="wd-5p">Date / created by</th>
+                            <th class="wd-5p">Groups</th>
+                            <th class="wd-5p">Pages</th>
+                            <th class="wd-5p">Operations</th>
                         </tr>
                     </thead>
                     <tbody>

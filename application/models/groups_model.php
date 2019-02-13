@@ -54,6 +54,11 @@ class Groups_model extends CI_Model{
         $this->db->insert('pages_groups', $data);
     }
 
+    public function deletePG($data){
+        $this->db->where('id', $data);
+        $this->db->delete('pages_groups');
+    }
+
     /**
     * @usage
     */

@@ -39,9 +39,26 @@ class Pages_model extends CI_Model{
         }
         return $query->result_array();
     }
-    
 
+    public function get_free_pages($gid){
+        $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
+        WHERE pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        if($query){
+            return $query->result_array();
+        }
+        return false;
+    }
 
+    public function get_added_pages($gid){
+        $query = $this->db->query('SELECT pages_groups.id pgid, pages.id, pages.fbPageName FROM pages
+                          JOIN pages_groups ON pages.id = pages_groups.pageId
+                          JOIN groups ON groups.id = pages_groups.groupId
+                          WHERE pages.id IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        if($query){
+            return $query->result_array();
+        }
+        return false;
+    }
 
     //-------------CRUD--------------------------
     /**

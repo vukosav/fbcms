@@ -10,7 +10,7 @@
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
     <div class="kt-pagetitle">
-        <h5>Users</h5>
+        <h5>Groups</h5>
     </div><!-- kt-pagetitle -->
 
     <div class="kt-pagebody">

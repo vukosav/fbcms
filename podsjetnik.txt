@@ -23,3 +23,73 @@ ALTER TABLE `users` ADD COLUMN `salt` VARCHAR(250) NOT NULL AFTER `password`;
 
 PROBLEMI
 Ako se dva puta klikne na dugme dok vrti insertova dva reda.
+
+
+///-------------------PREDLOG ZA MULTIPLE SUBMIT -------/////////////////
+PRVI NACIN
+if($_SESSION && isset($_SESSION['already_submitted'])) {
+
+  # If already submitted just redirect to thank you page
+
+} else {
+
+    # If first submit then assign session value and process the form
+    $_SESSION['already_submitted'] = true;
+
+    # Process form
+
+}
+
+
+DRUGI NACIN<?php
+session_start();
+
+/**
+ * Creates a token usable in a form
+ * @return string
+ */
+function getToken(){
+  $token = sha1(mt_rand());
+  if(!isset($_SESSION['tokens'])){
+    $_SESSION['tokens'] = array($token => 1);
+  }
+  else{
+    $_SESSION['tokens'][$token] = 1;
+  }
+  return $token;
+}
+
+/**
+ * Check if a token is valid. Removes it from the valid tokens list
+ * @param string $token The token
+ * @return bool
+ */
+function isTokenValid($token){
+  if(!empty($_SESSION['tokens'][$token])){
+    unset($_SESSION['tokens'][$token]);
+    return true;
+  }
+  return false;
+}
+
+// Check if a form has been sent
+$postedToken = filter_input(INPUT_POST, 'token');
+if(!empty($postedToken)){
+  if(isTokenValid($postedToken)){
+    // Process form
+  }
+  else{
+    // Do something about the error
+  }
+}
+
+// Get a token for the form we're displaying
+$token = getToken();
+?>
+<form method="post">
+  <fieldset>
+    <input type="hidden" name="token" value="<?php echo $token;?>"/>
+    <!-- Add form content -->
+  </fieldset>
+</form>
+///-------------------END PREDLOG ZA MULTIPLE SUBMIT -------/////////////////
