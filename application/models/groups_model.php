@@ -40,6 +40,31 @@ class Groups_model extends CI_Model{
         return $query->result_array();
     }
 
+    function getRows($params = array()){
+        $this->db->select('*');
+        $this->db->from('groups');
+        //filter data by searched keywords
+        if(!empty($params['search']['keywords'])){
+            $this->db->like('name',$params['search']['keywords']);
+        }
+        //sort data by ascending or desceding order
+        if(!empty($params['search']['sortBy'])){
+            $this->db->order_by('name',$params['search']['sortBy']);
+        }else{
+            $this->db->order_by('id','desc');
+        }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $query = $this->db->get();
+        //return fetched data
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
+
 
     //-------------CRUD--------------------------
     /**

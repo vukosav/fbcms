@@ -41,7 +41,8 @@ if($_SESSION && isset($_SESSION['already_submitted'])) {
 }
 
 
-DRUGI NACIN<?php
+DRUGI NACIN
+<?php
 session_start();
 
 /**

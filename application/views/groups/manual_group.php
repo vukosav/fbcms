@@ -22,13 +22,13 @@
                 <a class="btn btn-primary sm-4" href="<?=base_url()?>addgrp">Add new group</a>
             </div>
             <div class="table-wrapper">
-                <table id="datatable1" class="table display responsive nowrap">
+                <table id="datatable1" class="table display responsive">
                     <thead>
                         <tr>
-                            <th class="wd-25p">Group name</th>
-                            <th class="wd-15p">Created by</th>
-                            <th class="wd-15p">Date create</th>
-                            <th class="wd-5p">Operations</th>
+                            <th class="wd-5p all">Group name</th>
+                            <th class="wd-5p all">Created by</th>
+                            <th class="wd-5p all">Date create</th>
+                            <th class="wd-5p all">Operations</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +49,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </><!-- table-wrapper -->
+            </div><!-- table-wrapper -->
         </div><!-- card -->
 
     </div><!-- kt-pagebody -->

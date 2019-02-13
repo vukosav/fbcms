@@ -26,12 +26,11 @@
         'use strict';
 
         $('#datatable1').DataTable({
-          responsive: true,
-          language: {
-            searchPlaceholder: 'Search...',
-            sSearch: '',
-            lengthMenu: '_MENU_ items/page',
-          }
+          responsive: true, 
+          "paging":   false,
+          "info":     false,
+          searching: true,
+           retrieve: true
         });
 
         $('#datatable2').DataTable({

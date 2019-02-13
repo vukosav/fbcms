@@ -62,6 +62,7 @@ $route['users'] = 'users/index';
 $route['deleteusr/(:any)'] = 'users/delete/$1';
 $route['createuesrs'] = 'users/createusr';
 $route['groups'] = 'groups/index';
+$route['gr'] = 'groups/index1';
 $route['addgrp'] = 'groups/addgroup';
 $route['creategrp'] = 'groups/creategroup';
 $route['insertPG/(:any)/(:any)'] = 'groups/insertPagesGroups/1/1';
