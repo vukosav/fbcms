@@ -42,6 +42,7 @@ class Ajax_pagination{
     var $link_func       = 'getData';
     var $loading         = '.loading';
 
+
     /**
      * Constructor
      * @access    public

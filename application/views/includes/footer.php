@@ -20,6 +20,9 @@
     <script src="<?=base_url()?>theme/lib/gmaps/gmaps.js"></script>
     <script src="<?=base_url()?>theme/lib/chart.js/Chart.js"></script>
 
+    <script src="<?=base_url()?>theme/js/sweetalert2.all.min.js"></script>
+
+
     <script src="<?=base_url()?>theme/js/katniss.js"></script>
     <script>
       $(function(){
@@ -29,7 +32,7 @@
           responsive: true, 
           "paging":   false,
           "info":     false,
-          searching: true,
+          searching: false,
            retrieve: true
         });
 

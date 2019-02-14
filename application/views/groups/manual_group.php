@@ -7,6 +7,38 @@
 <?php $this->load->view('includes/headPanel'); ?>
 <!-- kt-breadcrumb -->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+function searchFilter(page_num) {
+    page_num = page_num ? page_num : 0;
+    var grname = $('#grname').val();
+    var sortBy = $('#sortBy').val();
+    var createdBy = $('#createdBy').val();
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url(); ?>groups/ajaxPaginationData/' + page_num,
+        data: 'page=' + page_num + '&createdBy=' + createdBy + '&grname=' + grname + '&sortBy=' + sortBy,
+        beforeSend: function() {
+            $('.loading').show();
+        },
+        success: function(html) {
+            $('#postList').html(html);
+            $('.loading').fadeOut("slow");
+            $('#datatable1').DataTable({
+                responsive: true,
+                "paging": false,
+                "info": false,
+                searching: false,
+                retrieve: true
+            });
+        }
+    });
+}
+</script>
+
+
+
+
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
     <div class="kt-pagetitle">
@@ -21,7 +53,31 @@
             <div class="form-group">
                 <a class="btn btn-primary sm-4" href="<?=base_url()?>addgrp">Add new group</a>
             </div>
-            <div class="table-wrapper">
+
+            <div class="row form-group">
+                <div class="col col-sm-2">
+
+                    <input type="text" class="form-control" id="grname" placeholder="Type group name"
+                        onkeyup="searchFilter()" />
+                </div>
+                <div class="col col-sm-2">
+                    <select id="sortBy" class="form-control" onchange="searchFilter()">
+                        <option value="">Sort By</option>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
+                <div class="col col-sm-2">
+                    <select class="form-control" id="createdBy" name="createdBy" onchange="searchFilter()">
+                        <option value="">created by</option>
+                        <?php if(!empty($usr)): foreach ($usr as $user): ?>
+                        <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
+                        <?php endforeach; endif; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="table-wrapper" id="postList">
+                <?php echo $this->ajax_pagination->create_links(); ?>
                 <table id="datatable1" class="table display responsive">
                     <thead>
                         <tr>
@@ -32,7 +88,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($groups as $group): ?>
+                        <?php if(!empty($groups)): foreach ($groups as $group): ?>
                         <tr>
                             <td><?php echo $group['name']; ?></td>
                             <td><?php echo $group['addedby']; ?></td>
@@ -44,11 +100,17 @@
                                 <a href="<?=base_url()?>deletegrup/<?php echo $group['id']; ?>">
                                     <span class="fa fa-trash"></span>
                                 </a>
+                                <a onclick="dellData()" data-togle="tooltip" href="" class="btn btn-danger">Delete
+                                </a><?php //return confirm('Are you shure you want to delete ');  ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <?php else: ?>
+                <p>Post(s) not available.</p>
+                <?php endif; ?>
+
             </div><!-- table-wrapper -->
         </div><!-- card -->
 
@@ -56,7 +118,36 @@
 
     <?php $this->load->view('includes/footer'); ?>
     <script>
-    function resetform() {
-        document.getElementById("myform").reset();
+    function dellData() {
+        event.preventDefault(); // prevent form submit
+        var form = event.target.form; // storing the form
+        swal.fire({
+                text: "Are you sure you want to delete?",
+                showCancelButton: true,
+
+                confirmButtonText: "Yes!",
+                cancelButtonText: "No!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8080/fbcms/groups/deletegrup/106',
+                        data: {
+                            id: id
+                        },
+                        success: function(data) {
+                            swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                        },
+                        error: function(data) {
+                            swal("NOT Deleted!", "Something blew up.", "error");
+                        }
+                    });
+                } else {
+                    swal("Cancelled", "Your imaginary file is safe :)", "error");
+                }
+            });
     }
     </script>

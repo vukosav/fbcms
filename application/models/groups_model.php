@@ -41,17 +41,23 @@ class Groups_model extends CI_Model{
     }
 
     function getRows($params = array()){
-        $this->db->select('*');
+        $this->db->where('groups.IsActive = ', 1);
+        $this->db->select('groups.*, users.username as addedby');
         $this->db->from('groups');
+        $this->db->join('users', 'users.id = groups.userId');
+        //filter data by user
+        if(!empty($params['search']['createdBy'])){
+            $this->db->where('users.id = ',$params['search']['createdBy']);
+        }
         //filter data by searched keywords
-        if(!empty($params['search']['keywords'])){
-            $this->db->like('name',$params['search']['keywords']);
+        if(!empty($params['search']['grname'])){
+            $this->db->like('groups.name',$params['search']['grname']);
         }
         //sort data by ascending or desceding order
         if(!empty($params['search']['sortBy'])){
-            $this->db->order_by('name',$params['search']['sortBy']);
+            $this->db->order_by('groups.name',$params['search']['sortBy']);
         }else{
-            $this->db->order_by('id','desc');
+            $this->db->order_by('groups.id','desc');
         }
         //set start and limit
         if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
@@ -105,5 +111,15 @@ class Groups_model extends CI_Model{
     }
     //-------------END CRUS--------------------
 
+    public function get_users($id = null){
+            $this->db->where('IsActive = ', 1);
+            // $this->db->select('groups.*, users.username as addedby');
+            // $this->db->from('groups');
+            // $this->db->join('users', 'users.id = groups.userId');
+            // $this->db->where('groups.id = ', $id);
+            $this->db->order_by('name','asc');
+            $query = $this->db->get('users');
+        return $query->result_array();
+    }
 
 }

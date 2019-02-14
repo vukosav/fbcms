@@ -43,10 +43,14 @@ class Groups extends CI_Controller {
         }
         
         //set conditions for search
-        $keywords = $this->input->post('keywords');
+        $grname = $this->input->post('grname');
+        $createdBy = $this->input->post('createdBy');
         $sortBy = $this->input->post('sortBy');
-        if(!empty($keywords)){
-            $conditions['search']['keywords'] = $keywords;
+        if(!empty($grname)){
+            $conditions['search']['grname'] = $grname;
+        }
+        if(!empty($createdBy)){
+            $conditions['search']['createdBy'] = $createdBy;
         }
         if(!empty($sortBy)){
             $conditions['search']['sortBy'] = $sortBy;
@@ -75,11 +79,43 @@ class Groups extends CI_Controller {
         $this->load->view('groups/ajax-pagination-data', $data, false);
     }
     public function index(){
-        $status['IsActive'] = true;
-        $data['groups'] = $this->groups_model->get_groups();
+        $data = array();
+        
+        //total rows count
+        $totalRec = count($this->groups_model->getRows());
+
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'groups/ajaxPaginationData';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+
+        //get the posts data
+        $data['groups'] = $this->groups_model->getRows(array('limit'=>$this->perPage));
+        
         $data['title'] = 'Manual Groups';
-        $this->output->enable_profiler();
+
+        //load users for filter
+        $data['usr'] = $this->groups_model->get_users();
+
+        //load the view
         $this->load->view('groups/manual_group', $data);
+
+        // $status['IsActive'] = true;
+        // $data['groups'] = $this->groups_model->get_groups();
+        // $data['title'] = 'Manual Groups';
+        // $this->output->enable_profiler();
+        // $this->load->view('groups/manual_group', $data);
+
+
+
+       
+        
+        
+        
+       
 
     }
 
