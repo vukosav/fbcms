@@ -2,10 +2,62 @@
 
 class Post_model extends CI_Model{
     
-    public function __construct()
-    {
-            //$this->load->database();
+    // public function __construct()
+    // {
+    //         //$this->load->database();
+    // }
+    
+    function getRows($params = array()){
+        // $this->db->where('posts.IsActive = ', 1);
+        $this->db->select('*');
+        $this->db->from('posts');
+        // $this->db->join('users', 'users.id = groups.userId');
+        //filter data by user
+        if(!empty($params['search']['wtitle'])){
+            $this->db->like('posts.wtitle = ',$params['search']['wtitle']);
+        }
+        //filter data by searched keywords
+                                                // if(!empty($params['search']['group'])){
+                                                //     $this->db->where('posts_pages.pageId',$params['search']['group']);
+                                                // }
+        //filter data by searched keywords
+                                                // if(!empty($params['search']['fbpage'])){
+                                                //     $this->db->where('posts_pages.pageId',$params['search']['fbpage']);
+                                                // }
+        //filter data by searched keywords
+        if(!empty($params['search']['date_from'])){
+            $this->db->where('posts.created_date >=',$params['search']['date_from']);
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['date_to'])){
+            $this->db->where('posts.created_date <=',$params['search']['date_to']);
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['user'])){
+            $this->db->where('posts.userId',$params['search']['user']);
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['post_status'])){
+            $this->db->where('posts.PostStatus',$params['search']['post_status']);
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['archived'])){
+            $this->db->where('posts.IsActive',$params['search']['archived']);
+        }else{
+            $this->db->where('posts.IsActive', 1);
+        }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $query = $this->db->get();
+        //return fetched data
+        return ($query->num_rows() > 0)?$query->result_array():array();
     }
+    
     
     //-------------QUEUED-----------------------
     /**

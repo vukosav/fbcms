@@ -7,30 +7,81 @@ class Users extends CI_Controller {
             parent::__construct();
             $this->load->model('users_model');
             $this->load->helper('url_helper');
+            $this->load->model('other_model');
+            $this->load->library('Ajax_pagination');
+            $this->perPage = 4;
+    }
+
+    function ajaxPaginationData(){
+        $conditions = array();
+        
+        //calc offset number
+        $page = $this->input->post('page');
+        if(!$page){
+            $offset = 0;
+        }else{
+            $offset = $page;
+        }
+        
+        //set conditions for search
+        $username = $this->input->post('username');
+        $role = $this->input->post('role');
+        if(!empty($username)){
+            $conditions['search']['username'] = $username;
+        }
+        if(!empty($role)){
+            $conditions['search']['role'] = $role;
+        }
+
+        //total rows count
+        $totalRec = count($this->users_model->getRows($conditions));
+        
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'users/ajaxPaginationData';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+        
+        //set start and limit
+        $conditions['start'] = $offset;
+        $conditions['limit'] = $this->perPage;
+        
+        //get posts data
+        $data['users'] = $this->users_model->getRows($conditions);
+        
+        //load the view
+      //  $this->output->enable_profiler();
+        $this->load->view('users/ajax-pagination-data', $data, false);
     }
 
     public function index(){
-        $status['IsActive'] = true;
-        $data['users'] = $this->users_model->get_users();
+        $data = array();
+        
+        //total rows count
+        $totalRec = count($this->users_model->getRows());
+
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'users/ajaxPaginationData';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+
+        //get the posts data
+        $data['users'] = $this->users_model->getRows(array('limit'=>$this->perPage));
+        
         $data['title'] = 'Users';
+
+        //load users for filter
+        $data['roles'] = $this->other_model->get_role();
+
+        //load the view
         $this->output->enable_profiler();
         $this->load->view('users/users_view', $data);
-        // $this->load->helper('url');
-        
-        // $data['IsActive'] = true;
-        // $this->input->post('working_title')? $data['title like '] = $this->input->post('working_title')."%":false;
-        // $this->input->post('user')? $data['created_by'] = $this->input->post('user'):false;
-        // $this->input->post('date_from')? $data['created_date >='] = $this->input->post('date_from')." 00:00:00":false;
-        // $this->input->post('date_to')? $data['created_date <='] = $this->input->post('date_to')." 23:59:59":false;
-        // $this->input->post('archived')? $data['IsActive'] = $this->input->post('archived'):false;
-        // $this->input->post('inProgres')? $data['ActionStatus'] = $this->input->post('inProgres'):false;
-        // $this->input->post('paused')? $data['ActionStatus'] = $this->input->post('paused'):false;
-        
 
-        // $q_post['queued'] = $this->post_model->get_queued($data);
-        // $q_post['title'] = 'Queued posts';
-        // $this->output->enable_profiler();
-        // $this->load->view('post/post_queued_view', $q_post);
     }
 
     public function addusr(){

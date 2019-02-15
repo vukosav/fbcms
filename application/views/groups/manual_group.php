@@ -7,7 +7,7 @@
 <?php $this->load->view('includes/headPanel'); ?>
 <!-- kt-breadcrumb -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
 <script>
 function searchFilter(page_num) {
     page_num = page_num ? page_num : 0;
@@ -56,7 +56,6 @@ function searchFilter(page_num) {
 
             <div class="row form-group">
                 <div class="col col-sm-2">
-
                     <input type="text" class="form-control" id="grname" placeholder="Type group name"
                         onkeyup="searchFilter()" />
                 </div>
@@ -100,7 +99,7 @@ function searchFilter(page_num) {
                                 <a href="<?=base_url()?>deletegrup/<?php echo $group['id']; ?>">
                                     <span class="fa fa-trash"></span>
                                 </a>
-                                <a onclick="dellData()" data-togle="tooltip" href="" class="btn btn-danger">Delete
+                                <a onclick="dellData(<?php echo $group['id']; ?>)" data-togle="tooltip" href="" class="btn btn-danger">Delete
                                 </a><?php //return confirm('Are you shure you want to delete ');  ?>
                             </td>
                         </tr>
@@ -118,7 +117,7 @@ function searchFilter(page_num) {
 
     <?php $this->load->view('includes/footer'); ?>
     <script>
-    function dellData() {
+    function dellData(id) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form
         swal.fire({
@@ -134,12 +133,12 @@ function searchFilter(page_num) {
                 if (isConfirm) {
                     $.ajax({
                         type: 'POST',
-                        url: 'http://localhost:8080/fbcms/groups/deletegrup/106',
+                        url: 'http://localhost:8080/fbcms/deletegrup/' + id,
                         data: {
                             id: id
                         },
                         success: function(data) {
-                            swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                            window.location(url); 
                         },
                         error: function(data) {
                             swal("NOT Deleted!", "Something blew up.", "error");

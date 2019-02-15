@@ -7,6 +7,34 @@
 <?php $this->load->view('includes/headPanel'); ?>
 <!-- kt-breadcrumb -->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+function searchFilter(page_num) {
+    page_num = page_num ? page_num : 0;
+    var username = $('#username').val();
+    var role = $('#role').val();
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url(); ?>users/ajaxPaginationData/' + page_num,
+        data: 'page=' + page_num + '&username=' + username + '&role=' + role,
+        beforeSend: function() {
+            $('.loading').show();
+        },
+        success: function(html) {
+            $('#postList').html(html);
+            $('.loading').fadeOut("slow");
+            $('#datatable1').DataTable({
+                responsive: true,
+                "paging": false,
+                "info": false,
+                searching: false,
+                retrieve: true
+            });
+        }
+    });
+}
+</script>
+
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
     <div class="kt-pagetitle">
@@ -21,7 +49,25 @@
             <div class="form-group">
                 <a class="btn btn-primary sm-4" href="<?=base_url()?>addusers">Add new user</a>
             </div>
-            <div class="table-wrapper">
+            <div class="row form-group">
+                <div class="col col-sm-2">
+                <input type="text" class="form-control" id="username" placeholder="Type username"
+                        onkeyup="searchFilter()" />
+                </div>
+                <div class="col col-sm-2">
+                    <select class="form-control" id="role" name="role" onchange="searchFilter()">
+                        <option value="">Role</option>
+                        <?php if(!empty($roles)): foreach ($roles as $role): ?>
+                        <option value="<?php echo $role['id']; ?>"><?php echo $role['name']; ?></option>
+                        <?php endforeach; endif; ?>
+                    </select>
+                </div>
+                <div class="col col-sm-3">
+                            <input id="button" onclick="resetform()" type="button" name="reset" value="Reset"><!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
+                    </div>
+            </div>
+            <div class="table-wrapper" id="postList">
+            <?php echo $this->ajax_pagination->create_links(); ?>
                 <table id="datatable1" class="table display responsive nowrap">
                     <thead>
                         <tr>
@@ -35,7 +81,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($users as $user): ?>
+                        <?php if(!empty($users)): foreach ($users as $user): ?>
                         <tr>
                             <td><?php echo $user['name']; ?></td>
                             <td><?php echo $user['username']; ?></td>
@@ -55,7 +101,10 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </><!-- table-wrapper -->
+                <?php else: ?>
+                <p>Post(s) not available.</p>
+                <?php endif; ?>
+            </div><!-- table-wrapper -->
         </div><!-- card -->
 
     </div><!-- kt-pagebody -->

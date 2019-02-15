@@ -7,28 +7,9 @@ class Groups extends CI_Controller {
             parent::__construct();
             $this->load->model('groups_model');
             $this->load->model('pages_model');
+            $this->load->model('other_model');
             $this->load->library('Ajax_pagination');
             $this->perPage = 4;
-    }
-    public function index1(){
-        $data = array();
-        
-        //total rows count
-        $totalRec = count($this->groups_model->getRows());
-        
-        //pagination configuration
-        $config['target']      = '#postList';
-        $config['base_url']    = base_url().'groups/ajaxPaginationData';
-        $config['total_rows']  = $totalRec;
-        $config['per_page']    = $this->perPage;
-        $config['link_func']   = 'searchFilter';
-        $this->ajax_pagination->initialize($config);
-        
-        //get the posts data
-        $data['groups'] = $this->groups_model->getRows(array('limit'=>$this->perPage));
-        
-        //load the view
-        $this->load->view('groups/index', $data);
     }
     
     function ajaxPaginationData(){
@@ -78,6 +59,7 @@ class Groups extends CI_Controller {
       //  $this->output->enable_profiler();
         $this->load->view('groups/ajax-pagination-data', $data, false);
     }
+
     public function index(){
         $data = array();
         
@@ -98,7 +80,7 @@ class Groups extends CI_Controller {
         $data['title'] = 'Manual Groups';
 
         //load users for filter
-        $data['usr'] = $this->groups_model->get_users();
+        $data['usr'] = $this->other_model->get_users();
 
         //load the view
         $this->load->view('groups/manual_group', $data);
@@ -108,14 +90,6 @@ class Groups extends CI_Controller {
         // $data['title'] = 'Manual Groups';
         // $this->output->enable_profiler();
         // $this->load->view('groups/manual_group', $data);
-
-
-
-       
-        
-        
-        
-       
 
     }
 

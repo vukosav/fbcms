@@ -43,8 +43,31 @@ class Users_model extends CI_Model{
         return $query->result_array();
     }
     
-
-
+    function getRows($params = array()){
+        $this->db->where('users.IsActive = ', 1);
+        $this->db->select('users.*, users.username, roles.name as rname, uu.username as addedby');
+        $this->db->from('users');
+        $this->db->join('roles', 'roles.id = users.roleId');
+        $this->db->join('users as uu', 'uu.id = users.createdBy', 'left outer');
+        //filter data by searched keywords
+        if(!empty($params['search']['role'])){
+            $this->db->where('users.roleId',$params['search']['role']);
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['username'])){
+            $this->db->like('users.username',$params['search']['username']);
+        }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $query = $this->db->get();
+        //return fetched data
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
 
     //-------------CRUD--------------------------
     /**

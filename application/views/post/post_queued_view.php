@@ -7,6 +7,42 @@
 <?php $this->load->view('includes/headPanel'); ?>
 <!-- kt-breadcrumb -->
 
+<script>
+function searchFilter(page_num) {
+    page_num = page_num ? page_num : 0;
+    var wtitle = $('#wtitle').val();
+    var group = $('#group').val();
+    var fbpage = $('#fbpage').val();
+    var date_from = $('#date_from').val();
+    var date_to = $('#date_to').val();
+    var user = $('#user').val();
+    var archived = $('#archived').val();
+    var post_status = $('#post_status')
+.val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
+        data: 'page=' + page_num + '&wtitle=' + wtitle + '&group=' + group + '&fbpage=' + fbpage +
+            '&date_from=' + date_from + '&date_to=' + date_to + '&user=' + user + '&post_status=' +
+            post_status + '&archived=' + archived,
+        beforeSend: function() {
+            $('.loading').show();
+        },
+        success: function(html) {
+            $('#postList').html(html);
+            $('.loading').fadeOut("slow");
+            $('#datatable1').DataTable({
+                responsive: true,
+                "paging": false,
+                "info": false,
+                searching: false,
+                retrieve: true
+            });
+        }
+    });
+}
+</script>
+
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
     <div class="kt-pagetitle">
@@ -18,43 +54,47 @@
         <div class="card pd-20 pd-sm-40 mg-t-50">
 
             <div class="table-wrapper">
-            <?php echo form_open('posting', 'id='.'myform'); ?>
-            <div class="row form-group">
-                    <div class="col col-sm-3">
-                        <input type="text" id="" name="working_title" placeholder="Filter by working title & post text" class="form-control"  value="<?php echo set_value('working_title') ?>">
+                <?php echo form_open('posting', 'id='.'myform'); ?>
+                <div class="row form-group">
+                    <div class="col col-sm-2">
+                        <input type="text" id="wtitle" name="working_title"
+                            placeholder="Filter by working title & post text" class="form-control"
+                            onkeyup="searchFilter()" />
+                        <input type="hidden" id="post_status" name="post_status" value="3">
                     </div>
-                    <div class="col-12 col-md-3">
-                        <select name="group" id="" class="form-control">
-                        <option value="<?php echo set_value('group') ?>"><?php echo set_value('group') ?></option>"
+                    <div class="col col-sm-2">
+                        <select name="group" id="group" class="form-control">
                             <option value="">Filter by group</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
                             <option value="3">Option #3</option>
                         </select>
                     </div>
-                    <div class="col-12 col-md-3">
-                        <select name="fbpage" id="" class="form-control">
-                            <option value="<?php echo set_value('fbpage') ?>"><?php echo set_value('fbpage') ?></option>"
+                    <div class="col col-sm-2">
+                        <select name="fbpage" id="fbpage" class="form-control">
                             <option value="">Filter by page</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
                             <option value="3">Option #3</option>
                         </select>
                     </div>
-                    <div class="col col-sm-3">
-                            <input id="button" onclick="resetform()" type="button" name="reset" value="Reset"><!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
+                    <div class="col col-sm-2">
+                        <input id="button" onclick="resetform()" type="button" name="reset" value="Reset">
+                        <!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
                     </div>
                 </div>
                 <div class="row form-group">
-                    <div class="col col-sm-3">
-                        <input type="date" id="" name="date_from" placeholder="Filter by date (from)" class="form-control" value="<?php echo set_value('date_from') ?>">
+                    <div class="col col-sm-2">
+                        <input type="date" id="date_from" name="date_from" placeholder="Filter by date (from)"
+                            class="form-control" value="<?php echo set_value('date_from') ?>">
                     </div>
-                    <div class="col col-sm-3">
-                        <input type="date" id="" name="date_to" placeholder="Filter by date (to)" class="form-control" value="<?php echo set_value('date_to') ?>">
+                    <div class="col col-sm-2">
+                        <input type="date" id="date_to" name="date_to" placeholder="Filter by date (to)"
+                            class="form-control" value="<?php echo set_value('date_to') ?>">
                     </div>
-                    <div class="col-12 col-md-3">
-                        <select name="user" id="myform" class="form-control">
-                        <option value="<?php echo set_value('user') ?>"><?php echo set_value('user') ?></option>"
+                    <div class="col-12 col-md-2">
+                        <select name="user" id="user" class="form-control">
+                            <option value="<?php echo set_value('user') ?>"><?php echo set_value('user') ?></option>"
                             <option value="">Filter by user</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
@@ -66,8 +106,8 @@
                     </div>
                 </div>
 
-                        <div class="row form-group">
-                            <!-- <div class="col col-sm-2">
+                <div class="row form-group">
+                    <!-- <div class="col col-sm-2">
                                 <label for="all" class="form-check-label ">
                                     <input type="checkbox" id="" value="" class="form-check-input" name="all" <?php //echo (set_value('all') ? 'checked' : '') ?>>All posts
                                 </label>
@@ -78,35 +118,41 @@
                                     posts
                                 </label>
                             </div> -->
-                            <div class="col col-sm">
-                                <label for="inProgres" class="form-check-label ">
-                                    <input type="checkbox" id="" value="1" class="form-check-input" name="inProgres" <?php echo (set_value('inProgres') ? 'checked' : '') ?>>In progres posts
-                                </label>
-                            </div>
-                            <div class="col col-sm">
-                                <label for="paused" class="form-check-label ">
-                                    <input type="checkbox" id="" value="2" class="form-check-input" name="paused" <?php echo (set_value('paused') ? 'checked' : '') ?>>Paused posts
-                                </label>
-                            </div>
-                            <div class="col col-sm-4">
-                                <label for="errors" class="form-check-label ">
-                                    <input type="checkbox" id="" value="" class="form-check-input" name="errors" <?php echo (set_value('errors') ? 'checked' : '') ?>>Posts with errors
-                                </label>
-                            </div>
-                            <div class="col col-sm-3">
-                                <label for="archived" class="form-check-label ">
-                                    <input type="checkbox" id="" value='false' class="form-check-input" name="archived" <?php echo (set_value('archived') ? 'checked' : '') ?>>Archived posts
-                                </label>
-                            </div>
-                        </div>
-                    
+                    <div class="col col-sm-2">
+                        <label for="inProgres" class="form-check-label ">
+                            <input type="checkbox" id="" value="1" class="form-check-input" name="inProgres"
+                                <?php echo (set_value('inProgres') ? 'checked' : '') ?>>In progres posts
+                        </label>
+                    </div>
+                    <div class="col col-sm-2">
+                        <label for="paused" class="form-check-label ">
+                            <input type="checkbox" id="" value="2" class="form-check-input" name="paused"
+                                <?php echo (set_value('paused') ? 'checked' : '') ?>>Paused posts
+                        </label>
+                    </div>
+                    <div class="col col-sm-2">
+                        <label for="errors" class="form-check-label ">
+                            <input type="checkbox" id="" value="" class="form-check-input" name="errors"
+                                <?php echo (set_value('errors') ? 'checked' : '') ?>>Posts with errors
+                        </label>
+                    </div>
+                    <div class="col col-sm-2">
+                        <label for="archived" class="form-check-label ">
+                            <input type="checkbox" id="archived" value='false' class="form-check-input" name="archived"
+                                <?php echo (set_value('archived') ? 'checked' : '') ?>>Archived posts
+                        </label>
+                    </div>
+                </div>
+
                 </form>
             </div><!-- table-wrapper -->
         </div><!-- card -->
 
         <div class="card pd-20 pd-sm-40">
-            <div class="table-wrapper">
-                <table id="datatable1" class="table display responsive nowrap"> <!-- ako se izbrise nowrap prikazace se sva polja u tabeli -->
+            <div class="table-wrapper" id="postList">
+                <?php echo $this->ajax_pagination->create_links(); ?>
+                <table id="datatable1" class="table display responsive nowrap">
+                    <!-- ako se izbrise nowrap prikazace se sva polja u tabeli -->
                     <thead>
                         <tr>
                             <th class="wd-5p">Status</th>
@@ -119,7 +165,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($queued as $q): ?>
+                        <?php if(!empty($posts)): foreach ($posts as $q): ?>
                         <tr>
                             <?php if($q['PostStatus'] ==2 ){
                                         echo "<td><span class='fa fa-circle-o'></span>";
@@ -173,6 +219,9 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <?php else: ?>
+                <p>Post(s) not available.</p>
+                <?php endif; ?>
             </div><!-- table-wrapper -->
         </div><!-- card -->
 
@@ -180,7 +229,7 @@
 
     <?php $this->load->view('includes/footer'); ?>
     <script>
-function resetform() {
-document.getElementById("myform").reset();
-}
-</script>
+    function resetform() {
+        document.getElementById("myform").reset();
+    }
+    </script>

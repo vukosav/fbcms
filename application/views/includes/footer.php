@@ -19,9 +19,7 @@
     <script src="http://maps.google.com/maps/api/js?key=AIzaSyAEt_DBLTknLexNbTVwbXyq2HSf2UbRBU8"></script>
     <script src="<?=base_url()?>theme/lib/gmaps/gmaps.js"></script>
     <script src="<?=base_url()?>theme/lib/chart.js/Chart.js"></script>
-
     <script src="<?=base_url()?>theme/js/sweetalert2.all.min.js"></script>
-
 
     <script src="<?=base_url()?>theme/js/katniss.js"></script>
     <script>
