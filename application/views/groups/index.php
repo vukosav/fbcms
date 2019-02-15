@@ -40,7 +40,7 @@ function searchFilter(page_num) {
 			</select>
 		</div>
         <div class="post-list" id="postList">
-            <table id="datatable1" class="table display responsive">
+        <table id="datatable1" class="table display responsive">
                       <thead>
                         <tr>
                             <th class="wd-5p all">Group name</th>

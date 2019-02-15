@@ -1,5 +1,5 @@
  
-<table id="datatable1" class="table display responsive">
+<table id="datatable11" class="table table-striped">
                     <thead>
                         <tr>
                             <th class="wd-5p all">Group name</th>
@@ -26,11 +26,9 @@
                             </td>
                         </tr>
                         
-<?php endforeach; else: ?>
+<?php endforeach; ?>
                        </tbody>
-                </table>
+                </table> <?php else: ?>
 <p>Post(s) not available.</p>
 <?php endif; ?>
 <?php echo $this->ajax_pagination->create_links(); ?>
-
- 

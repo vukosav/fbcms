@@ -22,23 +22,23 @@ class Ajax_pagination{
     var $prev_link       = '&#171;';
     var $last_link       = 'Last';
     var $uri_segment     = 3;
-    var $full_tag_open   = '<div class="pagination">';
-    var $full_tag_close  = '</div>';
-    var $first_tag_open  = '';
-    var $first_tag_close = '&nbsp;';
-    var $last_tag_open   = '&nbsp;';
-    var $last_tag_close  = '';
-    var $cur_tag_open    = '&nbsp;<b>';
-    var $cur_tag_close   = '</b>';
-    var $next_tag_open   = '&nbsp;';
-    var $next_tag_close  = '&nbsp;';
-    var $prev_tag_open   = '&nbsp;';
-    var $prev_tag_close  = '';
-    var $num_tag_open    = '&nbsp;';
-    var $num_tag_close   = '';
+    var $full_tag_open   = '<div class="ht-80 bd d-flex align-items-center justify-content-center"> <nav aria-label="Page navigation"> <ul class="pagination pagination-basic mg-b-0">';
+    var $full_tag_close  = ' </ul> </nav> </div>';
+    var $first_tag_open  = '<li class="page-item">';
+    var $first_tag_close = '</li>&nbsp;';
+    var $last_tag_open   = '&nbsp;<li class="page-item">';
+    var $last_tag_close  = '</li>';
+    var $cur_tag_open    = '<li class="page-item active"><a class="page-link">';
+    var $cur_tag_close   = '</a></li>';
+    var $next_tag_open   = '&nbsp;<li class="page-item">';
+    var $next_tag_close  = '</li>&nbsp;';
+    var $prev_tag_open   = '&nbsp;<li class="page-item">';
+    var $prev_tag_close  = '</li>';
+    var $num_tag_open    = '&nbsp;<li class="page-item">';
+    var $num_tag_close   = '</li>';
     var $target          = '';
-    var $anchor_class    = '';
-    var $show_count      = true;
+    var $anchor_class    = 'page-link';
+    var $show_count      = false;
     var $link_func       = 'getData';
     var $loading         = '.loading';
 
@@ -136,14 +136,14 @@ class Ajax_pagination{
         // SHOWING LINKS
         if ($this->show_count){
             $curr_offset = $CI->uri->segment($this->uri_segment);
-            $info = 'Showing ' . ( $curr_offset + 1 ) . ' to ' ;
+            $info = '<h6  class="tx-inverse mg-b-0">Showing ' . ( $curr_offset + 1 ) . ' to ' ;
 
             if( ( $curr_offset + $this->per_page ) < ( $this->total_rows -1 ) )
             $info .= $curr_offset + $this->per_page;
             else
             $info .= $this->total_rows;
 
-            $info .= ' of ' . $this->total_rows . ' | ';
+            $info .= ' of ' . $this->total_rows . '</h6>';
             $output .= $info;
         }
 
