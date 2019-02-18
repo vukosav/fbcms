@@ -1,4 +1,4 @@
- <table id="datatable1" class="table display responsive">
+ <table id="datatable11" class="table display responsive">
      <thead>
          <tr>
              <th class="wd-15p">Full name</th>
@@ -20,18 +20,23 @@
              <td><?php echo $user['addedby']; ?></td>
              <td><?php echo $user['rname']; ?></td>
              <td>
-                 <a href="<?=base_url()?>">
-                     <span class="fa fa-edit"></span>
-                 </a>
-                 <a href="<?=base_url()?>deleteusr/<?php echo $user['id']; ?>">
-                     <span class="fa fa-trash"></span>
-                 </a>
+                 <div class="btn-group" role="group" aria-label="Basic example">
+                     <a class="btn btn-info" href="<?=base_url()?>">
+                         <span class="fa fa-edit"></span>
+                     </a>
+                     <a class="btn btn-info"
+                         onclick="dellData(<?php echo $user['id']  .',&#39;' . base_url() . 'deleteusr/&#39;'; ?>)"
+                         href="">
+                         <span class="fa fa-trash"></span>
+                     </a>
+                 </div>
              </td>
          </tr>
 
-         <?php endforeach; else: ?>
+         <?php endforeach; ?>
      </tbody>
  </table>
+ <?php else: ?>
  <p>Post(s) not available.</p>
  <?php endif; ?>
  <?php echo $this->ajax_pagination->create_links(); ?>

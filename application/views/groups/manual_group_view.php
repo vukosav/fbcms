@@ -97,7 +97,7 @@ function searchFilter(page_num) {
                                 <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a class="btn btn-info" onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href="<?=base_url()?>deletegrup/<?php echo $group['id']; ?>">
+                                <a class="btn btn-info" onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href="">
                                     <span class="fa fa-trash"></span>
                                 </a>
                                 </div>
