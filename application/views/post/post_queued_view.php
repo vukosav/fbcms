@@ -15,15 +15,14 @@ function searchFilter(page_num) {
     var fbpage = $('#fbpage').val();
     var date_from = $('#date_from').val();
     var date_to = $('#date_to').val();
-    var user = $('#user').val();
+    var createdBy = $('#createdBy').val();
+    var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').val();
-    var post_status = $('#post_status')
-.val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
-        data: 'page=' + page_num + '&wtitle=' + wtitle + '&group=' + group + '&fbpage=' + fbpage +
-            '&date_from=' + date_from + '&date_to=' + date_to + '&user=' + user + '&post_status=' +
+        data: 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&group=' + group + '&fbpage=' + fbpage +
+            '&date_from=' + date_from + '&date_to=' + date_to  + '&post_status=' +
             post_status + '&archived=' + archived,
         beforeSend: function() {
             $('.loading').show();
@@ -38,11 +37,11 @@ function searchFilter(page_num) {
                 searching: false,
                 retrieve: true
             });
+            
         }
     });
 }
 </script>
-
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
     <div class="kt-pagetitle">
@@ -57,13 +56,12 @@ function searchFilter(page_num) {
                 <?php echo form_open('posting', 'id='.'myform'); ?>
                 <div class="row form-group">
                     <div class="col col-sm-2">
-                        <input type="text" id="wtitle" name="working_title"
-                            placeholder="Filter by working title & post text" class="form-control"
-                            onkeyup="searchFilter()" />
+                        <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title & post text" class="form-control"
+                        onkeyup="searchFilter()" />
                         <input type="hidden" id="post_status" name="post_status" value="3">
                     </div>
                     <div class="col col-sm-2">
-                        <select name="group" id="group" class="form-control">
+                        <select name="group" id="group" class="form-control" onchange="searchFilter()">
                             <option value="">Filter by group</option>
                             <option value="1">Option #1</option>
                             <option value="2">Option #2</option>
@@ -71,11 +69,11 @@ function searchFilter(page_num) {
                         </select>
                     </div>
                     <div class="col col-sm-2">
-                        <select name="fbpage" id="fbpage" class="form-control">
-                            <option value="">Filter by page</option>
-                            <option value="1">Option #1</option>
-                            <option value="2">Option #2</option>
-                            <option value="3">Option #3</option>
+                        <select class="form-control" id="fbpage" name="fbpage" onchange="searchFilter()">
+                            <option value="">Filter by fb page</option>
+                            <?php if(!empty($fbpg)): foreach ($fbpg as $fbp): ?>
+                            <option value="<?php echo $fbp['id']; ?>"><?php echo $fbp['fbPageName']; ?></option>
+                            <?php endforeach; endif; ?>
                         </select>
                     </div>
                     <div class="col col-sm-2">
@@ -86,19 +84,18 @@ function searchFilter(page_num) {
                 <div class="row form-group">
                     <div class="col col-sm-2">
                         <input type="date" id="date_from" name="date_from" placeholder="Filter by date (from)"
-                            class="form-control" value="<?php echo set_value('date_from') ?>">
+                            class="form-control" onchange="searchFilter()" />
                     </div>
                     <div class="col col-sm-2">
                         <input type="date" id="date_to" name="date_to" placeholder="Filter by date (to)"
-                            class="form-control" value="<?php echo set_value('date_to') ?>">
+                            class="form-control" onchange="searchFilter()" />
                     </div>
-                    <div class="col-12 col-md-2">
-                        <select name="user" id="user" class="form-control">
-                            <option value="<?php echo set_value('user') ?>"><?php echo set_value('user') ?></option>"
-                            <option value="">Filter by user</option>
-                            <option value="1">Option #1</option>
-                            <option value="2">Option #2</option>
-                            <option value="3">Option #3</option>
+                    <div class="col col-sm-2">
+                        <select class="form-control" id="createdBy" name="createdBy" onchange="searchFilter()">
+                            <option value="">created by</option>
+                            <?php if(!empty($usr)): foreach ($usr as $user): ?>
+                            <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
+                            <?php endforeach; endif; ?>
                         </select>
                     </div>
                     <div class="col col-sm-3">
@@ -121,25 +118,25 @@ function searchFilter(page_num) {
                     <div class="col col-sm-2">
                         <label for="inProgres" class="form-check-label ">
                             <input type="checkbox" id="" value="1" class="form-check-input" name="inProgres"
-                                <?php echo (set_value('inProgres') ? 'checked' : '') ?>>In progres posts
+                                >In progres posts
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="paused" class="form-check-label ">
                             <input type="checkbox" id="" value="2" class="form-check-input" name="paused"
-                                <?php echo (set_value('paused') ? 'checked' : '') ?>>Paused posts
+                               >Paused posts
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="errors" class="form-check-label ">
                             <input type="checkbox" id="" value="" class="form-check-input" name="errors"
-                                <?php echo (set_value('errors') ? 'checked' : '') ?>>Posts with errors
+                                >Posts with errors
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="archived" class="form-check-label ">
                             <input type="checkbox" id="archived" value='false' class="form-check-input" name="archived"
-                                <?php echo (set_value('archived') ? 'checked' : '') ?>>Archived posts
+                                >Archived posts
                         </label>
                     </div>
                 </div>
@@ -150,8 +147,7 @@ function searchFilter(page_num) {
 
         <div class="card pd-20 pd-sm-40">
             <div class="table-wrapper" id="postList">
-                <?php echo $this->ajax_pagination->create_links(); ?>
-                <table id="datatable1" class="table display responsive nowrap">
+                <table id="datatable11"  class="table display responsive nowrap">
                     <!-- ako se izbrise nowrap prikazace se sva polja u tabeli -->
                     <thead>
                         <tr>
@@ -164,7 +160,7 @@ function searchFilter(page_num) {
                             <th class="wd-5p">Operations</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id = "postListBody">
                         <?php if(!empty($posts)): foreach ($posts as $q): ?>
                         <tr>
                             <?php if($q['PostStatus'] ==2 ){
@@ -188,32 +184,34 @@ function searchFilter(page_num) {
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><?php echo substr($q['content'], 0, 100) ."..."; ?></td>
+                            <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
                             <td>Group1<br>Group2</td>
                             <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
                             <td>
-                                <a href="#">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-info" href="#">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a href="#">
+                                <a class="btn btn-info" href="#">
                                     <span class="fa fa-copy"></span>
                                 </a>
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a href='#'><span class='fa fa-calendar-o'></span></a>";
+                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-calendar-o'></span></a>";
                                 }
                                 else{
                                     if($q['ActionStatus']==1){
-                                    echo "<a href='#'><span class='fa fa-pause'></span></a> ";
+                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a href='#'><span class='fa fa-pause'></span></a> ";
+                                        echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
                                     }
                                 } ?>
-                                <a href="#">
+                                <a class="btn btn-info" href="#">
                                     <span class="fa fa-trash"></span>
                                 </a>
+                                </div>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -222,14 +220,61 @@ function searchFilter(page_num) {
                 <?php else: ?>
                 <p>Post(s) not available.</p>
                 <?php endif; ?>
+                <?php echo $this->ajax_pagination->create_links(); ?>
             </div><!-- table-wrapper -->
         </div><!-- card -->
 
     </div><!-- kt-pagebody -->
 
     <?php $this->load->view('includes/footer'); ?>
-    <script>
+    <!-- <script>
     function resetform() {
         document.getElementById("myform").reset();
+    }
+    </script> -->
+    <script>
+    function dellData(id, url) {
+        event.preventDefault(); // prevent form submit
+        var form = event.target.form; // storing the form
+        console.log('url', url);
+        swal.fire({
+                text: "Are you sure you want to delete?",
+                showCancelButton: true,
+                confirmButtonText: "Yes!",
+                cancelButtonText: "No!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+             }).then((result) => {
+                    if (result.value) { 
+                        console.log('klik na yes u modal', id);
+                    $.ajax({
+                        type: 'POST',
+                        url: url + id,
+                        //data: {
+                        //    id: id
+                        //},
+                        success: function(data) {
+                           
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                                ).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                    });
+                                
+                           // window.location(url); 
+                        },
+                        error: function(data) {
+                            swal("NOT Deleted!", "Something blew up.", "error");
+                        }
+                    });
+                }else{
+                    console.log('klik na no u modal');
+                }
+            });
+            
     }
     </script>

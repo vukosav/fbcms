@@ -47,7 +47,7 @@ class Groups extends CI_Controller {
         $config['per_page']    = $this->perPage;
         $config['link_func']   = 'searchFilter';
         $this->ajax_pagination->initialize($config);
-        
+
         //set start and limit
         $conditions['start'] = $offset;
         $conditions['limit'] = $this->perPage;
@@ -83,7 +83,8 @@ class Groups extends CI_Controller {
         $data['usr'] = $this->other_model->get_users();
 
         //load the view
-        $this->load->view('groups/manual_group', $data);
+        $this->output->enable_profiler();
+        $this->load->view('groups/manual_group_view', $data);
 
         // $status['IsActive'] = true;
         // $data['groups'] = $this->groups_model->get_groups();

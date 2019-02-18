@@ -25,31 +25,38 @@ class Post extends CI_Controller {
         
         //set conditions for search
         $wtitle = $this->input->post('wtitle');
-        $group = $this->input->post('group');
-        $fbpage = $this->input->post('fbpage');
-        $date_from = $this->input->post('date_from');
-        $date_to = $this->input->post('date_to');
-        $user = $this->input->post('user');
-        $archived = $this->input->post('archived');
-        $post_status = $this->input->post('post_status');
-        if(!empty($grname)){
+        $createdBy = $this->input->post('createdBy');
+        // $group = $this->input->post('group');
+        // $fbpage = $this->input->post('fbpage');
+        $date_from = $this->input->post('date_from') .' 00:00:00';
+        $date_to = $this->input->post('date_to') .' 23:59:59';
+        // $archived = $this->input->post('archived');
+        // $post_status = $this->input->post('post_status');
+        if(!empty($createdBy)){
+            $conditions['search']['createdBy'] = $createdBy;
+        }
+        if(!empty($wtitle)){
             $conditions['search']['wtitle'] = $wtitle;
         }
-        if(!empty($group)){
-            $conditions['search']['group'] = $group;
-        }
-        if(!empty($fbpage)){
-            $conditions['search']['fbpage'] = $fbpage;
-        }
+        // if(!empty($group)){
+        //     $conditions['search']['group'] = $group;
+        // }
+        // if(!empty($fbpage)){
+        //     $conditions['search']['fbpage'] = $fbpage;
+        // }
         if(!empty($date_from)){
             $conditions['search']['date_from'] = $date_from;
         }
         if(!empty($date_to)){
             $conditions['search']['date_to'] = $date_to;
         }
-        if(!empty($user)){
-            $conditions['search']['user'] = $user;
-        }
+
+        // if(!empty($archived)){
+        //     $conditions['search']['archived'] = $archived;
+        // }
+        // if(!empty($post_status)){
+        //     $conditions['search']['post_status'] = $post_status;
+        // }
 
         //total rows count
         $totalRec = count($this->post_model->getRows($conditions));
@@ -70,7 +77,7 @@ class Post extends CI_Controller {
         $data['posts'] = $this->post_model->getRows($conditions);
         
         //load the view
-      //  $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('post/ajax-pagination-data', $data, false);
     }
 
@@ -96,6 +103,8 @@ class Post extends CI_Controller {
 
         //load users for filter
         $data['usr'] = $this->other_model->get_users();
+        //load pages for filter
+        $data['fbpg'] = $this->other_model->get_fbpage();
 
         //load the view
         $this->output->enable_profiler();

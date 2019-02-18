@@ -15,15 +15,14 @@
                             <td><?php echo $group['addedby']; ?></td>
                             <td><?php echo $group['createDate']; ?></td>
                             <td>
-                                <a href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a href="<?=base_url()?>deletegrup/<?php echo $group['id']; ?>">
+                                <a class="btn btn-info" onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href="<?=base_url()?>deletegrup/<?php echo $group['id']; ?>">
                                     <span class="fa fa-trash"></span>
                                 </a>
-                                <a onclick="dellData()" data-togle="tooltip" href="" class="btn btn-danger">Delete
-                                </a><?php //return confirm('Are you shure you want to delete ');  ?>
-                            </td>
+                                </div>
                         </tr>
                         
 <?php endforeach; ?>

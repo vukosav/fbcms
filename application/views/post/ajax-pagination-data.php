@@ -1,5 +1,5 @@
  
-<table id="datatable1" class="table display responsive">
+<table id="datatable11" class="table table-striped">
                     <thead>
                     <tr>
                             <th class="wd-5p">Status</th>
@@ -35,37 +35,39 @@
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><?php echo substr($q['content'], 0, 100) ."..."; ?></td>
+                            <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
                             <td>Group1<br>Group2</td>
                             <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
                             <td>
-                                <a href="#">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-info" href="#">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a href="#">
+                                <a class="btn btn-info" href="#">
                                     <span class="fa fa-copy"></span>
                                 </a>
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a href='#'><span class='fa fa-calendar-o'></span></a>";
+                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-calendar-o'></span></a>";
                                 }
                                 else{
                                     if($q['ActionStatus']==1){
-                                    echo "<a href='#'><span class='fa fa-pause'></span></a> ";
+                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a href='#'><span class='fa fa-pause'></span></a> ";
+                                        echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
                                     }
                                 } ?>
-                                <a href="#">
+                                <a class="btn btn-info" href="#">
                                     <span class="fa fa-trash"></span>
                                 </a>
+                                </div>
                             </td>
                         </tr>
-<?php endforeach; else: ?>
+<?php endforeach; ?>
                        </tbody>
-                </table>
+                       </table> <?php else: ?>
 <p>Post(s) not available.</p>
 <?php endif; ?>
 <?php echo $this->ajax_pagination->create_links(); ?>

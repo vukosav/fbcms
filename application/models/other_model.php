@@ -22,4 +22,11 @@ class Other_model extends CI_Model{
         $query = $this->db->get('roles');
         return $query->result_array();
     }
+
+    public function get_fbpage($id = null){
+        $this->db->where('IsActive = ', 1);
+        $this->db->order_by('fbPageName','asc');
+        $query = $this->db->get('pages');
+    return $query->result_array();
+}
 }
