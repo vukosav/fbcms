@@ -94,3 +94,33 @@ $token = getToken();
   </fieldset>
 </form>
 ///-------------------END PREDLOG ZA MULTIPLE SUBMIT -------/////////////////
+
+
+
+///-----------------za postove--------////////
+**upit
+SELECT `posts`.id, `posts`.title, posts.content 
+, PagesForPost(posts.id) AS pages, `users`.`username` as `addedby`
+ FROM `posts` 
+ JOIN `users` ON posts.created_by = users.id
+  LEFT JOIN `posts_pages` ON `posts`.`id` = `posts_pages`.`postId`
+  WHERE (`PostStatus` = 2 or `PostStatus` = 3) AND `posts`.`IsActive` = 1
+  GROUP BY `posts`.id, `posts`.title, posts.content , `users`.`username` 
+
+
+**funkcija
+CREATE OR replace FUNCTION PagesForPost (postId INT)
+RETURNS text DETERMINISTIC
+RETURN (SELECT  REPLACE(GROUP_CONCAT(ifNull(pages.fbPageName,'<br>'),'<br>'),',','') AS pages
+FROM posts
+left JOIN posts_pages ON posts.id = posts_pages.postId
+left JOIN pages ON pages.id = posts_pages.pageId
+WHERE posts.id = postId
+GROUP BY posts.id
+ );
+ 
+
+
+
+ **
+ SELECT PagesForPost(5) AS postspages;

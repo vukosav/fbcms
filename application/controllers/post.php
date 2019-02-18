@@ -27,7 +27,7 @@ class Post extends CI_Controller {
         $wtitle = $this->input->post('wtitle');
         $createdBy = $this->input->post('createdBy');
         // $group = $this->input->post('group');
-        // $fbpage = $this->input->post('fbpage');
+        $fbpage = $this->input->post('fbpage');
         $date_from = $this->input->post('date_from') .' 00:00:00';
         $date_to = $this->input->post('date_to') .' 23:59:59';
         // $archived = $this->input->post('archived');
@@ -41,9 +41,9 @@ class Post extends CI_Controller {
         // if(!empty($group)){
         //     $conditions['search']['group'] = $group;
         // }
-        // if(!empty($fbpage)){
-        //     $conditions['search']['fbpage'] = $fbpage;
-        // }
+        if(!empty($fbpage)){
+            $conditions['search']['fbpage'] = $fbpage;
+        }
         if(!empty($date_from)){
             $conditions['search']['date_from'] = $date_from;
         }
@@ -109,7 +109,7 @@ class Post extends CI_Controller {
         //load the view
         $this->output->enable_profiler();
         $this->load->view('post/post_queued_view', $data);
-        
+        // print_r($data['posts']);
         //$data['IsActive'] = true;
         // $this->input->post('working_title')? $data['title like '] = $this->input->post('working_title')."%":false;
         // $this->input->post('user')? $data['created_by'] = $this->input->post('user'):false;

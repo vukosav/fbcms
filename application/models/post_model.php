@@ -11,26 +11,27 @@ class Post_model extends CI_Model{
         // $this->db->where('posts.IsActive = ', 1);
         $where = "(PostStatus = 2 or PostStatus = 3)";
         $this->db->where($where);
-        $this->db->select('posts.*, users.username as addedby');
+        $this->db->select('posts.*, PagesForPost(posts.id) AS pages, users.username as addedby');
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
         //$this->db->from('');
-        // $this->db->join('users', 'users.id = groups.userId');
+        $this->db->join('posts_pages', 'posts.id = posts_pages.postId', 'left');
+        
 
         //filter data by searched keywords
                                                 // if(!empty($params['search']['group'])){
                                                 //     $this->db->where('posts_pages.pageId',$params['search']['group']);
                                                 // }
         //filter data by searched keywords
-                                                // if(!empty($params['search']['fbpage'])){
-                                                //     $this->db->where('posts_pages.pageId',$params['search']['fbpage']);
-                                                // }
+        if(!empty($params['search']['fbpage'])){
+            $this->db->where('posts_pages.pageId',$params['search']['fbpage']);
+        }
         //filter data by searched keywords
         if(!empty($params['search']['createdBy'])){
             $this->db->where('posts.created_by = ',$params['search']['createdBy']);
         }
-        //filter data by searched keywords
+        // filter data by searched keywords
         // if(!empty($params['search']['date_from'])){
         //     if(!empty($params['search']['date_to'])){
         //             $od = $params['search']['date_from'];
@@ -59,10 +60,13 @@ class Post_model extends CI_Model{
         if(!empty($params['search']['wtitle'])){
             $this->db->like('posts.title',$params['search']['wtitle']);
         }
-        //filter data by searched keywords
-        // if(!empty($params['search']['date_to'])){
-        //     $this->db->where('posts.created_date <=',$params['search']['date_to']);
-        // }
+        // filter data by searched keywords
+        if(!empty($params['search']['date_from'])){
+            $this->db->where('posts.created_date >=',$params['search']['date_from']);
+        }
+        if(!empty($params['search']['date_to'])){
+            $this->db->where('posts.created_date <=',$params['search']['date_to']);
+        }
 
         //filter data by searched keywords
         // if(!empty($params['search']['post_status'])){
@@ -83,6 +87,7 @@ class Post_model extends CI_Model{
         //get records
         $query = $this->db->get();
         //return fetched data
+        // $debug_array = []
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
     
