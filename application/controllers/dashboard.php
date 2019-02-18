@@ -21,6 +21,7 @@ class Dashboard extends CI_Controller {
         $gstat = $this->dashboard_model->get_gstatistic();
         $pstat['global'] = $gstat[0];
         $pstat['title'] = 'Dashboard';
+        // $pstat['userdata']  =   $this->session->userdata('name');
         $this->load->view('dashboard/dashboard_view', $pstat);
 
     }

@@ -6,6 +6,91 @@ class Users_model extends CI_Model{
     {
             //$this->load->database();
     }
+
+    public function isLoggedIn(){
+		if(isset($this->session->userdata('user')['logged_in']))
+			return true;
+
+		return false;
+    }
+    
+    public function checkUserLogin($username, $password) {
+		$this->db->from('users');
+		$this->db->where('username', $username);
+		$this->db->or_where('email', $username);
+		$queryResult = $this->db->get();
+
+        // Check password
+        $makeHash = hash('sha256', $password . $queryResult->row('salt'));
+
+        // Check check password
+        if($makeHash !== $queryResult->row('password')){
+            $this->errors = ("Incorrect username/password.");
+            return FALSE;
+        }
+
+        if(!$this->userLogin($queryResult)){
+            return false;
+        }
+
+		// if($rememberMe){
+		// 	$sessionCode = $this->saveUserSession($makeHash,(int)$queryResult->row('id'));
+		// 	$cookie = array(
+		//         'name'   => '_usid',
+		//         'value'  => $sessionCode,
+		//         'expire' => '900000',
+		//         'path'   => '/',
+		//         'prefix' => $this->config->item('sess_cookie_name'),
+		//         'secure' => FALSE
+		// 	);
+		// 	$this->input->set_cookie($cookie);
+		// }
+		return true;
+    }
+    
+    public function userLogin($user){
+
+        // Is user account active
+        if((int)$user->row('IsActive') == 0){
+           $this->errors = ("Your account is not activated. please contact the site administrator in order to activate your account.");
+            return false;
+        }
+
+        $userData = array();
+
+        $newUserData = array();
+
+        date_default_timezone_set('UTC');
+
+        $now = new DateTime();
+
+        $newUserData['last_login'] = date('Y-m-d h:i:s', time());
+
+        //$this->setId($user->row('id'));
+        //$this->update($newUserData);
+
+        $userData['user_id'] = $user->row('id');
+        $userData['username'] = (string)$user->row('username');
+        $userData['name'] = (string)$user->row('name');
+        $userData['email'] = (string)$user->row('email');
+        $userData['logged_in'] = TRUE;
+        $userData['role'] = $user->row('roleId');
+
+        $this->setUserSession($userData);
+
+        return true;
+    }
+
+    private function setUserSession($data){
+		// set session user data
+		$this->session->set_userdata('user',$data);
+	}
+    
+    public function loggedOut(){
+		$this->db->where("user_id",$this->session->userdata('user')['user_id']);
+        $this->session->sess_destroy();
+		return $this->db->delete('users_session');
+    }
     
     /**
      * @usage

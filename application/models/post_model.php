@@ -11,12 +11,12 @@ class Post_model extends CI_Model{
         // $this->db->where('posts.IsActive = ', 1);
         $where = "(PostStatus = 2 or PostStatus = 3)";
         $this->db->where($where);
-        $this->db->select('posts.*, PagesForPost(posts.id) AS pages, users.username as addedby');
+        $this->db->select('posts.*,  users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
         //$this->db->from('');
-        $this->db->join('posts_pages', 'posts.id = posts_pages.postId', 'left');
+        // $this->db->join('posts_pages', 'posts.id = posts_pages.postId', 'left');
         
 
         //filter data by searched keywords

@@ -18,6 +18,7 @@ chackbox paused i in progres treba jedan drugog da iskuljucuju
 ////------------UPDATE BAZE -----------------/////
 ALTER TABLE `users` ADD `IsActive` INT(1) NULL DEFAULT '1' AFTER `createdBy`;
 ALTER TABLE `users` ADD COLUMN `salt` VARCHAR(250) NOT NULL AFTER `password`;
+ALTER TABLE `users` ADD COLUMN `last_login` datetime DEFAULT NULL;
 
 ////----------END UPDATE BAZE ---------------/////
 

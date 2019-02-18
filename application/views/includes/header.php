@@ -45,6 +45,8 @@
 
   <body>
 
+  <?php if($this->uri->segment(1)=="login"):?>
+<?php else: ?>
     <!-- ##### SIDEBAR LOGO ##### -->
     <div class="kt-sideleft-header">
       <div class="kt-logo"><a href="<?=base_url()?>">Datadata</a></div>
@@ -56,3 +58,4 @@
         </span>
       </div><!-- input-group -->
     </div><!-- kt-sideleft-header -->
+<?php endif; ?>

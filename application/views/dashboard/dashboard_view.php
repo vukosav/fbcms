@@ -100,7 +100,7 @@
           <div class="col-lg-4">
             <div class="card pd-40 tx-center">
               <div class="d-flex justify-content-center mg-b-30">
-                <img src="../img/icon1.svg" class="wd-100" alt="">
+                <img src="<?=base_url()?>theme/img/icon1.svg" class="wd-100" alt="">
               </div>
               <h6 class="tx-md-20 tx-inverse mg-b-20">Document Management</h6>
               <p class="tx-13">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. Even the all-powerful Pointing has no control about the blind texts.</p>
@@ -115,7 +115,7 @@
               <div class="list-group list-group-flush">
                 <div class="list-group-item">
                   <div class="media">
-                    <img src="../img/img1.jpg" class="wd-30 rounded-circle" alt="">
+                    <img src="<?=base_url()?>theme/img/img1.jpg" class="wd-30 rounded-circle" alt="">
                     <div class="media-body mg-l-10">
                       <h6 class="mg-b-0 tx-inverse tx-13">Katherine Lumaad</h6>
                       <p class="mg-b-0 tx-gray-500 tx-12">an hour ago</p>
@@ -125,7 +125,7 @@
                 </div><!-- list-group-item -->
                 <div class="list-group-item">
                   <div class="media">
-                    <img src="../img/img2.jpg" class="wd-30 rounded-circle" alt="">
+                    <img src="<?=base_url()?>theme/img/img2.jpg" class="wd-30 rounded-circle" alt="">
                     <div class="media-body mg-l-10">
                       <h6 class="mg-b-0 tx-inverse tx-13">Mary Grace Ceballos</h6>
                       <p class="mg-b-0 tx-gray-500 tx-12">2 hours ago</p>
@@ -135,7 +135,7 @@
                 </div><!-- list-group-item -->
                 <div class="list-group-item">
                   <div class="media">
-                    <img src="../img/img4.jpg" class="wd-30 rounded-circle" alt="">
+                    <img src="<?=base_url()?>theme/img/img4.jpg" class="wd-30 rounded-circle" alt="">
                     <div class="media-body mg-l-10">
                       <h6 class="mg-b-0 tx-inverse tx-13">Rowella Sombrio</h6>
                       <p class="mg-b-0 tx-gray-500 tx-12">3 hours ago</p>
