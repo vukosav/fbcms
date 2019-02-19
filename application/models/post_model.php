@@ -9,9 +9,9 @@ class Post_model extends CI_Model{
     
     function getRows($params = array()){
         // $this->db->where('posts.IsActive = ', 1);
-        $where = "(PostStatus = 2 or PostStatus = 3)";
-        $this->db->where($where);
-        $this->db->select('posts.*,  users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
+        // $where = "(PostStatus = 2 or PostStatus = 3)";
+        // $this->db->where($where);
+        $this->db->select('posts.*, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
@@ -32,52 +32,36 @@ class Post_model extends CI_Model{
             $this->db->where('posts.created_by = ',$params['search']['createdBy']);
         }
         // filter data by searched keywords
-        // if(!empty($params['search']['date_from'])){
-        //     if(!empty($params['search']['date_to'])){
-        //             $od = $params['search']['date_from'];
-        //             $do = $params['search']['date_to'];
-        //             $w = '(posts.created_date BETWEEN ' .$od .' AND ' .$do .')';
-        //             $this->db->where($w);
-        //         }else{
-        //             $this->db->where('posts.created_date >=',$params['search']['date_from']);
-        //         }
-        // }elseif(!empty($params['search']['date_to'])){
-        //     $this->db->where('posts.created_date <=',$params['search']['date_to']);
-        // }
-                            // if(($params['search']['date_from'] !== '' ) || ($params['search']['to'] !== '' )){
-                            //                 $od = $params['search']['date_from'];
-                            //                $do = $params['search']['date_to'];
-                            //                $w = '(posts.created_date BETWEEN ' .$od .' AND ' .$do .')';
-                            //                 $this->db->where($w);
-                            // }
-                            // if(($params['search']['date_from'] !== '' ) || ($params['search']['to'] == '' )){
-                            //     $this->db->where('posts.created_date >=',$params['search']['date_from']);
-                            // }
-                            // if(($params['search']['date_from'] == '' ) || ($params['search']['to'] !== '' )){
-                            //     $this->db->where('posts.created_date <=',$params['search']['date_to']);
-                            // }
-        //filter data by title
-        if(!empty($params['search']['wtitle'])){
-            $this->db->like('posts.title',$params['search']['wtitle']);
-        }
-        // filter data by searched keywords
         if(!empty($params['search']['date_from'])){
             $this->db->where('posts.created_date >=',$params['search']['date_from']);
         }
         if(!empty($params['search']['date_to'])){
             $this->db->where('posts.created_date <=',$params['search']['date_to']);
         }
-
+        //filter data by searched keywords
+        if(!empty($params['search']['archived'])){
+            $this->db->where('posts.IsActive = ', 0);
+        }else{
+            $this->db->where('posts.IsActive', 1);
+        }
+        //filter data by searched keywords
+        // if(!empty($params['search']['inProgres'])){
+        //     $this->db->where('posts.PostStatus =  3');
+        // }else{
+            $this->db->where('(PostStatus = 2 or PostStatus = 3)');
+        // }
+        //filter data by searched keywords
+        if(!empty($params['search']['paused'])){
+            $this->db->where('posts.ActionStatus = ',2);
+        }
+        //filter data by title
+        if(!empty($params['search']['wtitle'])){
+            $this->db->like('posts.title',$params['search']['wtitle']);
+        }
         //filter data by searched keywords
         // if(!empty($params['search']['post_status'])){
         //     $this->db->where('posts.PostStatus',$params['search']['post_status']);
         // }
-        //filter data by searched keywords
-        if(!empty($params['search']['archived'])){
-            $this->db->where('posts.IsActive',$params['search']['archived']);
-        }else{
-            $this->db->where('posts.IsActive', 1);
-        }
         //set start and limit
         if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
             $this->db->limit($params['limit'],$params['start']);

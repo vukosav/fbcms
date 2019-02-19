@@ -28,9 +28,12 @@ class Post extends CI_Controller {
         $createdBy = $this->input->post('createdBy');
         // $group = $this->input->post('group');
         $fbpage = $this->input->post('fbpage');
-        $date_from = $this->input->post('date_from') .' 00:00:00';
-        $date_to = $this->input->post('date_to') .' 23:59:59';
-        // $archived = $this->input->post('archived');
+        $date_from = $this->input->post('date_from')?  $this->input->post('date_from') .' 00:00:00':false;
+        $date_to = $this->input->post('date_to')? $this->input->post('date_to') .' 23:59:59':false;
+        $archived = $this->input->post('archived');
+        $paused = $this->input->post('paused');
+        $errors = $this->input->post('errors');
+        $inProgres = $this->input->post('inProgres');
         // $post_status = $this->input->post('post_status');
         if(!empty($createdBy)){
             $conditions['search']['createdBy'] = $createdBy;
@@ -50,14 +53,22 @@ class Post extends CI_Controller {
         if(!empty($date_to)){
             $conditions['search']['date_to'] = $date_to;
         }
-
-        // if(!empty($archived)){
-        //     $conditions['search']['archived'] = $archived;
-        // }
+        if(!empty($archived)){
+            $conditions['search']['archived'] = $archived;
+        }
+        if(!empty($paused)){
+            $conditions['search']['paused'] = $paused;
+        }
+        if(!empty($errors)){
+            $conditions['search']['errors'] = $errors;
+        }
+        if(!empty($inProgres)){
+            $conditions['search']['inProgres'] = $inProgres;
+        }
         // if(!empty($post_status)){
         //     $conditions['search']['post_status'] = $post_status;
         // }
-
+print_r($conditions);
         //total rows count
         $totalRec = count($this->post_model->getRows($conditions));
         

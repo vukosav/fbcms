@@ -58,7 +58,6 @@ $route['posting'] = 'post/index';
 // $route['sent'] = 'post/sent';
 // $route['addpost'] = 'post/addpost';
 $route['addusers'] = 'users/addusr';
-$route['log'] = 'users/log';
 $route['login'] = 'users/login';
 $route['logout'] = 'users/logout';
 $route['users'] = 'users/index';

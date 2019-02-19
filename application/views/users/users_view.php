@@ -47,7 +47,7 @@ function searchFilter(page_num) {
             <p class="mg-b-20 mg-sm-b-30">Searching, ordering and paging goodness will be immediately added to the
                 table, as shown in this example.</p> -->
             <div class="form-group">
-                <a class="btn btn-primary sm-4" href="<?=base_url()?>addusers">Add new user</a>
+                <a class="btn btn-primary sm-4" href="<?=base_url()?>addusers">Add new user</a><h1><?php echo $this->session->userdata('user')['name'] ?></h1>
             </div>
             <div class="row form-group" id="srcForm">
                 <div class="col col-sm-2">

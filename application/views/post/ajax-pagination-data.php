@@ -36,9 +36,10 @@
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
                             <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
-                            <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
+                            <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td>Group1<br>Group2</td>
-                            <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td>
+                            <td><?php echo $q['pages']  ?></td>
+                            <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a class="btn btn-info" href="#">

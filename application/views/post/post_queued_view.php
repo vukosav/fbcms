@@ -16,14 +16,16 @@ function searchFilter(page_num) {
     var date_from = $('#date_from').val();
     var date_to = $('#date_to').val();
     var createdBy = $('#createdBy').val();
+    var paused = $('#paused').val();
+    var errors = $('#errors').val();
+    var inProgres = $('#inProgres').val();
     var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').val();
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
-        data: 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&group=' + group + '&fbpage=' + fbpage +
-            '&date_from=' + date_from + '&date_to=' + date_to  + '&post_status=' +
-            post_status + '&archived=' + archived,
+        data: 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +  '&date_to=' + date_to  + '&group=' + group + '&fbpage=' + fbpage +
+             '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors + '&inProgres=' + inProgres,
         beforeSend: function() {
             $('.loading').show();
         },
@@ -83,12 +85,10 @@ function searchFilter(page_num) {
                 </div>
                 <div class="row form-group">
                     <div class="col col-sm-2">
-                        <input type="date" id="date_from" name="date_from" placeholder="Filter by date (from)"
-                            class="form-control" onchange="searchFilter()" />
+                        <input type="date" id="date_from" name="date_from" placeholder="Filter by date (from)" class="form-control" onchange="searchFilter()" />
                     </div>
                     <div class="col col-sm-2">
-                        <input type="date" id="date_to" name="date_to" placeholder="Filter by date (to)"
-                            class="form-control" onchange="searchFilter()" />
+                        <input type="date" id="date_to" name="date_to" placeholder="Filter by date (to)" class="form-control" onchange="searchFilter()" />
                     </div>
                     <div class="col col-sm-2">
                         <select class="form-control" id="createdBy" name="createdBy" onchange="searchFilter()">
@@ -117,14 +117,14 @@ function searchFilter(page_num) {
                             </div> -->
                     <div class="col col-sm-2">
                         <label for="inProgres" class="form-check-label ">
-                            <input type="checkbox" id="" value="1" class="form-check-input" name="inProgres"
-                                >In progres posts
+                            <input type="checkbox" id="inProgres" class="form-check-input" name="inProgres" 
+                                />In progres posts
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="paused" class="form-check-label ">
-                            <input type="checkbox" id="" value="2" class="form-check-input" name="paused"
-                               >Paused posts
+                            <input type="checkbox" id="paused" class="form-check-input" name="paused" 
+                                />Paused posts
                         </label>
                     </div>
                     <div class="col col-sm-2">
@@ -135,8 +135,8 @@ function searchFilter(page_num) {
                     </div>
                     <div class="col col-sm-2">
                         <label for="archived" class="form-check-label ">
-                            <input type="checkbox" id="archived" value='false' class="form-check-input" name="archived"
-                                >Archived posts
+                            <input type="checkbox" id="archived" class="form-check-input" value="false" name="archived" onchange="searchFilter()"
+                                />Archived posts
                         </label>
                     </div>
                 </div>
@@ -168,7 +168,7 @@ function searchFilter(page_num) {
                                         echo "<br>0/90</td>";
                                         
                                     } else{
-                                    echo "<td><span class='fa fa-adjust'></span>";
+                                    echo "<td><span class='fa fa-adjust'></span> ";
                                     echo "<span class='fa fa-pause'></span>";
                                     echo "<br>0/90</td>";
                                     } ?>
@@ -185,7 +185,7 @@ function searchFilter(page_num) {
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
                             <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
-                            <td><?php echo $q['created_date'] ." /<br>" .$q['created_by'] ; ?></td>
+                            <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td>Group1<br>Group2</td>
                             <td><?php echo $q['pages']  ?></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
@@ -277,5 +277,12 @@ function searchFilter(page_num) {
                 }
             });
             
+    }
+
+    function resetform() {
+        // document.getElementById("srcForm").reset();
+        // document.getElementById("date_from").value = '';
+        // document.getElementById("date_to").value = '';
+        location.reload();
     }
     </script>

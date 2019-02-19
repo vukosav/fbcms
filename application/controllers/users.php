@@ -10,11 +10,9 @@ class Users extends CI_Controller {
             $this->load->model('other_model');
             $this->load->library('Ajax_pagination');
             $this->perPage = 4;
+            $this->load->helper('cookie');
     }
 
-    public function log() {
-        $this->load->view('users/login_view');
-    }
 
     public function login() {
 
@@ -60,9 +58,9 @@ class Users extends CI_Controller {
 				// 	redirect("dashboard");
 				// 	exit();
                 // }
-                print_r($this->session->userdata()); 
+               // print_r($this->session->userdata()); 
                 echo "<h1>bla bla bla</h1>";
-                //redirect('dashboard');
+                redirect('dashboard');
                 //$this->load->view('dashboard', $data);
 			} else {
 				// login failed
