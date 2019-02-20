@@ -20,6 +20,17 @@ ALTER TABLE `users` ADD `IsActive` INT(1) NULL DEFAULT '1' AFTER `createdBy`;
 ALTER TABLE `users` ADD COLUMN `salt` VARCHAR(250) NOT NULL AFTER `password`;
 ALTER TABLE `users` ADD COLUMN `last_login` datetime DEFAULT NULL;
 
+---------------- AAAAA
+CREATE TABLE `users_session` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `hash` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `users_session_ibfk_1` (`user_id`),
+  CONSTRAINT `users_session_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+----------------AAAAAA
+
 ////----------END UPDATE BAZE ---------------/////
 
 PROBLEMI
