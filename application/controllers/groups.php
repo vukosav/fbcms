@@ -99,11 +99,11 @@ class Groups extends CI_Controller {
         redirect('/groups/index');
     }
 
-    public function addgroup(){
+    // public function addgroup(){
 
-        $s_post['title'] = 'Add new group';
-        $this->load->view('groups/add_group',$s_post);
-    }
+    //     $s_post['title'] = 'Add new group';
+    //     $this->load->view('groups/add_group',$s_post);
+    // }
     
     public function creategroup(){
     
@@ -122,17 +122,17 @@ class Groups extends CI_Controller {
             'name' => $this->input->post('groupname'),
             'createDate' => date('Y-m-d h:i:s', time()),
             'IsActive' => true,
-            'userId' => 1
+            'userId' => $this->session->userdata('user')['user_id']
         );
       
         if ($this->form_validation->run() === FALSE){
             $data['title'] = 'Add new group';
             $data['groups'] = false;
-            $this->load->view('groups/add_group', $data);
+            $this->load->view('groups/index', $data);
         }else{
             $q_post['queued'] = $this->groups_model->insert($data);
             $data['title'] = 'Groups';
-            $this->output->enable_profiler();
+            //$this->output->enable_profiler();
             redirect('/groups/index');
         }
     }
@@ -158,7 +158,7 @@ class Groups extends CI_Controller {
             'pageId' => $pid,
             'groupId' => $gid,
             'dateCreate' => date('Y-m-d h:i:s', time()),
-            'userId' => 1
+            'userId' => $this->session->userdata('user')['user_id']
         );
         $this->groups_model->insertPG($data);
         // }

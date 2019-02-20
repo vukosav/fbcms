@@ -2,6 +2,8 @@
 
 class Users_model extends CI_Model{
     
+    public $errors;
+
     public function __construct()
     {
             //$this->load->database();
@@ -60,14 +62,12 @@ class Users_model extends CI_Model{
 
         $newUserData = array();
 
-        date_default_timezone_set('UTC');
-
-        $now = new DateTime();
+        //date_default_timezone_set('UTC');
 
         $newUserData['last_login'] = date('Y-m-d h:i:s', time());
 
-        //$this->setId($user->row('id'));
-        //$this->update($newUserData);
+        $updId = $user->row('id');
+        $this->update($newUserData,  $updId);
 
         $userData['user_id'] = $user->row('id');
         $userData['username'] = (string)$user->row('username');
@@ -83,7 +83,7 @@ class Users_model extends CI_Model{
 
     private function setUserSession($data){
 		// set session user data
-		$this->session->set_userdata('user',$data);
+        $this->session->set_userdata('user',$data);
 	}
     
     public function loggedOut(){
@@ -166,6 +166,17 @@ class Users_model extends CI_Model{
     /**
     * @usage
     */
+    public function update($data, $id){
+		foreach ($data as $key => $value) {
+			$this->db->set($key, $value);
+		}
+		$this->db->where("id", $id);
+		$this->db->update("users");
+
+		return $this->db->affected_rows() > 0;
+	}
+    
+    
     // public function update($data, $post_id){
     //     $this->db->where(['post_id', $post_id]);
     //     $this->db->update('post', $data);

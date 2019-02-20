@@ -8,10 +8,10 @@
           <p class="mg-b-0">Responsive Bootstrap 4 Admin Template</p>
         </div><!-- signbox-header -->
         <div class="signbox-body">
-        <span class="tx-danger"><?php echo validation_errors(); ?></span>
+        <span class="tx-danger"><?php echo validation_errors(); ?><?php echo isset($errors)? $errors:""; ?></span>
           <div class="form-group">
             <label class="form-control-label">Email: <span class="tx-danger"></span></label>
-            <input type="email" name="email" placeholder="Enter your email" class="form-control"  value="<?php echo set_value('email'); ?>">
+            <input type="text" name="email" placeholder="Enter your email or password" class="form-control"  value="<?php echo set_value('email'); ?>">
           </div><!-- form-group -->
           <div class="form-group">
             <label class="form-control-label">Password: <span class="tx-danger">*</span></label>

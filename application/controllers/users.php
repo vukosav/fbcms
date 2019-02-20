@@ -1,18 +1,20 @@
 <?php
 
-class Users extends CI_Controller {
+class Users extends MY_controller {
 
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('users_model');
-            $this->load->helper('url_helper');
-            $this->load->model('other_model');
-            $this->load->library('Ajax_pagination');
-            $this->perPage = 4;
-            $this->load->helper('cookie');
+            // $this->load->model('users_model');
+            // $this->load->helper('url_helper');
+            // $this->load->model('other_model');
+            // $this->load->library('Ajax_pagination');
+            // $this->perPage = 4;
+            // $this->load->helper('cookie');
+            // if(!isset($this->session->userdata('user')['logged_in'])){
+            //     redirect('/login');
+            // }
     }
-
 
     public function login() {
 
@@ -27,9 +29,6 @@ class Users extends CI_Controller {
                         // 	}
                         // }
 
-		// load form helper and validation library
-                            // $this->load->helper('form');
-                            // $this->load->library('form_validation');
 
         // set validation rules
         $this->load->library('form_validation');
@@ -38,7 +37,7 @@ class Users extends CI_Controller {
 
 		if ($this->form_validation->run() == false) {
             // validation not ok, send validation errors to the view
-            $data['title'] = 'Users';
+            $data['title'] = 'Login';
             $data['users'] = false;
 			$this->load->view('users/login_view', $data);
 		} else {
@@ -48,23 +47,26 @@ class Users extends CI_Controller {
                                             //$rememberMe = $this->input->post('remember',TRUE) == "on" ? TRUE : FALSE;
 
 			if ($this->users_model->checkUserLogin($username, $password)) {
-				// user login ok
-				// if($this->session->userdata('next_after_login')){
-				// 	$uri = $this->session->userdata('next_after_login');
-				// 	$this->session->unset_userdata('next_after_login');
-				// 	redirect($uri);
-				// 	exit();
-				// }else{
-				// 	redirect("dashboard");
-				// 	exit();
-                // }
+                                // user login ok
+                                // if($this->session->userdata('next_after_login')){
+                                // 	$uri = $this->session->userdata('next_after_login');
+                                // 	$this->session->unset_userdata('next_after_login');
+                                // 	redirect($uri);
+                                // 	exit();
+                                // }else{
+                                // 	redirect("dashboard");
+                                // 	exit();
+                                // }
                // print_r($this->session->userdata()); 
-                echo "<h1>bla bla bla</h1>";
+               // echo "<h1>bla bla bla</h1>";
                 redirect('dashboard');
                 //$this->load->view('dashboard', $data);
 			} else {
 				// login failed
-				//$twigData['flash'][] = flash_bag($this->users_model->getErrors(),"danger");
+                //echo ($this->users_model->getErrors(),"danger");
+                $data['title'] = 'Login';
+                $data['errors'] = $this->users_model->errors;
+                $this->load->view('users/login_view', $data);
 				
 			}
 		}
@@ -77,7 +79,7 @@ class Users extends CI_Controller {
         if(!$this->users_model->isLoggedIn())
 			redirect('login');
 		$this->users_model->loggedOut();
-		redirect('dashboard');
+		redirect('login');
 	}
 
     function ajaxPaginationData(){

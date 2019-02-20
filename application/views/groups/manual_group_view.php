@@ -47,12 +47,19 @@ function searchFilter(page_num) {
 
     <div class="kt-pagebody">
         <div class="card pd-20 pd-sm-40">
-            <!-- <h6 class="card-body-title">Basic Responsive DataTable</h6>
-            <p class="mg-b-20 mg-sm-b-30">Searching, ordering and paging goodness will be immediately added to the
-                table, as shown in this example.</p> -->
             <div class="form-group">
-                <a class="btn btn-primary sm-4" href="<?=base_url()?>addgrp">Add new group</a>
+                <?php echo form_open('creategrp'); ?>
+                <span class="tx-danger"><?php echo validation_errors(); ?></span>
+                <div class="input-group">
+                    <input type="text" name="groupname" class="col col-md-6 form-control" placeholder="Type grup name"
+                        required value="<?php echo set_value('groupname'); ?>">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Add new group">Add new group</button>
+                    </div>
+                </div>
             </div>
+            </form>
+
 
             <div class="row form-group">
                 <div class="col col-sm-2">
@@ -76,8 +83,8 @@ function searchFilter(page_num) {
                 </div>
             </div>
             <div class="table-wrapper" id="postList">
-                
-                <table id="datatable11"  class="table table-striped">
+
+                <table id="datatable11" class="table table-striped">
                     <thead>
                         <tr>
                             <th class="wd-5p all">Group name</th>
@@ -86,20 +93,22 @@ function searchFilter(page_num) {
                             <th class="wd-5p all">Operations</th>
                         </tr>
                     </thead>
-                    <tbody id = "postListBody">
+                    <tbody id="postListBody">
                         <?php if(!empty($groups)): foreach ($groups as $group): ?>
                         <tr>
                             <td><?php echo $group['name']; ?></td>
                             <td><?php echo $group['addedby']; ?></td>
                             <td><?php echo $group['createDate']; ?></td>
                             <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>">
-                                    <span class="fa fa-edit"></span>
-                                </a>
-                                <a class="btn btn-info" onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href="">
-                                    <span class="fa fa-trash"></span>
-                                </a>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip" data-placement="top" title="Edit group">
+                                        <span class="fa fa-edit"></span>
+                                    </a>
+                                    <a class="btn btn-info"
+                                        onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)"
+                                        href="" data-toggle="tooltip" data-placement="top" title="Delete group">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -123,43 +132,43 @@ function searchFilter(page_num) {
         var form = event.target.form; // storing the form
         console.log('url', url);
         swal.fire({
-                text: "Are you sure you want to delete?",
-                showCancelButton: true,
-                confirmButtonText: "Yes!",
-                cancelButtonText: "No!",
-                closeOnConfirm: false,
-                closeOnCancel: false
-             }).then((result) => {
-                    if (result.value) { 
-                        console.log('klik na yes u modal', id);
-                    $.ajax({
-                        type: 'POST',
-                        url: url + id,
-                        //data: {
-                        //    id: id
-                        //},
-                        success: function(data) {
-                           
-                            Swal.fire(
-                                'Deleted!',
-                                'Your file has been deleted.',
-                                'success'
-                                ).then((result) => {
-                                    if (result.value) {
-                                        location.reload();
-                                    }
-                                    });
-                                
-                           // window.location(url); 
-                        },
-                        error: function(data) {
-                            swal("NOT Deleted!", "Something blew up.", "error");
-                        }
-                    });
-                }else{
-                    console.log('klik na no u modal');
-                }
-            });
-            
+            text: "Are you sure you want to delete?",
+            showCancelButton: true,
+            confirmButtonText: "Yes!",
+            cancelButtonText: "No!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }).then((result) => {
+            if (result.value) {
+                console.log('klik na yes u modal', id);
+                $.ajax({
+                    type: 'POST',
+                    url: url + id,
+                    //data: {
+                    //    id: id
+                    //},
+                    success: function(data) {
+
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        ).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+
+                        // window.location(url); 
+                    },
+                    error: function(data) {
+                        swal("NOT Deleted!", "Something blew up.", "error");
+                    }
+                });
+            } else {
+                console.log('klik na no u modal');
+            }
+        });
+
     }
     </script>

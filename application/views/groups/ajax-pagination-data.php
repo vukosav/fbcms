@@ -16,12 +16,14 @@
                             <td><?php echo $group['createDate']; ?></td>
                             <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>">
-                                    <span class="fa fa-edit"></span>
-                                </a>
-                                <a class="btn btn-info" onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href="">
-                                    <span class="fa fa-trash"></span>
-                                </a>
+                                <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip" data-placement="top" title="Edit group">
+                                        <span class="fa fa-edit"></span>
+                                    </a>
+                                    <a class="btn btn-info"
+                                        onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)"
+                                        href="" data-toggle="tooltip" data-placement="top" title="Delete group">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
                                 </div>
                         </tr>
                         
