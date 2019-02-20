@@ -40,7 +40,7 @@
                     </div>
                     <div class="bd-r pd-r-10">
                         <label class="tx-12"> &nbsp;Comments in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold">&nbsp;<?php echo $global['cLast72']; ?></p>
+                        <p class="tx-lato tx-inverse tx-bold">&nbsp;<span style="text-size: 24px"><?php echo $global['cLast72']; ?></span></p>
                     </div>
                     <div class="pd-x-10">
                         <label class="tx-12">Shares in last 72h</label>

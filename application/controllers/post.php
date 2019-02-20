@@ -33,7 +33,7 @@ class Post extends CI_Controller {
         $archived = $this->input->post('archived');
         $paused = $this->input->post('paused');
         $errors = $this->input->post('errors');
-        $inProgres = $this->input->post('inProgres');
+        $inProgres = $this->input->post('inProgres',FALSE);
         // $post_status = $this->input->post('post_status');
         if(!empty($createdBy)){
             $conditions['search']['createdBy'] = $createdBy;
@@ -56,19 +56,19 @@ class Post extends CI_Controller {
         if(!empty($archived)){
             $conditions['search']['archived'] = $archived;
         }
-        if(!empty($paused)){
-            $conditions['search']['paused'] = $paused;
-        }
-        if(!empty($errors)){
-            $conditions['search']['errors'] = $errors;
-        }
-        if(!empty($inProgres)){
-            $conditions['search']['inProgres'] = $inProgres;
-        }
+        // if(!empty($paused)){
+        //     $conditions['search']['paused'] = $paused;
+        // }
+        // if(!empty($errors)){
+        //     $conditions['search']['errors'] = $errors;
+        // }
+        // if(!empty($inProgres)){
+        //     $conditions['search']['inProgres'] = $inProgres;
+        // }
         // if(!empty($post_status)){
         //     $conditions['search']['post_status'] = $post_status;
         // }
-print_r($conditions);
+print_r($this->db->last_query());
         //total rows count
         $totalRec = count($this->post_model->getRows($conditions));
         

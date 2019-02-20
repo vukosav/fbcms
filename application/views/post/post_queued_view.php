@@ -117,25 +117,25 @@ function searchFilter(page_num) {
                             </div> -->
                     <div class="col col-sm-2">
                         <label for="inProgres" class="form-check-label ">
-                            <input type="checkbox" id="inProgres" class="form-check-input" name="inProgres" 
+                            <input type="checkbox" id="inProgres" class="form-check-input" name="inProgres" onchange="searchFilter()"
                                 />In progres posts
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="paused" class="form-check-label ">
-                            <input type="checkbox" id="paused" class="form-check-input" name="paused" 
+                            <input type="checkbox" id="paused" class="form-check-input" name="paused" onchange="searchFilter()"
                                 />Paused posts
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="errors" class="form-check-label ">
-                            <input type="checkbox" id="" value="" class="form-check-input" name="errors"
+                            <input type="checkbox" id="" value="" class="form-check-input" name="errors" 
                                 >Posts with errors
                         </label>
                     </div>
                     <div class="col col-sm-2">
                         <label for="archived" class="form-check-label ">
-                            <input type="checkbox" id="archived" class="form-check-input" value="false" name="archived" onchange="searchFilter()"
+                            <input type="checkbox" id="archived" class="form-check-input" name="archived" onchange="searchFilter()"
                                 />Archived posts
                         </label>
                     </div>

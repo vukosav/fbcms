@@ -40,16 +40,16 @@ class Post_model extends CI_Model{
         }
         //filter data by searched keywords
         if(!empty($params['search']['archived'])){
-            $this->db->where('posts.IsActive = ', 0);
+            $this->db->here('posts.IsActive', 0);
         }else{
             $this->db->where('posts.IsActive', 1);
         }
         //filter data by searched keywords
-        // if(!empty($params['search']['inProgres'])){
-        //     $this->db->where('posts.PostStatus =  3');
-        // }else{
+        if(!empty($params['search']['inProgres'])){
+            $this->db->where('posts.PostStatus =  3');
+        }else{
             $this->db->where('(PostStatus = 2 or PostStatus = 3)');
-        // }
+        }
         //filter data by searched keywords
         if(!empty($params['search']['paused'])){
             $this->db->where('posts.ActionStatus = ',2);
@@ -72,6 +72,7 @@ class Post_model extends CI_Model{
         $query = $this->db->get();
         //return fetched data
         // $debug_array = []
+
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
     

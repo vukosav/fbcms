@@ -100,16 +100,16 @@ function searchFilter(page_num) {
                             <td><?php echo $group['addedby']; ?></td>
                             <td><?php echo $group['createDate']; ?></td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a class="btn btn-info" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip" data-placement="top" title="Edit group">
-                                        <span class="fa fa-edit"></span>
+                                <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
+                                    <a class="btn btn-primary btn-icon rounded-circle mg-r-5 mg-b-10" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip" data-placement="top" title="Edit group">
+                                    <div><i class="fa fa-edit"></i></div>
                                     </a>
-                                    <a class="btn btn-info"
+                                    <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
                                         onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)"
                                         href="" data-toggle="tooltip" data-placement="top" title="Delete group">
-                                        <span class="fa fa-trash"></span>
+                                        <div><i class="fa fa-trash"></i></div>
                                     </a>
-                                </div>
+                                <!-- </div> -->
                             </td>
                         </tr>
                         <?php endforeach; ?>
