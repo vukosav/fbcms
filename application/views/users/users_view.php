@@ -47,7 +47,7 @@ function searchFilter(page_num) {
             <p class="mg-b-20 mg-sm-b-30">Searching, ordering and paging goodness will be immediately added to the
                 table, as shown in this example.</p> -->
             <div class="form-group">
-                <a class="btn btn-primary sm-4" href="<?=base_url()?>addusers">Add new user</a>
+                <a class="btn btn-default sm-4" href="<?=base_url()?>addusers">Add new user</a>
             </div>
             <div class="row form-group" id="srcForm">
                 <div class="col col-sm-2">
@@ -91,16 +91,15 @@ function searchFilter(page_num) {
                             <td><?php echo $user['addedby']; ?></td>
                             <td><?php echo $user['rname']; ?></td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a class="btn btn-info" href="<?=base_url()?>">
-                                        <span class="fa fa-edit"></span>
-                                    </a>
-                                    <a class="btn btn-info"
-                                        onclick="dellData(<?php echo $user['id']  .',&#39;' . base_url() . 'deleteusr/&#39;'; ?>)"
-                                        href="">
-                                        <span class="fa fa-trash"></span>
-                                    </a>
-                                </div>
+                                <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
+                                    href="<?=base_url()?>">
+                                    <div><i class="fa fa-edit"></i></div>
+                                </a>
+                                <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
+                                    onclick="dellData(<?php echo $user['id']  .',&#39;' . base_url() . 'deleteusr/&#39;'; ?>)"
+                                    href="">
+                                    <div><i class="fa fa-trash"></i></div>
+                                </a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

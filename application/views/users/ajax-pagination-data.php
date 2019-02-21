@@ -20,16 +20,14 @@
              <td><?php echo $user['addedby']; ?></td>
              <td><?php echo $user['rname']; ?></td>
              <td>
-                 <div class="btn-group" role="group" aria-label="Basic example">
-                     <a class="btn btn-info" href="<?=base_url()?>">
-                         <span class="fa fa-edit"></span>
+                     <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10" href="<?=base_url()?>">
+                     <div><i class="fa fa-edit"></i></div>
                      </a>
-                     <a class="btn btn-info"
+                     <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
                          onclick="dellData(<?php echo $user['id']  .',&#39;' . base_url() . 'deleteusr/&#39;'; ?>)"
                          href="">
-                         <span class="fa fa-trash"></span>
+                         <div><i class="fa fa-trash"></i></div>
                      </a>
-                 </div>
              </td>
          </tr>
 

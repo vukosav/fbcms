@@ -54,7 +54,8 @@ function searchFilter(page_num) {
                     <input type="text" name="groupname" class="col col-md-6 form-control" placeholder="Type grup name"
                         required value="<?php echo set_value('groupname'); ?>">
                     <div class="input-group-btn">
-                        <button class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Add new group">Add new group</button>
+                        <button class="btn btn-default" data-toggle="tooltip" data-placement="top"
+                            title="Add new group">Add new group</button>
                     </div>
                 </div>
             </div>
@@ -100,16 +101,16 @@ function searchFilter(page_num) {
                             <td><?php echo $group['addedby']; ?></td>
                             <td><?php echo $group['createDate']; ?></td>
                             <td>
-                                <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
-                                    <a class="btn btn-primary btn-icon rounded-circle mg-r-5 mg-b-10" href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip" data-placement="top" title="Edit group">
+                                <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
+                                    href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip"
+                                    data-placement="top" title="Edit group">
                                     <div><i class="fa fa-edit"></i></div>
-                                    </a>
-                                    <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                                        onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)"
-                                        href="" data-toggle="tooltip" data-placement="top" title="Delete group">
-                                        <div><i class="fa fa-trash"></i></div>
-                                    </a>
-                                <!-- </div> -->
+                                </a>
+                                <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
+                                    onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)"
+                                    href="" data-toggle="tooltip" data-placement="top" title="Delete group">
+                                    <div><i class="fa fa-trash"></i></div>
+                                </a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

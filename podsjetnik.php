@@ -19,7 +19,7 @@ chackbox paused i in progres treba jedan drugog da iskuljucuju
 ALTER TABLE `users` ADD `IsActive` INT(1) NULL DEFAULT '1' AFTER `createdBy`;
 ALTER TABLE `users` ADD COLUMN `salt` VARCHAR(250) NOT NULL AFTER `password`;
 ALTER TABLE `users` ADD COLUMN `last_login` datetime DEFAULT NULL;
-
+ALTER TABLE `page_statistic` ADD CONSTRAINT `FK_page_statistic_pages` FOREIGN KEY (`page_id`) REFERENCES `pages` (`id`);
 ---------------- AAAAA
 CREATE TABLE `users_session` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -136,3 +136,7 @@ GROUP BY posts.id
 
  **
  SELECT PagesForPost(5) AS postspages;
+
+
+ http://jsfiddle.net/uqs3wgmh/
+ 

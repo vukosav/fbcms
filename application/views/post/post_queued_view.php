@@ -58,7 +58,7 @@ function searchFilter(page_num) {
                 <?php echo form_open('posting', 'id='.'myform'); ?>
                 <div class="row form-group">
                     <div class="col col-sm-2">
-                        <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title & post text" class="form-control"
+                        <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title" class="form-control"
                         onkeyup="searchFilter()" />
                         <input type="hidden" id="post_status" name="post_status" value="3">
                     </div>

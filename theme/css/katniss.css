@@ -9646,9 +9646,9 @@ textarea.parsley-error:active {
   background-color: #e9ecef;
 }
 .pagination-primary .active .page-link, .pagination-primary .active .page-link:hover, .pagination-primary .active .page-link:focus {
-  background-color: #007bff;
+  background-color: #3B6998;
   color: #fff;
-  border-color: transparent;
+  border-color: #386491;
 }
 .pagination-primary.pagination-dark .active .page-link {
   background-color: #007bff;
