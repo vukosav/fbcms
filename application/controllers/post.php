@@ -154,4 +154,41 @@ print_r($this->db->last_query());
         $this->load->view('post/post_add_post_view',$s_post);
     }
 
+    //jelena start
+    public function insert_post(){
+        $this->load->helper(array('form', 'url'));
+
+        $post_type='message'; //$this->input->post('post_type');
+        
+        $_SESSION['user_id']=1;//dok ne dobijemo logovanog usera
+       
+        if(isset($_SESSION['user_id'])){
+            
+            $user_id=$_SESSION['user_id'];
+           
+            /*$w_title=$this->input->post('w_title'); 
+            $message = $this->input->post('message');
+            $upload_img=$this->input->post('upload_img'); 
+            $upload_video = $this->input->post('upload_video');
+            $add_link=$this->input->post('add_link');*/
+             
+            $w_title=$this->input->post('name'); //ovo nije
+            $message = $this->input->post('message');
+            $upload_img=$this->input->post('imageURL'); //bjese nula
+            $upload_video = $this->input->post('video');
+            $add_link=$this->input->post('link');
+             
+           
+           $res= $this->post_model->insert_post($user_id, $w_title, $message, $upload_img, $upload_video, $add_link);
+                             
+            echo 'Inserted Post id: ' . $res;
+        }
+        else {
+            //redirect ('/login');
+            echo 'no session user id';
+        }
+    }
+
+//jelena end
+
 }

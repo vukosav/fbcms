@@ -76,3 +76,8 @@ $route['editgrup/(:any)'] = 'groups/edit/$1';
 // $route['news/(:any)'] = 'news/view/$1';
 // $route['(:any)'] = 'pages/view/$1';
 // $route['default_controller'] = 'pages/view';
+
+//jelena start
+$route['insert_pages'] = 'add_pages/insert_pages';
+$route['insert_post'] = 'post/insert_post';
+//jelena end

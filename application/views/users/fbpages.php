@@ -1,0 +1,62 @@
+<?php $this->load->view('includes/header'); ?>
+
+    <!-- ##### SIDEBAR MENU ##### -->
+    <?php $this->load->view('includes/sidebar'); ?> 
+    <!-- kt-sideleft -->
+
+    <!-- ##### HEAD PANEL ##### -->
+    <?php $this->load->view('includes/headPanel'); ?> 
+    <!-- kt-breadcrumb -->
+
+    <!-- ##### MAIN PANEL ##### -->
+    <div class="kt-mainpanel">
+      <!-- <div class="kt-pagetitle">-->
+      <!--   <h5>Dashboard</h5>-->
+      <!-- </div> --><!-- kt-pagetitle -->
+    
+        <div class="kt-pagebody">
+
+        <div class="col-lg-12">
+                <div class="card pd-40 tx-center">
+                <div class="d-flex justify-content-center mg-b-30">
+                    <img src="https://graph.facebook.com/<?php echo $fb_user_id; ?>/picture?redirect=1&amp;height=40&amp;width=40&amp;type=normal" style="vertical-align:top;" onerror="this.src = 'theme/default/images/facebookUser.jpg'">
+                </div>
+                <h6 class="tx-md-20 tx-inverse mg-b-20">Add Facebook Pages</h6>
+                <?php if (isset($_SESSION['facebook_access_token'])){?>
+
+                        <?php echo form_open('insert_pages'); ?>     
+                        <div class="row">
+                                <?php  
+                                    $numofpages = count( $fbpages);
+                                    $last= $numofpages-1;
+                                    echo '<input type="hidden" name="numofpages" value="' . $numofpages . '"</input>' ;
+                                            
+                                        for ($i = 0; $i <=  $last; $i++) {
+                                                echo '<div class="col-lg-3">';
+                                                echo '<br>' . $fbpages[$i]['id'];
+                                                echo '<br>' . $fbpages[$i]['name'];
+                                                echo '<br><img src="' . $fbpages[$i]['picture']['data']['url'] . '">';
+                                                // echo '<br><br>' . $fbpages[$i]['access_token'];
+                                                echo '<br><input type="checkbox" name="chk'.  ($i+1) . '">Add page</input>';
+                                                echo '<input type="hidden" name="fbp' . ($i+1) . '" value="fbpid=' . $fbpages[$i]['id'] . 'fbpn=' . $fbpages[$i]['name'] . '"</input>' ;
+                                                echo '</div>'; 
+                                        }
+                                ?>
+                            </div>
+                          <button type="submit" class="btn btn-default btn-block" style="width:200px; margin:0 auto">Add selected pages</button>
+                                         
+                        </div><!-- card -->
+                        </div><!-- card -->
+                        </form>
+            <?php                            
+                } else {
+                    echo 'no FB access token in session';
+                }
+            ?>    
+                                        
+                   
+        </div><!-- kt-pagebody -->
+    </div>  <!-- main panel -->  
+    
+<?php $this->load->view('includes/footer'); ?> 
+

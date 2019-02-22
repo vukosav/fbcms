@@ -169,4 +169,47 @@ class Post_model extends CI_Model{
     //-------------END CRUS--------------------
 
 
+//jelena start
+
+public function insert_post($user_id, $w_title, $message, $upload_img, $upload_video, $add_link) {
+
+    $this->db->set('created_by',$user_id);
+    $this->db->set('title',$w_title);
+    $this->db->set('content',$message);
+    $this->db->set('created_date', date("Y-m-d H:i:s"));
+    $this->db->set('PostStatus', 1);
+    $this->db->set('ActionStatus', 0);
+    $this->db->set('isActive', 1);
+    $q = $this->db->insert('posts');
+    
+    $inserted_post_id=$this->db->insert_id();
+    if($upload_img!==""){
+        $attach_type="image";
+        $attach_location=$upload_img;
+    } 
+
+    if ($upload_video!=="") {
+        $attach_type="video";
+        $attach_location=$upload_video;
+    }
+
+    if ($add_link!=="") {
+        $attach_type="link";
+        $attach_location=$add_link;
+    }
+
+    if (  $inserted_post_id!== null ) {
+        $this->db->set('post_id', $this->db->insert_id());
+        $this->db->set('attach_type',$attach_type);
+        $this->db->set('attach_location',$attach_location);
+        $this->db->set('caption', "");
+        $this->db->set('localResources', 1);
+        $query = $this->db->insert('post_attachments');
+    }
+
+    return $inserted_post_id ;
+
+}   
+//jelena end
+
 }

@@ -111,4 +111,16 @@ class Groups_model extends CI_Model{
     }
     //-------------END CRUS--------------------
 
+    //jelena start
+    public function get_groups_for_user($user_id) {
+        $this->db->select('id, name');
+        $this->db->where('userId',$user_id);
+        $this->db->where('isActive',true);
+        $query = $this->db->get('groups');
+        
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
+
+   //jelena end 
+
 }
