@@ -107,7 +107,7 @@ class Add_Pages extends CI_Controller {
             
             $user_id=$_SESSION['user_id']; 
             $numofpages=$this->input->post('numofpages'); 
-            echo $numofpages . ' new pages. Added pages:';
+            //echo $numofpages . ' new pages. Added pages:';
              
              if($numofpages>0){
 
@@ -125,8 +125,9 @@ class Add_Pages extends CI_Controller {
                                 
                                 $res= $this->pages_model->insert_page($fbpage_id, $fbPage_name, $user_id);
                                 if($res>0){
-                                    echo '<br>Page id:' . $fbpage_id;
-                                    echo '<br>Page name:' . $fbPage_name; 
+                                   // echo '<br>Page id:' . $fbpage_id;
+                                   // echo '<br>Page name:' . $fbPage_name; 
+                                   redirect('pages');
                                 }
                                else 
                                echo 'no new pages';

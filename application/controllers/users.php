@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Users extends MY_controller {
 
@@ -59,7 +59,7 @@ class Users extends MY_controller {
                                 // }
                // print_r($this->session->userdata()); 
                // echo "<h1>bla bla bla</h1>";
-                redirect('dashboard');
+                redirect('fbcheck');
                 //$this->load->view('dashboard', $data);
 			} else {
 				// login failed

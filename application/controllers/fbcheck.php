@@ -42,7 +42,7 @@ class FBCheck extends CI_Controller {
         //   $helper = $fb->getPageTabHelper();
         //pages_messaging, pages_messaging_subscriptions
         $permissions = ['email', 'user_likes', 'manage_pages', 'publish_pages' , 'read_insights', 'read_page_mailboxes', 'user_posts']; // optional
-        $loginUrl = $helper->getLoginUrl('http://localhost/fbcms/logincallback', $permissions);
+        $loginUrl = $helper->getLoginUrl(base_url() . '/logincallback', $permissions);
 
         $data = array('loginUrl' => $loginUrl);
        

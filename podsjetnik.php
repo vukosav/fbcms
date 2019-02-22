@@ -31,6 +31,16 @@ CREATE TABLE `users_session` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ----------------AAAAAA
 
+----------------------
+CREATE TABLE `fb_users` (
+  `id` int(11) NOT NULL,
+  `fb_user_id` varchar(100) NOT NULL,
+  `fb_name` varchar(100) DEFAULT NULL,
+  `fb_access_token` text,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+----------------------------------
+
 ////----------END UPDATE BAZE ---------------/////
 
 PROBLEMI

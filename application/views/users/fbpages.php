@@ -32,19 +32,35 @@
                                     echo '<input type="hidden" name="numofpages" value="' . $numofpages . '"</input>' ;
                                             
                                         for ($i = 0; $i <=  $last; $i++) {
-                                                echo '<div class="col-lg-3">';
+                                               /* echo '<div class="col-lg-3">';
                                                 echo '<br>' . $fbpages[$i]['id'];
                                                 echo '<br>' . $fbpages[$i]['name'];
                                                 echo '<br><img src="' . $fbpages[$i]['picture']['data']['url'] . '">';
                                                 // echo '<br><br>' . $fbpages[$i]['access_token'];
                                                 echo '<br><input type="checkbox" name="chk'.  ($i+1) . '">Add page</input>';
                                                 echo '<input type="hidden" name="fbp' . ($i+1) . '" value="fbpid=' . $fbpages[$i]['id'] . 'fbpn=' . $fbpages[$i]['name'] . '"</input>' ;
-                                                echo '</div>'; 
+                                                echo '</div>'; */
+
+                                                echo '<div class="card wd-xs-150" style="margin-right:10px;">';
+                                                echo '<div class="card-body bd bd-b-0">';
+                                                echo '<h6 class="mg-b-3"><a href="" class="tx-dark">' . $fbpages[$i]['name'] . '</a></h6>';
+                                                echo '<span class="tx-12"><input type="checkbox" name="chk'.  ($i+1) . '">Add page</input></span>';
+                                                echo '</div><!-- card-body -->';
+                                                echo '<img class="card-img-bottom img-fluid" src="' . $fbpages[$i]['picture']['data']['url'] . '" alt="Image">';
+                                                echo '</div><!-- card -->';
+                                
+
+
+
+
                                         }
                                 ?>
                             </div>
+                            <div class="form-group">
                           <button type="submit" class="btn btn-default btn-block" style="width:200px; margin:0 auto">Add selected pages</button>
-                                         
+                          
+                          <a class="btn btn-block" href="<?=base_url()?>pages" style="width:200px; margin:0 auto">Cancel</a>     
+                          </div>       
                         </div><!-- card -->
                         </div><!-- card -->
                         </form>

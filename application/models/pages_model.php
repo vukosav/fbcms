@@ -13,6 +13,37 @@ class Pages_model extends CI_Model{
      * All:
      * Custom:
      */
+    function getRows($params = array()){
+        $this->db->where('pages.IsActive = ', 1);
+        // $this->db->select('groups.*, users.username as addedby');
+        // $this->db->from('groups');
+        // $this->db->join('users', 'users.id = groups.userId');
+        //filter data by user
+        // if(!empty($params['search']['createdBy'])){
+        //     $this->db->where('users.id = ',$params['search']['createdBy']);
+        // }
+        //filter data by searched keywords
+        // if(!empty($params['search']['grname'])){
+        //     $this->db->like('groups.name',$params['search']['grname']);
+        // }
+        //sort data by ascending or desceding order
+        // if(!empty($params['search']['sortBy'])){
+        //     $this->db->order_by('groups.name',$params['search']['sortBy']);
+        // }else{
+        //     $this->db->order_by('groups.id','desc');
+        // }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $query = $this->db->get('pages');
+        //return fetched data
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
+
     public function get_pages($id = null){
         if($id === null){
             $this->db->where('pages.IsActive = ', 1);

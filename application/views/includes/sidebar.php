@@ -30,5 +30,11 @@
             <span>Users</span>
           </a>
         </li><!-- nav-item -->
+        <li class="nav-item">
+          <a href="<?=base_url()?>pages" class="nav-link <?php if($this->uri->segment(1)=="pages"){echo "active";}?>">
+            <i class="icon ion-document"></i>
+            <span>Pages</span>
+          </a>
+        </li><!-- nav-item -->
       </ul>
     </div><ion-icon name="contacts"></ion-icon>
