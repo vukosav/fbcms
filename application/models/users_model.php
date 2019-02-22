@@ -118,12 +118,12 @@ class Users_model extends CI_Model{
             // $query = $this->db->get();
         }else{
             $this->db->where('users.IsActive = ', 1);
-            $this->db->select('users.*, roles.name as rname, uu.username as addedby');
-            $this->db->from('users');
-            $this->db->join('roles', 'roles.id = users.roleId');
-            $this->db->join('users as uu', 'uu.id = users.createdBy', 'left outer');
+            // $this->db->select('users.*, roles.name as rname, uu.username as addedby');
+            // $this->db->from('users');
+            // $this->db->join('roles', 'roles.id = users.roleId');
+            // $this->db->join('users as uu', 'uu.id = users.createdBy', 'left outer');
             $this->db->where('users.id = ', $id);
-            $query = $this->db->get();
+            $query = $this->db->get('users');
         }
         return $query->result_array();
     }

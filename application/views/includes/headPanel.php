@@ -5,13 +5,13 @@
       </div><!-- kt-headpanel-left -->
 
       <div class="kt-headpanel-right">
-        <div class="dropdown dropdown-notification">
-          <a href="" class="nav-link pd-x-7 pos-relative" data-toggle="dropdown">
-            <i class="icon ion-ios-bell-outline tx-24"></i>
+        <!-- <div class="dropdown dropdown-notification"> -->
+          <!-- <a href="" class="nav-link pd-x-7 pos-relative" data-toggle="dropdown"> -->
+            <!-- <i class="icon ion-ios-bell-outline tx-24"></i> -->
             <!-- start: if statement -->
             <span class="square-8 bg-danger pos-absolute t-15 r-0 rounded-circle"></span>
             <!-- end: if statement -->
-          </a>
+          <!-- </a> -->
           <div class="dropdown-menu wd-300 pd-0-force">
             <div class="dropdown-menu-header">
               <label>Notifications</label>
@@ -62,7 +62,8 @@
               </div>
             </div><!-- media-list -->
           </div><!-- dropdown-menu -->
-        </div><!-- dropdown -->
+        <!-- </div> -->
+        <!-- dropdown -->
         <div class="dropdown dropdown-profile">
           <a href="" class="nav-link nav-link-profile" data-toggle="dropdown">
             <img src="<?=base_url()?>theme/img/img3.jpg" class="wd-32 rounded-circle" alt="">
@@ -70,7 +71,7 @@
           </a>
           <div class="dropdown-menu wd-200">
             <ul class="list-unstyled user-profile-nav">
-              <li><a href=""><i class="icon ion-ios-person-outline"></i> Edit Profile</a></li>
+              <!-- <li><a href=""><i class="icon ion-ios-person-outline"></i> Edit Profile</a></li> -->
               <!-- <li><a href=""><i class="icon ion-ios-gear-outline"></i> Settings</a></li>
               <li><a href=""><i class="icon ion-ios-download-outline"></i> Downloads</a></li>
               <li><a href=""><i class="icon ion-ios-star-outline"></i> Favorites</a></li>

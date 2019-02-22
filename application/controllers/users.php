@@ -165,7 +165,7 @@ class Users extends MY_controller {
 
         // $s_post['sent'] = $this->post_model->get_sent();
         $s_post['title'] = 'Add new user';
-        $this->load->view('users/singup',$s_post);
+        $this->load->view('users/create_users_view',$s_post);
     }
     
     public function createusr(){
@@ -175,7 +175,7 @@ class Users extends MY_controller {
 
         $this->form_validation->set_rules(
             'username', 'Username',
-            'trim|required|min_length[5]|max_length[12]|is_unique[users.username]',
+            'trim|required|min_length[3]|is_unique[users.username]',
             array(
                     'required'      => 'You have not provided %s.',
                     'is_unique'     => 'This %s already exists.'
@@ -212,8 +212,6 @@ class Users extends MY_controller {
         // $this->db->set('salt', $salt);
 
 
-
-
         $data = array(
             'username' => $this->input->post('username'),
             'email' => $this->input->post('email'),
@@ -233,7 +231,7 @@ class Users extends MY_controller {
             // $this->load->view('news/create');
             // $this->load->view('templates/footer');
             // $this->load->view('users/users_view', $data);
-            $this->load->view('users/singup', $data);
+            $this->load->view('users/create_users_view', $data);
         }else{
 
             // $this->input->post('role')? $data['roleid'] = $this->input->post('role'):false;
@@ -243,9 +241,6 @@ class Users extends MY_controller {
             $this->output->enable_profiler();
             redirect('/users/index');
         }
-
-       
-        // $this->load->view('users/users_view', $data);
     }
 
     public function hash_password($password,$salt) {
@@ -255,5 +250,85 @@ class Users extends MY_controller {
     public function delete ($id){
         $this->users_model->delete($id);
         redirect('/users/index');
+    }
+
+    public function edit (){
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules(
+            'username', 'Username',
+            'trim|required|min_length[3]'.$is_uniqueUn,
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        $this->form_validation->set_rules(
+            'email', 'E-mail',
+            'trim|required'.$is_uniqueEm,
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        
+        $this->form_validation->set_rules(
+            'password', 'Password',
+            'trim|required|min_length[6]',
+            array(
+                    'required'      => 'You have not provided %s.'
+            )
+        );
+
+        // $password = $this->hash_password($this->password,$salt);
+        // $this->db->set('password', $password);
+        // $this->db->set('salt', $salt);
+
+        $pwd = $this->users_model->get_users($this->input->post('id'));
+        $pwd = array_shift($pwd);
+        if($pwd['username']!=$this->input->post('username')){
+            $is_uniqueUn =  '|is_unique[users.username]';
+        } else {
+           $$is_uniqueUn =  '';
+        }
+        if($pwd['email']!=$this->input->post('email')){
+            $is_uniqueEm =  '|is_unique[users.email]';
+        } else {
+           $is_uniqueEm =  '';
+        }
+
+        $data = array(
+            'username' => $this->input->post('username'),
+            'email' => $this->input->post('email'),
+            'name' => $this->input->post('fullname'),
+            'roleid' => $this->input->post('role')
+        );
+        if($pwd['password']!=$this->input->post('password')){
+            $data['salt'] = substr(md5(uniqid(rand(), true)), 0, 32);
+            $data['password'] = $this->hash_password($this->input->post('password'),  $data['salt']);
+        } 
+      
+        if ($this->form_validation->run() === FALSE){
+            $data['title'] = 'Users';
+            $data['users'] = false;
+            // $this->load->view('templates/header', $data);
+            // $this->load->view('news/create');
+            // $this->load->view('templates/footer');
+            // $this->load->view('users/users_view', $data);
+            $this->output->enable_profiler();
+            $this->load->view('users/edit_users_view', $data);
+        }else{
+
+            $this->users_model->update($data, $this->input->post('id'));
+            $data['title'] = 'Users';
+            $this->output->enable_profiler();
+            redirect('/users/index');
+        }
+    }
+    public function show ($id){
+        $data['users'] = $this->users_model->get_users($id);
+        $data['users'] = array_shift($data['users']);
+        $data['title'] = 'Edit user';
+        $this->load->view('users/edit_users_view', $data);
     }
 }

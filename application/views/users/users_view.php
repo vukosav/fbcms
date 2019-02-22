@@ -92,7 +92,7 @@ function searchFilter(page_num) {
                             <td><?php echo $user['rname']; ?></td>
                             <td>
                                 <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    href="<?=base_url()?>">
+                                    href="<?=base_url()?>showusers/<?php echo $user['id']; ?>">
                                     <div><i class="fa fa-edit"></i></div>
                                 </a>
                                 <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
