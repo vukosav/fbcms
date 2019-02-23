@@ -7,10 +7,11 @@ class Post_model extends CI_Model{
     //         //$this->load->database();
     // }
     
-    function getRows($params = array()){
+    function getRows($params = array(), $pos=null){
         // $this->db->where('posts.IsActive = ', 1);
         // $where = "(PostStatus = 2 or PostStatus = 3)";
         // $this->db->where($where);
+        $this->db->distinct();
         $this->db->select('posts.*, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
@@ -45,10 +46,26 @@ class Post_model extends CI_Model{
             $this->db->where('posts.IsActive', 1);
         }
         //filter data by searched keywords
-        if(!empty($params['search']['inProgres'])){
-            $this->db->where('posts.PostStatus', 3);
-        }else{
-            $this->db->where('(PostStatus = 2 or PostStatus = 3)');
+        if(isset($pos)){
+            if($pos==1){
+                if(!empty($params['search']['inProgres'])){ 
+                    if(!empty($params['search']['scheduled'])){
+                        $this->db->where('(PostStatus = 2 or PostStatus = 3)');
+                    }else{
+                        $this->db->where('posts.PostStatus', 3);
+                    }
+                }elseif(!empty($params['search']['scheduled'])){
+                        $this->db->where('posts.PostStatus', 2);
+                         
+                }
+                else{
+                     $this->db->where('(PostStatus = 2 or PostStatus = 3)');
+                }
+            }elseif($pos==2){
+                $this->db->where('(PostStatus = 1)');
+            }else{
+                $this->db->where('(PostStatus = 4)');
+            }
         }
         //filter data by searched keywords
         if(!empty($params['search']['paused'])){

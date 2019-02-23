@@ -14,12 +14,19 @@
                     <tbody>
 <?php if(!empty($posts)): foreach ($posts as $q): ?> 
 <tr>
-                            <?php if($q['PostStatus'] ==2 ){
+<?php if($q['PostStatus'] ==1 ){
+                                 echo "<td>Draft</td>";
+                            }
+                            elseif($q['PostStatus'] ==2 ){
                                         echo "<td><span class='fa fa-circle-o'></span>";
                                         echo "<br>0/90</td>";
                                         
-                                    } else{
-                                    echo "<td><span class='fa fa-adjust'></span>";
+                                    } elseif($q['PostStatus'] ==3 ){
+                                    echo "<td><span class='fa fa-adjust'></span> ";
+                                    echo "<span class='fa fa-pause'></span>";
+                                    echo "<br>0/90</td>";
+                                    }else{
+                                        echo "<td><span class='fa fa-circle'></span> ";
                                     echo "<span class='fa fa-pause'></span>";
                                     echo "<br>0/90</td>";
                                     } ?>
@@ -38,29 +45,29 @@
                             <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td>Group1<br>Group2</td>
-                            <td><?php echo $q['pages'];  ?></td>
+                            <td><?php echo $q['pages']; ?></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-info" href="#">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-default" href="#">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a class="btn btn-info" href="#">
+                                <a class="btn btn-default" href="#">
                                     <span class="fa fa-copy"></span>
                                 </a>
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-calendar-o'></span></a>";
+                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-calendar-o'></span></a>";
                                 }
                                 else{
                                     if($q['ActionStatus']==1){
-                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
+                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
+                                        echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
                                     }
                                 } ?>
-                                <a class="btn btn-info" href="#">
+                                <a class="btn btn-danger" href="#">
                                     <span class="fa fa-trash"></span>
                                 </a>
                                 </div>

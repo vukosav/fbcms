@@ -13,6 +13,7 @@ class Post extends CI_Controller {
     }
 
     function ajaxPaginationData(){
+        
         $conditions = array();
         
         //calc offset number
@@ -33,8 +34,13 @@ class Post extends CI_Controller {
         $archived = $this->input->post('archived');
         $paused = $this->input->post('paused');
         $errors = $this->input->post('errors');
-        $inProgres = $this->input->post('inProgres',FALSE);
-        // $post_status = $this->input->post('post_status');
+        $inProgres = $this->input->post('inProgres');
+        $scheduled = $this->input->post('scheduled');
+        $post_status = $this->input->post('post_status');
+
+
+        $conditions['search']['post_status'] = $post_status;
+       
         if(!empty($createdBy)){
             $conditions['search']['createdBy'] = $createdBy;
         }
@@ -64,11 +70,14 @@ class Post extends CI_Controller {
         }
         if($inProgres == 'true'){
             $conditions['search']['inProgres'] = 'nn';
-        }
-
+        } 
+        if($scheduled == 'true'){
+            $conditions['search']['scheduled'] = 'nn';
+        } 
+print_r( $conditions);
 // print_r($this->db->last_query());
         //total rows count
-        $totalRec = count($this->post_model->getRows($conditions));
+        $totalRec = count($this->post_model->getRows($conditions, $post_status));
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -83,19 +92,28 @@ class Post extends CI_Controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['posts'] = $this->post_model->getRows($conditions);
-        // print_r($this->db->last_query());
+        $data['posts'] = $this->post_model->getRows($conditions, $post_status);
+       
+        print_r($this->db->last_query());
         //load the view
         //$this->output->enable_profiler();
         $this->load->view('post/ajax-pagination-data', $data, false);
     }
 
     public function index(){
-
         $data = array();
+        $pos =  $this->uri->segment(2);       
+        if($pos == 1){
+            $data['title'] = 'Queued posts';
+        }elseif($pos == 2){
+            $data['title'] = 'Draft posts';
+        }else{
+            $data['title'] = 'Sent posts';
+        }
+      
         
         //total rows count
-        $totalRec = count($this->post_model->getRows());
+        $totalRec = count($this->post_model->getRows(array() ,$pos));
 
         //pagination configuration
         $config['target']      = '#postList';
@@ -106,18 +124,20 @@ class Post extends CI_Controller {
         $this->ajax_pagination->initialize($config);
 
         //get the posts data
-        $data['posts'] = $this->post_model->getRows(array('limit'=>$this->perPage));
+        $data['posts'] = $this->post_model->getRows(array('limit'=>$this->perPage), $pos);
         
-        $data['title'] = 'Queued posts';
+        //$data['title'] = 'Queued posts';
 
         //load users for filter
         $data['usr'] = $this->other_model->get_users();
         //load pages for filter
         $data['fbpg'] = $this->other_model->get_fbpage();
 
+        $data['pos']= $pos;
         //load the view
+        print_r($this->db->last_query());
         $this->output->enable_profiler();
-        $this->load->view('post/post_queued_view', $data);
+        $this->load->view('post/post_view', $data);
         // print_r($data['posts']);
         //$data['IsActive'] = true;
         // $this->input->post('working_title')? $data['title like '] = $this->input->post('working_title')."%":false;
@@ -131,7 +151,7 @@ class Post extends CI_Controller {
         // $q_post['queued'] = $this->post_model->get_queued($data);
         // // $q_post['title'] = 'Queued posts';
         // $this->output->enable_profiler();
-        // $this->load->view('post/post_queued_view', $q_post);
+        // $this->load->view('post/post_view', $q_post);
     }
 
     public function draft(){

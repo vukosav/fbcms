@@ -53,7 +53,7 @@ $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['posting'] = 'post/index';
+$route['posting/(:any)'] = 'post/index/$1';
 // $route['draft'] = 'post/draft';
 // $route['sent'] = 'post/sent';
 // $route['addpost'] = 'post/addpost';
