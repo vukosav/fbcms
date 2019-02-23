@@ -15,17 +15,21 @@ class Pages_model extends CI_Model{
      */
     function getRows($params = array()){
         $this->db->where('pages.IsActive = ', 1);
-        // $this->db->select('groups.*, users.username as addedby');
-        // $this->db->from('groups');
-        // $this->db->join('users', 'users.id = groups.userId');
+        $this->db->select('pages.*, groups.name as group, users.username as addedby');
+        $this->db->from('pages');
+        $this->db->join('users', 'users.id = pages.userId');
+        $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
+        $this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
+        $wtitle = $this->input->post('pagename');
+        $group = $this->input->post('group');
         //filter data by user
-        // if(!empty($params['search']['createdBy'])){
-        //     $this->db->where('users.id = ',$params['search']['createdBy']);
-        // }
-        //filter data by searched keywords
-        // if(!empty($params['search']['grname'])){
-        //     $this->db->like('groups.name',$params['search']['grname']);
-        // }
+        if(!empty($params['search']['group'])){
+            $this->db->where('groups.id = ',$params['search']['group']);
+        }
+        //filter data by page name        
+        if(!empty($params['search']['pagename'])){
+            $this->db->like('pages.fbPageName',$params['search']['pagename']);
+        }
         //sort data by ascending or desceding order
         // if(!empty($params['search']['sortBy'])){
         //     $this->db->order_by('groups.name',$params['search']['sortBy']);
@@ -39,7 +43,7 @@ class Pages_model extends CI_Model{
             $this->db->limit($params['limit']);
         }
         //get records
-        $query = $this->db->get('pages');
+        $query = $this->db->get();
         //return fetched data
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
@@ -91,6 +95,26 @@ class Pages_model extends CI_Model{
         return false;
     }
 
+    public function get_free_groups($pid){
+        $query = $this->db->query('SELECT groups.id, groups.name FROM groups
+        WHERE groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        if($query){
+            return $query->result_array();
+        }
+        return false;
+    }
+
+    public function get_added_groups($pid){
+        $query = $this->db->query('SELECT pages_groups.id pgid, groups.id, groups.name FROM groups
+                          JOIN pages_groups ON groups.id = pages_groups.groupId
+                          JOIN pages ON pages.id = pages_groups.pageId
+                          WHERE groups.id IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        if($query){
+            return $query->result_array();
+        }
+        return false;
+    }
+
     //-------------CRUD--------------------------
     /**
      * @usage
@@ -113,12 +137,13 @@ class Pages_model extends CI_Model{
     * @usage
     */
     public function delete($id){
-        $this->db->set('IsActive', false);
+        $this->db->set('isActive', false);
         $this->db->where('id', $id);
-        $this->db->update('users');
+        $this->db->update('pages');
         //$this->db->delete('users', $id);
         return $this->db->affected_rows();
     }
+
     //-------------END CRUS--------------------
 
 

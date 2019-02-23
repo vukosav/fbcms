@@ -24,6 +24,7 @@
                      data-toggle="tooltip" data-placement="top" title="Delete group">
                      <div><i class="fa fa-trash"></i></div>
                  </a>
+             </td>
          </tr>
 
          <?php endforeach; ?>

@@ -11,13 +11,12 @@
 <script>
 function searchFilter(page_num) {
     page_num = page_num ? page_num : 0;
-    var grname = $('#grname').val();
-    var sortBy = $('#sortBy').val();
-    var createdBy = $('#createdBy').val();
+    var pagename = $('#pagename').val();
+    var group = $('#group').val();
     $.ajax({
         type: 'POST',
-        url: '<?php echo base_url(); ?>groups/ajaxPaginationData/' + page_num,
-        data: 'page=' + page_num + '&createdBy=' + createdBy + '&grname=' + grname + '&sortBy=' + sortBy,
+        url: '<?php echo base_url(); ?>pages/ajaxPaginationData/' + page_num,
+        data: 'page=' + page_num + '&pagename=' + pagename + '&group=' + group,
         beforeSend: function() {
             $('.loading').show();
         },
@@ -47,39 +46,23 @@ function searchFilter(page_num) {
 
     <div class="kt-pagebody">
         <div class="card pd-20 pd-sm-40">
-            <div class="form-group">
-                <?php echo form_open('creategrp'); ?>
-                <span class="tx-danger"><?php echo validation_errors(); ?></span>
-                <div class="input-group">
-                    <input type="text" name="groupname" class="col col-md-6 form-control" placeholder="Type grup name"
-                        required value="<?php echo set_value('groupname'); ?>">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" data-toggle="tooltip" data-placement="top"
-                            title="Add new group">Add new group</button>
-                    </div>
+
+        <div class="row form-group">
+                <div class="col col-sm-2">
+                    <a href="<?=base_url()?>fbcheck" class="btn btn-default">Add new pages</a>
                 </div>
             </div>
-            </form>
-
-
             <div class="row form-group">
-                <div class="col col-sm-2">
-                    <input type="text" class="form-control" id="grname" placeholder="Type group name"
+                <div class="col col-sm-3">
+                    <input type="text" class="form-control" id="pagename" placeholder="Filter by page name"
                         onkeyup="searchFilter()" />
                 </div>
                 <div class="col col-sm-3">
-                    <select id="sortBy" class="form-control" onchange="searchFilter()">
-                        <option value="">Sort By group name</option>
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
-                </div>
-                <div class="col col-sm-2">
-                    <select class="form-control" id="createdBy" name="createdBy" onchange="searchFilter()">
-                        <option value="">created by</option>
-                        <?php if(!empty($usr)): foreach ($usr as $user): ?>
-                        <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
-                        <?php endforeach; endif; ?>
+                    <select id="group" class="form-control" onchange="searchFilter()">
+                        <option value="">Filter By group name</option>
+                        <?php if(!empty($group)): foreach ($group as $gr): ?>
+                            <option value="<?php echo $gr['id']; ?>"><?php echo $gr['name']; ?></option>
+                            <?php endforeach; endif; ?>
                     </select>
                 </div>
             </div>
@@ -92,6 +75,7 @@ function searchFilter(page_num) {
                             <th class="wd-5p all">Page ID</th>
                             <th class="wd-5p all">Added date</th>
                             <th class="wd-5p all">Added by</th>
+                            <th class="wd-5p all">Groups</th>
                             <th class="wd-5p all">Operations</th>
                         </tr>
                     </thead>
@@ -101,16 +85,17 @@ function searchFilter(page_num) {
                             <td><?php echo $page['fbPageName']; ?></td>
                             <td><?php echo $page['fbPageId']; ?></td>
                             <td><?php echo $page['dateAdded']; ?></td>
-                            <td>GROUPS</td>
+                            <td><?php echo $page['addedby']; ?></td>
+                            <td><?php echo $page['group']; ?></td>
                             <td>
                                 <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    href="<?=base_url()?>editgrup/<?php echo $page['id']; ?>" data-toggle="tooltip"
-                                    data-placement="top" title="Edit group">
+                                    href="<?=base_url()?>editpage/<?php echo $page['id']; ?>" data-toggle="tooltip"
+                                    data-placement="top" title="Edit page">
                                     <div><i class="fa fa-edit"></i></div>
                                 </a>
                                 <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)"
-                                    href="" data-toggle="tooltip" data-placement="top" title="Delete group">
+                                    onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)"
+                                    href="" data-toggle="tooltip" data-placement="top" title="Delete page">
                                     <div><i class="fa fa-trash"></i></div>
                                 </a>
                             </td>

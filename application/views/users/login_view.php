@@ -4,8 +4,8 @@
     <?php echo form_open('login'); ?>
       <div class="signbox">
         <div class="signbox-header">
-          <h4>katniss</h4>
-          <p class="mg-b-0">Responsive Bootstrap 4 Admin Template</p>
+          <h4>DATADATA</h4>
+          <p class="mg-b-0">Please type your email and password!</p>
         </div><!-- signbox-header -->
         <div class="signbox-body">
         <span class="tx-danger"><?php echo validation_errors(); ?><?php echo isset($errors)? $errors:""; ?></span>

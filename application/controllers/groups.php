@@ -162,16 +162,20 @@ class Groups extends CI_Controller {
         );
         $this->groups_model->insertPG($data);
         // }
-        redirect('editgrup/'.$gid);
+        $url = $_SERVER['HTTP_REFERER'];
+        redirect($url);
+        //redirect('editgrup/'.$gid);
         // print_r($data);
     }
 
     public function deletePagesGroups() {
         $this->load->helper(array('form', 'url'));
-        $gid =  $this->uri->segment(2);
+        //$gid =  $this->uri->segment(2);
         $pid =  $this->uri->segment(3);
         $this->groups_model->deletePG($pid);
-        redirect('editgrup/'.$this->uri->segment(2));
+        $url = $_SERVER['HTTP_REFERER'];
+        redirect($url);
+        //redirect('editgrup/'.$this->uri->segment(2));
     }
 
 }

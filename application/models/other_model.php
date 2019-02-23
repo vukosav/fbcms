@@ -23,6 +23,12 @@ class Other_model extends CI_Model{
         return $query->result_array();
     }
 
+    public function get_group(){
+        $this->db->order_by('name','asc');
+        $query = $this->db->get('groups');
+        return $query->result_array();
+    }
+
     public function get_fbpage($id = null){
         $this->db->where('IsActive = ', 1);
         $this->db->order_by('fbPageName','asc');

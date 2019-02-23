@@ -72,7 +72,9 @@ $route['creategrp'] = 'groups/creategroup';
 $route['insertPG/(:any)/(:any)'] = 'groups/insertPagesGroups/1/1';
 $route['deletePG/(:any)/(:any)'] = 'groups/deletePagesGroups/1/1';
 $route['deletegrup/(:any)'] = 'groups/delete/$1';
+$route['deletepage/(:any)'] = 'pages/delete/$1';
 $route['editgrup/(:any)'] = 'groups/edit/$1';
+$route['editpage/(:any)'] = 'pages/edit/$1';
 
 // $route['news/(:any)'] = 'news/view/$1';
 // $route['(:any)'] = 'pages/view/$1';

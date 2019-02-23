@@ -9,7 +9,7 @@
           <!-- <a href="" class="nav-link pd-x-7 pos-relative" data-toggle="dropdown"> -->
             <!-- <i class="icon ion-ios-bell-outline tx-24"></i> -->
             <!-- start: if statement -->
-            <span class="square-8 bg-danger pos-absolute t-15 r-0 rounded-circle"></span>
+            <!-- <span class="square-8 bg-danger pos-absolute t-15 r-0 rounded-circle"></span> -->
             <!-- end: if statement -->
           <!-- </a> -->
           <div class="dropdown-menu wd-300 pd-0-force">

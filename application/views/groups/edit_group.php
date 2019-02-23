@@ -1,14 +1,3 @@
-<?php
-if(isset($_POST['Apply'])){
-    $conn = mysqli_connect('localhost', 'root', '', 'datadata');
-    foreach($_POST['pagesIdArray'] as $pgId){
-        $query = "INSERT INTO`pages_groups` (`pageId`, `groupId`, `userId`, `dateCreate`) VALUES ($pgId, $groups[0]['name'], '1', '2019-02-12 13:58:05')";
-        $update_bulk_status = mysqli_query($conn, $query);
-        confirmQuery($update_bulk_status);
-    }
-    // print_r($_POST['pagesIdArray']);
-}
-?>
 <?php $this->load->view('includes/header'); ?>
 <!-- ##### SIDEBAR MENU ##### -->
 <?php $this->load->view('includes/sidebar'); ?>
@@ -82,22 +71,18 @@ if(isset($_POST['Apply'])){
                 </div><!-- form-group -->
 
                 <!-- <form action="" method='post'> -->
-                <ol data-draggable="target">
+                <!-- <ol data-draggable="target"> -->
                     <?php //foreach ($pages as $page): ?>
-                    <li data-draggable="item" value="<?php //echo $page['id']; ?>"><?php //echo $page['fbPageName']; ?>BLA BLA BLA</li>
+                    <!-- <li data-draggable="item" value="<?php //echo $page['id']; ?>"><?php //echo $page['fbPageName']; ?>BLA BLA BLA</li> -->
                     <?php //endforeach; ?>
-                </ol>
+                <!-- </ol>
 
                 <ol data-draggable="target" name="pagesIdArray[]">
 
-                </ol>
-                <input type="submit" name="submit" class="btn btn-success" value="Apply">
+                </ol> -->
+               
                 <!-- </form> -->
 
-
-
-
-                <button type="submit" class="btn btn-dark btn-block">Add pages to group</button>
                 <!-- <div class="tx-center bd pd-10 mg-t-40">Already a member? <a href="page-signin.html">Sign In</a></div> -->
             </div><!-- table-wrapper -->
         </div><!-- card -->
