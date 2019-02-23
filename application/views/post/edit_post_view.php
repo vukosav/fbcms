@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#4A64B0">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
  
-    <link rel="icon" type="image/png" href="http://localhost/fbcms/theme/default/images/kp_favicon1.png?v=kp272" >
+    <link rel="icon" type="image/png" href="<?=base_url()?>theme/default/images/kp_favicon1.png?v=kp272" >
     <title>Edit FB Post</title>
 
     <!-- vendor css -->
@@ -23,47 +23,47 @@
     <link rel="stylesheet" href="<?=base_url()?>theme/css/katniss.css">
 
 
-    <link href="http://localhost/fbcms/theme/default/bootstrap/css/bootstrap.min.css?v=kp272" rel="stylesheet">
-    <link href="http://localhost/fbcms/theme/default/bootstrap/css/bootstrap-4.min.css?v=kp272" rel="stylesheet">
-    <link href="http://localhost/fbcms/theme/default/css/roboto_font.css?v=kp272" rel="stylesheet">
-    <link href="http://localhost/fbcms/theme/default/css/preloader.min.css?v=kp272" rel="stylesheet" type="text/css" />
-    <link href="http://localhost/fbcms/theme/default/fontawesome/css/all.min.css?v=kp272" rel="stylesheet" />
-    <link href="http://localhost/fbcms/theme/default/css/dashboard.min.css?v=kp272" rel="stylesheet" />
-    <link href="http://localhost/fbcms/theme/default/css/skins/skin-blue.min.css?v=kp272" rel="stylesheet" />
+    <link href="<?=base_url()?>theme/default/bootstrap/css/bootstrap.min.css?v=kp272" rel="stylesheet">
+    <link href="<?=base_url()?>theme/default/bootstrap/css/bootstrap-4.min.css?v=kp272" rel="stylesheet">
+    <link href="<?=base_url()?>theme/default/css/roboto_font.css?v=kp272" rel="stylesheet">
+    <link href="<?=base_url()?>theme/default/css/preloader.min.css?v=kp272" rel="stylesheet" type="text/css" />
+    <link href="<?=base_url()?>theme/default/fontawesome/css/all.min.css?v=kp272" rel="stylesheet" />
+    <link href="<?=base_url()?>theme/default/css/dashboard.min.css?v=kp272" rel="stylesheet" />
+    <link href="<?=base_url()?>theme/default/css/skins/skin-blue.min.css?v=kp272" rel="stylesheet" />
     
-    <link href="http://localhost/fbcms/theme/default/css/theme_color.css?v=kp272" rel="stylesheet" type="text/css" />
-    <link href="http://localhost/fbcms/theme/default/css/general.css?v=kp272" rel="stylesheet" type="text/css" />
+    <link href="<?=base_url()?>theme/default/css/theme_color.css?v=kp272" rel="stylesheet" type="text/css" />
+    <link href="<?=base_url()?>theme/default/css/general.css?v=kp272" rel="stylesheet" type="text/css" />
     
-    <link href="http://localhost/fbcms/theme/default/css/skins/md.css?v=kp272" rel="stylesheet" />
+    <link href="<?=base_url()?>theme/default/css/skins/md.css?v=kp272" rel="stylesheet" />
     
     
-    <link href="http://localhost/fbcms/theme/default/plugins/animate/animate.min.css" rel="stylesheet">
+    <link href="<?=base_url()?>theme/default/plugins/animate/animate.min.css" rel="stylesheet">
     
   
-  	<link href="http://localhost/fbcms/theme/default/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+  	<link href="<?=base_url()?>theme/default/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
 
-	<link rel="stylesheet" type="text/css" href="http://localhost/fbcms/vendor/elfinder/jquery/css/jquery-ui.min.css">
-	<link rel="stylesheet" type="text/css" href="http://localhost/fbcms/vendor/elfinder/css/elfinder.min.css">
+	<link rel="stylesheet" type="text/css" href="<?=base_url()?>vendor/elfinder/jquery/css/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="<?=base_url()?>vendor/elfinder/css/elfinder.min.css">
 
-	<link rel="stylesheet" type="text/css" href="http://localhost/fbcms/theme/default/css/emojionearea.min.css">
+	<link rel="stylesheet" type="text/css" href="<?=base_url()?>theme/default/css/emojionearea.min.css">
 
-	<link href="http://localhost/fbcms/theme/default/css/datatables.bootstrap.min.css" rel="stylesheet">
-	<link href="http://localhost/fbcms/theme/default/plugins/select2/select2.min.css" rel="stylesheet"> 
-    <link rel='stylesheet' type='text/css' href="http://localhost/fbcms/theme/default/css/style_fb_status_presets.css" rel="stylesheet">
+	<link href="<?=base_url()?>theme/default/css/datatables.bootstrap.min.css" rel="stylesheet">
+	<link href="<?=base_url()?>theme/default/plugins/select2/select2.min.css" rel="stylesheet"> 
+    <link rel='stylesheet' type='text/css' href="<?=base_url()?>theme/default/css/style_fb_status_presets.css" rel="stylesheet">
 
 
 
-    <script src="http://localhost/fbcms/theme/default/js/jquery.js?v=kp272"></script>
-    <script src="http://localhost/fbcms/theme/default/js/libs/dashboard.min.js?v=kp272"></script>
-    <script src="http://localhost/fbcms/theme/default/bootstrap/js/bootstrap.min.js?v=kp272"></script>
-    <script src="http://localhost/fbcms/theme/default/js/libs/preloader.min.js?v=kp272"></script>
-    <script src="http://localhost/fbcms/theme/default/js/helpers.js?v=kp272"></script>
+    <script src="<?=base_url()?>theme/default/js/jquery.js?v=kp272"></script>
+    <script src="<?=base_url()?>theme/default/js/libs/dashboard.min.js?v=kp272"></script>
+    <script src="<?=base_url()?>theme/default/bootstrap/js/bootstrap.min.js?v=kp272"></script>
+    <script src="<?=base_url()?>theme/default/js/libs/preloader.min.js?v=kp272"></script>
+    <script src="<?=base_url()?>theme/default/js/helpers.js?v=kp272"></script>
     
-    <script src="http://localhost/fbcms/vendor/elfinder/jquery/js/jquery-ui.min.js"></script>
+    <script src="<?=base_url()?>vendor/elfinder/jquery/js/jquery-ui.min.js"></script>
     <script type="text/javascript">
             $('[data-toggle="kp_tooltip"]').tooltip();
     </script>
-    <script src="http://localhost/fbcms/theme/default/js/libs/emojione.min.js"></script>
+    <script src="<?=base_url()?>theme/default/js/libs/emojione.min.js"></script>
 </head>
 <body>
 <!-- ##### SIDEBAR MENU ##### -->
@@ -588,21 +588,21 @@ function videoPostPreview(){
 	});
 </script>
 
- <script src="http://localhost/fbcms/theme/default/js/jsui.js?v=kp272"></script>
+ <script src="<?=base_url()?>theme/default/js/jsui.js?v=kp272"></script>
   
-  <script src="http://localhost/fbcms/theme/default/plugins/select2/select2.min.js"></script>
-  <script src="http://localhost/fbcms/theme/default/js/post_form.js"></script>
-  <script src="http://localhost/fbcms/theme/default/js/libs/jquery.reel.js"></script>
-  <script src="http://localhost/fbcms/theme/default/js/postpreview.js"></script>
-  <script src="http://localhost/fbcms/theme/default/js/libs/moment.min.js"></script>
+  <script src="<?=base_url()?>theme/default/plugins/select2/select2.min.js"></script>
+  <script src="<?=base_url()?>theme/default/js/post_form.js"></script>
+  <script src="<?=base_url()?>theme/default/js/libs/jquery.reel.js"></script>
+  <script src="<?=base_url()?>theme/default/js/postpreview.js"></script>
+  <script src="<?=base_url()?>theme/default/js/libs/moment.min.js"></script>
   
-  <script src="http://localhost/fbcms/theme/default/js/libs/bootstrap-datetimepicker.min.js"></script>
-  <script src="http://localhost/fbcms/theme/default/js/libs/emojionearea.min.js"></script>
+  <script src="<?=base_url()?>theme/default/js/libs/bootstrap-datetimepicker.min.js"></script>
+  <script src="<?=base_url()?>theme/default/js/libs/emojionearea.min.js"></script>
   
-  <script src="http://localhost/fbcms/vendor/elfinder/js/elfinder.min.js"></script>
+  <script src="<?=base_url()?>vendor/elfinder/js/elfinder.min.js"></script>
   
-  <script src="http://localhost/fbcms/theme/default/js/jquery.dataTables.min.js"></script>
-  <script src="http://localhost/fbcms/theme/default/js/dataTables.bootstrap.min.js"></script>
+  <script src="<?=base_url()?>theme/default/js/jquery.dataTables.min.js"></script>
+  <script src="<?=base_url()?>theme/default/js/dataTables.bootstrap.min.js"></script>
   
   <script>
 
@@ -813,7 +813,7 @@ function videoPostPreview(){
           kp_preloader("on");
           $(".postStatus_"+currentGroup).html("<span class='badge'>Sending post...<span>");
           $.ajax({
-              url: 'http://localhost/fbcms/posts/send_post',
+              url: '<?=base_url()?>posts/send_post',
               dataType: 'json',
               type: 'post',
               contentType: 'application/x-www-form-urlencoded',
@@ -1011,7 +1011,7 @@ function videoPostPreview(){
           }
 
           $.ajax({
-              url: 'http://localhost/fbcms/posts/update',
+              url: '<?=base_url()?>posts/update',
               dataType: 'json',
               type: 'post',
               contentType: 'application/x-www-form-urlencoded',
@@ -1074,7 +1074,7 @@ function videoPostPreview(){
       });
 
       $.ajax({
-          url: 'http://localhost/fbcms/nodes_categories/remove_nodes',
+          url: '<?=base_url()?>nodes_categories/remove_nodes',
           dataType: 'json',
           type: 'post',
           contentType: 'application/x-www-form-urlencoded',
@@ -1127,7 +1127,7 @@ function videoPostPreview(){
           $("#modalAddCateBtn").prop('disabled', true);
 
           $.ajax({
-              url: 'http://localhost/fbcms/nodes_categories/add_nodes',
+              url: '<?=base_url()?>nodes_categories/add_nodes',
               dataType: 'json',
               type: 'post',
               contentType: 'application/x-www-form-urlencoded',
@@ -1196,7 +1196,7 @@ function videoPostPreview(){
   function GetSiteDetails(url,callback){
       if(xhrGetSiteDetails!==null) xhrGetSiteDetails.abort();
       xhrGetSiteDetails = $.ajax({
-          url: "http://localhost/fbcms/helpers/get_url_info",
+          url: "<?=base_url()?>helpers/get_url_info",
           dataType: "json",
           type: "post",
           data: { 
@@ -1303,7 +1303,7 @@ function videoPostPreview(){
       }
 
       $.ajax({
-          url: 'http://localhost/fbcms/posts/add',
+          url: '<?=base_url()?>posts/add',
           dataType: 'json',
           type: 'post',
           contentType: 'application/x-www-form-urlencoded',
@@ -1364,7 +1364,7 @@ function videoPostPreview(){
       $("#postForm #saveScheduledPost").prop('disabled', true);
           
       $.ajax({
-          url: 'http://localhost/fbcms/schedules/action/add',
+          url: '<?=base_url()?>schedules/action/add',
           dataType: 'json',
           type: 'post',
           contentType: 'application/x-www-form-urlencoded',

@@ -41,8 +41,8 @@ class Helpers extends CI_Controller {
 */
 		display_json(array(
 			'status' => 'ok',
-			//'url' => url_info($this->input->post('url',TRUE))
-			'url' => url_info('https://edition.cnn.com/2019/02/20/uk/confusing-brexit-is-confusing-intl-gbr/index.html')
+			'url' => url_info($this->input->post('url',TRUE))
+			//'url' => url_info('')
 		));
 		return;
 	}

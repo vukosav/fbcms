@@ -107,7 +107,7 @@ class Add_Pages extends CI_Controller {
             
             $user_id=$_SESSION['user_id']; 
             $numofpages=$this->input->post('numofpages'); 
-            //echo $numofpages . ' new pages. Added pages:';
+            echo $numofpages . ' new pages. Added pages:';
              
              if($numofpages>0){
 

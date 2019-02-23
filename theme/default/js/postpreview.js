@@ -112,6 +112,7 @@ $( document ).ready(function() {
 					$(".previewLink").html("<iframe src='https://www.youtube.com/embed/"+videoID+"' width='470px' height='300px' frameborder='0' allowfullscreen='allowfullscreen'></iframe>");
 					
 					GetSiteDetails(link,function(data) {
+						console.log('GetSiteDetails-start',data)
 						if(data.status == "ok"){
 							$(".postPreview .name").html(data.url.title);
 							$(".postPreview .description").html(data.url.description);
@@ -288,6 +289,8 @@ function imagePostPreview(){
 			}
 			imgblock += "</div>";
 		}
+
+		console.log('pregled posta', imgblock);
 	$('.postPreview').append(imgblock);
 
 	if($('#enable360Image').prop('checked')){
@@ -311,6 +314,7 @@ function linkPostPreview(){
 		linkBlock += "<p class='caption'><span class='defaultCaption'></span></p>";
 		linkBlock += "</div>";
 		linkBlock += "</div>";
+		console.log('pregled linkBlock', linkBlock);
 	$('.postPreview').append(linkBlock);
 	$( "#link" ).trigger('propertychange');
 		$( "#picture" ).trigger('propertychange');
