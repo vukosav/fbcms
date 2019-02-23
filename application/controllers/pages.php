@@ -32,7 +32,7 @@ class Pages extends CI_Controller {
         if(!empty($group)){
             $conditions['search']['group'] = $group;
         }
-        echo "Page name je   " . $pagename ."    i grup id je    " .  $group;
+
         //total rows count
         $totalRec = count($this->pages_model->getRows($conditions));
         
