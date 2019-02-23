@@ -16,11 +16,11 @@ function searchFilter(page_num) {
     var date_from = $('#date_from').val();
     var date_to = $('#date_to').val();
     var createdBy = $('#createdBy').val();
-    var paused = $('#paused').val();
-    var errors = $('#errors').val();
-    var inProgres = $('#inProgres').val();
+    var paused = $('#paused').is(':checked');
+    var errors = $('#errors').is(':checked');
+    var inProgres = $('#inProgres').is(':checked');
     var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
-    var archived = $('#archived').val();
+    var archived = $('#archived').is(':checked');
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
@@ -55,7 +55,7 @@ function searchFilter(page_num) {
         <div class="card pd-20 pd-sm-40 mg-t-50">
 
             <div class="table-wrapper">
-                <?php echo form_open('posting', 'id='.'myform'); ?>
+                <?php echo form_open('posting'); ?>
                 <div class="row form-group">
                     <div class="col col-sm-2">
                         <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title" class="form-control"
@@ -106,12 +106,12 @@ function searchFilter(page_num) {
                 <div class="row form-group">
                     <!-- <div class="col col-sm-2">
                                 <label for="all" class="form-check-label ">
-                                    <input type="checkbox" id="" value="" class="form-check-input" name="all" <?php //echo (set_value('all') ? 'checked' : '') ?>>All posts
+                                    <input type="checkbox" id="" class="form-check-input" name="all">All posts
                                 </label>
                             </div>
                             <div class="col col-sm-3">
                                 <label for="scheduled" class="form-check-label ">
-                                    <input type="checkbox" id="" value="" class="form-check-input" name="scheduled" <?//php echo (set_value('scheduled') ? 'checked' : '') ?>>Scheduled
+                                    <input type="checkbox" id="" class="form-check-input" name="scheduled">Scheduled
                                     posts
                                 </label>
                             </div> -->
@@ -129,7 +129,7 @@ function searchFilter(page_num) {
                     </div>
                     <div class="col col-sm-2">
                         <label for="errors" class="form-check-label ">
-                            <input type="checkbox" id="" value="" class="form-check-input" name="errors" 
+                            <input type="checkbox" id="errors" class="form-check-input" name="errors" onchange="searchFilter()"
                                 >Posts with errors
                         </label>
                     </div>
@@ -187,29 +187,29 @@ function searchFilter(page_num) {
                             <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td>Group1<br>Group2</td>
-                            <td><?php echo $q['pages']  ?></td>
+                            <td><?php echo $q['pages']; ?></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-info" href="#">
+                                <a class="btn btn-default" href="#">
                                     <span class="fa fa-edit"></span>
                                 </a>
-                                <a class="btn btn-info" href="#">
+                                <a class="btn btn-default" href="#">
                                     <span class="fa fa-copy"></span>
                                 </a>
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-calendar-o'></span></a>";
+                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-calendar-o'></span></a>";
                                 }
                                 else{
                                     if($q['ActionStatus']==1){
-                                    echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
+                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a class='btn btn-info' href='#'><span class='fa fa-pause'></span></a> ";
+                                        echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
                                     }
                                 } ?>
-                                <a class="btn btn-info" href="#">
+                                <a class="btn btn-danger" href="#">
                                     <span class="fa fa-trash"></span>
                                 </a>
                                 </div>

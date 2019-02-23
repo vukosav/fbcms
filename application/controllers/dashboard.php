@@ -27,19 +27,19 @@ class Dashboard extends CI_Controller {
         $group = $this->input->post('group');
         $pwithoutPL24 = $this->input->post('pwithoutPL24');
         $pwithoutPL72 = $this->input->post('pwithoutPL72');
-            
+        
         if(!empty($pagename)){
             $conditions['search']['pagename'] = $pagename;
         }
         // if(!empty($group)){
         //     $conditions['search']['group'] = $group;
         // }
-        if(!empty($pwithoutPL24)){
-            $conditions['search']['pwithoutPL24'] = $pwithoutPL24;
+        if($pwithoutPL24 == 'true'){
+            $conditions['search']['pwithoutPL24'] = 'nn';
         }
-        // if(!empty($pwithoutPL72)){
-        //     $conditions['search']['pwithoutPL72'] = $pwithoutPL72;
-        // }
+        if($pwithoutPL72 == 'true'){
+            $conditions['search']['pwithoutPL72'] = 'nn';
+        }
 
         //total rows count
         $totalRec = count($this->dashboard_model->getRows($conditions));

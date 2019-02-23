@@ -53,22 +53,20 @@ class Post extends CI_Controller {
         if(!empty($date_to)){
             $conditions['search']['date_to'] = $date_to;
         }
-        if(!empty($archived)){
-            $conditions['search']['archived'] = $archived;
+        if($archived == 'true'){
+            $conditions['search']['archived'] = 'nn';
         }
-        // if(!empty($paused)){
-        //     $conditions['search']['paused'] = $paused;
-        // }
-        // if(!empty($errors)){
-        //     $conditions['search']['errors'] = $errors;
-        // }
-        // if(!empty($inProgres)){
-        //     $conditions['search']['inProgres'] = $inProgres;
-        // }
-        // if(!empty($post_status)){
-        //     $conditions['search']['post_status'] = $post_status;
-        // }
-print_r($this->db->last_query());
+        if($paused == 'true'){
+            $conditions['search']['paused'] = 'nn';
+        }
+        if($errors == 'true'){
+            $conditions['search']['errors'] = 'nn';
+        }
+        if($inProgres == 'true'){
+            $conditions['search']['inProgres'] = 'nn';
+        }
+
+// print_r($this->db->last_query());
         //total rows count
         $totalRec = count($this->post_model->getRows($conditions));
         
@@ -86,7 +84,7 @@ print_r($this->db->last_query());
         
         //get posts data
         $data['posts'] = $this->post_model->getRows($conditions);
-        
+        // print_r($this->db->last_query());
         //load the view
         //$this->output->enable_profiler();
         $this->load->view('post/ajax-pagination-data', $data, false);

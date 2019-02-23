@@ -13,8 +13,8 @@ function searchFilter(page_num) {
     page_num = page_num ? page_num : 0;
     var pagename = $('#pagename').val();
     var group = $('#group').val();
-    var pwithoutPL24 = $('#pwithoutPL24').val($(this).is(':checked'));
-    var pwithoutPL72 = $('#pwithoutPL72').val($(this).is(':checked'));
+    var pwithoutPL24 = $('#pwithoutPL24').is(':checked');
+    var pwithoutPL72 = $('#pwithoutPL72').is(':checked');
     
     $.ajax({
         type: 'POST',
@@ -116,14 +116,14 @@ function searchFilter(page_num) {
                 <!-- </div>
                 <div class="row form-group"> -->
                     <div class="col col-sm-2">
-                        <label for="inProgres" class="form-check-label ">
-                            <input type="checkbox" id="pwithoutPL24" class="form-check-input" name="pwithoutPL24" value="false"
+                        <label for="pwithoutPL24" class="form-check-label ">
+                            <input type="checkbox" id="pwithoutPL24" class="form-check-input" name="pwithoutPL24" 
                                 onchange="searchFilter()" />Pages without post in last 24h
                         </label>
                     </div>
                     <div class="col col-sm-2">
-                        <label for="paused" class="form-check-label ">
-                            <input type="checkbox" id="pwithoutPL72" class="form-check-input" name="pwithoutPL72" value="false"
+                        <label for="pwithoutPL72" class="form-check-label ">
+                            <input type="checkbox" id="pwithoutPL72" class="form-check-input" name="pwithoutPL72" 
                                 onchange="searchFilter()" />Pages without post in last 72h
                         </label>
                     </div>

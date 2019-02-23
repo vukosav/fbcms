@@ -254,6 +254,18 @@ class Users extends MY_controller {
 
     public function edit (){
         $this->load->helper(array('form', 'url'));
+        $pwd = $this->users_model->get_users($this->input->post('id'));
+        $pwd = array_shift($pwd);
+        if($pwd['username']!=$this->input->post('username')){
+            $is_uniqueUn =  '|is_unique[users.username]';
+        } else {
+           $$is_uniqueUn =  '';
+        }
+        if($pwd['email']!=$this->input->post('email')){
+            $is_uniqueEm =  '|is_unique[users.email]';
+        } else {
+           $is_uniqueEm =  '';
+        }
         $this->load->library('form_validation');
         $this->form_validation->set_rules(
             'username', 'Username',
@@ -283,19 +295,6 @@ class Users extends MY_controller {
         // $password = $this->hash_password($this->password,$salt);
         // $this->db->set('password', $password);
         // $this->db->set('salt', $salt);
-
-        $pwd = $this->users_model->get_users($this->input->post('id'));
-        $pwd = array_shift($pwd);
-        if($pwd['username']!=$this->input->post('username')){
-            $is_uniqueUn =  '|is_unique[users.username]';
-        } else {
-           $$is_uniqueUn =  '';
-        }
-        if($pwd['email']!=$this->input->post('email')){
-            $is_uniqueEm =  '|is_unique[users.email]';
-        } else {
-           $is_uniqueEm =  '';
-        }
 
         $data = array(
             'username' => $this->input->post('username'),

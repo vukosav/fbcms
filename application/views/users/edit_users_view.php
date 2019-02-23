@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label class="form-control-label">Email: <span class="tx-danger">*</span></label>
                     <input type="email" name="email" class="form-control" placeholder="Type email address" required
-                        value="<?php echo $users['email']; ?>">
+                        value="<?php echo $users['email']?$users['email']:set_value('email');?>">
                     <input type="hidden" name="id" class="form-control" placeholder="Type email address" required
                         value="<?php echo $users['id']; ?>">
                 </div><!-- form-group -->
@@ -28,20 +28,20 @@
                 <div class="form-group">
                     <label class="form-control-label">Full Name: <span class="tx-danger">*</span></label>
                     <input type="text" name="fullname" class="form-control" placeholder="Type full name" required
-                        value="<?php echo $users['name']; ?>">
+                        value="<?php echo $users['name']?$users['name']:set_value('fullname'); ?>">
                 </div><!-- form-group -->
 
 
                 <div class="form-group">
                     <label class="form-control-label">Usernamename: <span class="tx-danger">*</span></label>
                     <input type="text" name="username" class="form-control" placeholder="Type username" required
-                        value="<?php echo $users['username']; ?>">
+                        value="<?php echo $users['username']?$users['username']:set_value('username'); ?>">
                 </div><!-- form-group -->
 
                 <div class="form-group">
                     <label class="form-control-label">Password: <span class="tx-danger">*</span></label>
                     <input type="password" name="password" class="form-control" placeholder="Type password" required
-                        value="<?php echo $users['password']; ?>">
+                        value="<?php echo $users['password']?$users['password']:set_value('password'); ?>">
                 </div><!-- form-group -->
 
 
@@ -49,7 +49,12 @@
                 <div class="form-group mg-b-10-force">
                     <label class="form-control-label">Role: <span class="tx-danger">*</span></label>
                     <select class="form-control select2" name="role" data-placeholder="Choose role" required>
-                        <?php echo ($users['roleId'] == 1)? "<option value='1'>Admin</option><option value='2'>Editor</option>": "<option value='2'>Editor</option><option value='1'>Admin</option>"; ?>
+                        <?php if (isset($users['roleId'])){
+                            echo $users['roleId'] == 1? "<option value='1'>Admin</option><option value='2'>Editor</option>": "<option value='2'>Editor</option><option value='1'>Admin</option>";
+                        }else{
+                            echo (set_value('role') == 1)? "<option value='1'>Admin</option><option value='2'>Editor</option>": "<option value='2'>Editor</option><option value='1'>Admin</option>";
+                        }
+                         ?>
                     </select>
                 </div>
 

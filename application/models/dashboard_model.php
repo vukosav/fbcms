@@ -19,11 +19,11 @@ class Dashboard_model extends CI_Model{
         // }
         //filter data by user
         if(!empty($params['search']['pwithoutPL24'])){
-            $this->db->where('page_statistic.p24',$params['search']['pwithoutPL24']);
+            $this->db->where('page_statistic.p24',0);
         }
         // //filter data by user
         if(!empty($params['search']['pwithoutPL72'])){
-            $this->db->where('page_statistic.p72',$params['search']['pwithoutPL72']);
+            $this->db->where('page_statistic.p72',0);
         }
         //filter data by searched keywords
         if(!empty($params['search']['pagename'])){
