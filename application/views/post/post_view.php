@@ -104,9 +104,6 @@ function searchFilter(page_num) {
                             <?php endforeach; endif; ?>
                         </select>
                     </div>
-                    <div class="col col-sm-3">
-                        <button class="btn btn-primary btn-sm">Find</button>
-                    </div>
                 </div>
 
                 <div class="row form-group">
@@ -213,7 +210,7 @@ function searchFilter(page_num) {
                             <td><?php echo $q['pages']; ?></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <div class="btn-group1" role="group" aria-label="Basic example">
                                 <a class="btn btn-default" href="#">
                                     <span class="fa fa-edit"></span>
                                 </a>
@@ -222,18 +219,18 @@ function searchFilter(page_num) {
                                 </a>
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-calendar-o'></span></a>";
+                                    echo "<br><a class='btn btn-default' href='#'><span class='fa fa-calendar-o'></span></a>";
                                 }
                                 else{
                                     if($q['ActionStatus']==1){
-                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
+                                    echo "<br><a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
+                                        echo "<br><a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
                                     }
                                 } ?>
                                 <a class="btn btn-danger" href="#">
-                                    <span class="fa fa-trash"></span>
+                                    <span class="fa fa-trash" style="font-size: 14px"></span>
                                 </a>
                                 </div>
                             </td>

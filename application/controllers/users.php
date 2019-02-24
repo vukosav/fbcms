@@ -151,7 +151,7 @@ class Users extends MY_controller {
         //$data['userdata']  =   $this->session->userdata('name');
         
         //load the view
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('users/users_view', $data);
 
     }
@@ -238,7 +238,7 @@ class Users extends MY_controller {
 
             $q_post['queued'] = $this->users_model->insert($data);
             $data['title'] = 'Users';
-            $this->output->enable_profiler();
+            //$this->output->enable_profiler();
             redirect('/users/index');
         }
     }
@@ -314,13 +314,13 @@ class Users extends MY_controller {
             // $this->load->view('news/create');
             // $this->load->view('templates/footer');
             // $this->load->view('users/users_view', $data);
-            $this->output->enable_profiler();
+            //$this->output->enable_profiler();
             $this->load->view('users/edit_users_view', $data);
         }else{
 
             $this->users_model->update($data, $this->input->post('id'));
             $data['title'] = 'Users';
-            $this->output->enable_profiler();
+            //$this->output->enable_profiler();
             redirect('/users/index');
         }
     }

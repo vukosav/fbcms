@@ -74,7 +74,7 @@ class Post extends CI_Controller {
         if($scheduled == 'true'){
             $conditions['search']['scheduled'] = 'nn';
         } 
-print_r( $conditions);
+//print_r( $conditions);
 // print_r($this->db->last_query());
         //total rows count
         $totalRec = count($this->post_model->getRows($conditions, $post_status));
@@ -94,7 +94,7 @@ print_r( $conditions);
         //get posts data
         $data['posts'] = $this->post_model->getRows($conditions, $post_status);
        
-        print_r($this->db->last_query());
+       // print_r($this->db->last_query());
         //load the view
         //$this->output->enable_profiler();
         $this->load->view('post/ajax-pagination-data', $data, false);
@@ -135,8 +135,8 @@ print_r( $conditions);
 
         $data['pos']= $pos;
         //load the view
-        print_r($this->db->last_query());
-        $this->output->enable_profiler();
+        //print_r($this->db->last_query());
+        //$this->output->enable_profiler();
         $this->load->view('post/post_view', $data);
         // print_r($data['posts']);
         //$data['IsActive'] = true;

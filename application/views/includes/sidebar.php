@@ -7,16 +7,22 @@
             <span>Dashboard</span>
           </a>
         </li><!-- nav-item -->
-        <li class="nav-item">
-          <a href="<?=base_url()?>" class="nav-link with-sub <?php if($this->uri->segment(1)=="posting"){echo "active";}?>">
+        <!-- <li class="nav-item">
+          <a href="<?//=base_url()?>" class="nav-link with-sub <?php //if($this->uri->segment(1)=="posting"){echo "active";}?>">
             <i class="icon ion-ios-list-outline"></i>
             <span>Posting</span>
           </a>
           <ul class="nav-sub">
-            <li class="nav-item"><a href="<?=base_url()?>posting" class="nav-link <?php if($this->uri->segment(1)=="posting"){echo "active";}?>">Queued posts</a></li>
+            <li class="nav-item"><a href="<//?=base_url()?>posting" class="nav-link <?php //if($this->uri->segment(1)=="posting"){echo "active";}?>">Queued posts</a></li>
             <li class="nav-item"><a href="table-datatable.html" class="nav-link">Draft posts</a></li>
             <li class="nav-item"><a href="table-datatable.html" class="nav-link">Sent posts</a></li>
           </ul>
+        </li>nav-item -->
+        <li class="nav-item">
+          <a href="<?=base_url()?>/posting/1" class="nav-link <?php if($this->uri->segment(1)=="posting"){echo "active";}?>">
+            <i class="icon ion-ios-list-outline"></i>
+            <span>Posting</span>
+          </a>
         </li><!-- nav-item -->
         <li class="nav-item">
           <a href="<?=base_url()?>groups" class="nav-link <?php if($this->uri->segment(1)=="groups"){echo "active";}?>">

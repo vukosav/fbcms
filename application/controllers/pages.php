@@ -81,7 +81,7 @@ class Pages extends CI_Controller {
         $data['group'] = $this->other_model->get_group();
 
         //load the view
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('pages/pages_view', $data);
         //print_r($data['pages']);
 
@@ -99,6 +99,6 @@ class Pages extends CI_Controller {
         $data['title'] = 'Edit Pages';
         // print_r($data);
         $this->load->view('pages/edit_page', $data);
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
     }
 }

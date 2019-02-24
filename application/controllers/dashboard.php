@@ -87,7 +87,7 @@ class Dashboard extends CI_Controller {
         $data['global'] = $gstat[0];
 
         //load the view
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('dashboard/dashboard_view', $data);
 
         // $status['IsActive'] = true;
