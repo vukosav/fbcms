@@ -19,13 +19,14 @@ function searchFilter(page_num) {
     var paused = $('#paused').is(':checked');
     var errors = $('#errors').is(':checked');
     var inProgres = $('#inProgres').is(':checked');
+    var scheduled = $('#scheduled').is(':checked');
     var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').is(':checked');
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
         data: 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +  '&date_to=' + date_to  + '&group=' + group + '&fbpage=' + fbpage +
-             '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors + '&inProgres=' + inProgres,
+             '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors + '&scheduled=' + scheduled + '&inProgres=' + inProgres,
         beforeSend: function() {
             $('.loading').show();
         },
@@ -47,12 +48,17 @@ function searchFilter(page_num) {
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
     <div class="kt-pagetitle">
-        <h5>Queued posts</h5>
+        <!-- <h5>Queued posts</h5> -->
     </div><!-- kt-pagetitle -->
-
     <div class="kt-pagebody">
-
-        <div class="card pd-20 pd-sm-40 mg-t-50">
+    <div class="pd-10 bg-gray-800 mg-t">
+            <ul class="nav nav-pills nav-pills-for-dark flex-column flex-md-row" role="tablist">
+              <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="1"){echo "active2";}?>" href="<?=base_url()?>posting/1" role="tab">Queued posts</a></li>
+              <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="2"){echo "active2";}?>" href="<?=base_url()?>posting/2" role="tab">Draft posts</a></li>
+              <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="3"){echo "active2";}?>" href="<?=base_url()?>posting/3" role="tab">Sent posts</a></li>
+            </ul>
+          </div>
+        <div class="card pd-20 pd-sm-40 mg-t-5">
 
             <div class="table-wrapper">
                 <?php echo form_open('posting'); ?>
@@ -60,7 +66,7 @@ function searchFilter(page_num) {
                     <div class="col col-sm-2">
                         <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title" class="form-control"
                         onkeyup="searchFilter()" />
-                        <input type="hidden" id="post_status" name="post_status" value="3">
+                        <input type="hidden" id="post_status" name="post_status" value="<?php echo $pos; ?>">
                     </div>
                     <div class="col col-sm-2">
                         <select name="group" id="group" class="form-control" onchange="searchFilter()">
@@ -108,13 +114,14 @@ function searchFilter(page_num) {
                                 <label for="all" class="form-check-label ">
                                     <input type="checkbox" id="" class="form-check-input" name="all">All posts
                                 </label>
-                            </div>
-                            <div class="col col-sm-3">
+                            </div> -->
+                            <?php if($this->uri->segment(2) == 1): ?>
+                            <div class="col col-sm-2">
                                 <label for="scheduled" class="form-check-label ">
-                                    <input type="checkbox" id="" class="form-check-input" name="scheduled">Scheduled
+                                    <input type="checkbox" id="scheduled" class="form-check-input" name="scheduled" onchange="searchFilter()" />Scheduled
                                     posts
                                 </label>
-                            </div> -->
+                            </div>
                     <div class="col col-sm-2">
                         <label for="inProgres" class="form-check-label ">
                             <input type="checkbox" id="inProgres" class="form-check-input" name="inProgres" onchange="searchFilter()"
@@ -132,7 +139,16 @@ function searchFilter(page_num) {
                             <input type="checkbox" id="errors" class="form-check-input" name="errors" onchange="searchFilter()"
                                 >Posts with errors
                         </label>
+                    
                     </div>
+                    <?php elseif($this->uri->segment(2) == 3): ?>
+                    <div class="col col-sm-2">
+                        <label for="errors" class="form-check-label ">
+                            <input type="checkbox" id="errors" class="form-check-input" name="errors" onchange="searchFilter()"
+                                >Posts with errors
+                        </label>
+                    </div>
+                    <?php endif; ?>
                     <div class="col col-sm-2">
                         <label for="archived" class="form-check-label ">
                             <input type="checkbox" id="archived" class="form-check-input" name="archived" onchange="searchFilter()"
@@ -163,12 +179,19 @@ function searchFilter(page_num) {
                     <tbody id = "postListBody">
                         <?php if(!empty($posts)): foreach ($posts as $q): ?>
                         <tr>
-                            <?php if($q['PostStatus'] ==2 ){
+                            <?php if($q['PostStatus'] ==1 ){
+                                 echo "<td>Draft</td>";
+                            }
+                            elseif($q['PostStatus'] ==2 ){
                                         echo "<td><span class='fa fa-circle-o'></span>";
                                         echo "<br>0/90</td>";
                                         
-                                    } else{
+                                    } elseif($q['PostStatus'] ==3 ){
                                     echo "<td><span class='fa fa-adjust'></span> ";
+                                    echo "<span class='fa fa-pause'></span>";
+                                    echo "<br>0/90</td>";
+                                    }else{
+                                        echo "<td><span class='fa fa-circle'></span> ";
                                     echo "<span class='fa fa-pause'></span>";
                                     echo "<br>0/90</td>";
                                     } ?>

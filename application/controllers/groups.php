@@ -151,12 +151,12 @@ class Groups extends CI_Controller {
     public function insertPagesGroups() {
         //$this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
-        $gid =  $this->uri->segment(2);
-        $pid =  $this->uri->segment(3);
+        $grupid =  $this->uri->segment(2);
+        $pageid =  $this->uri->segment(3);
         // foreach($pid as $p){
         $data = array(
-            'pageId' => $pid,
-            'groupId' => $gid,
+            'pageId' => $pageid,
+            'groupId' => $grupid,
             'dateCreate' => date('Y-m-d h:i:s', time()),
             'userId' => $this->session->userdata('user')['user_id']
         );

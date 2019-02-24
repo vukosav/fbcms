@@ -9532,7 +9532,11 @@ textarea.parsley-error:active {
   color: #fff;
   background-color: #17a2b8;
 }
-
+.nav-pills-for-dark .nav-link.active2, .nav-pills-for-dark .nav-link.active:hover, .nav-pills-for-dark .nav-link.active:focus {
+  color: #fff;
+  background-color: #3B6998;
+  border-color: #386491;
+}
 .nav.active-primary .nav-link.active {
   color: #007bff;
 }
