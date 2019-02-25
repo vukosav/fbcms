@@ -15,11 +15,12 @@ function searchFilter(page_num) {
     var group = $('#group').val();
     var pwithoutPL24 = $('#pwithoutPL24').is(':checked');
     var pwithoutPL72 = $('#pwithoutPL72').is(':checked');
-    
+
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>dashboard/ajaxPaginationData/' + page_num,
-        data: 'page=' + page_num + '&pagename=' + pagename + '&group=' + group + '&pwithoutPL24=' + pwithoutPL24 + '&pwithoutPL72=' + pwithoutPL72,
+        data: 'page=' + page_num + '&pagename=' + pagename + '&group=' + group + '&pwithoutPL24=' +
+            pwithoutPL24 + '&pwithoutPL72=' + pwithoutPL72,
         beforeSend: function() {
             $('.loading').show();
         },
@@ -45,64 +46,72 @@ function searchFilter(page_num) {
     </div><!-- kt-pagetitle -->
 
     <div class="kt-pagebody">
-            <div class="card pd-20">
-                <h6 class="tx-12 tx-uppercase tx-info tx-bold mg-b-15"></h6>
-                <div class="d-flex mg-b-5">
-                    <div class="pd-r-10">
-                        <div style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;"> 
-                               <i class="fa fa-plus-circle" style = "font-size: 4em;"></i>
-                               <div style="background:#3b6998; color:white; text-align:center; height:20px;">
-                                  <h6>Schedule new post</h6> 
-                               </div>
-                            
+        <div class="card pd-20">
+            <h6 class="tx-12 tx-uppercase tx-info tx-bold mg-b-15"></h6>
+            <div class="d-flex mg-b-5">
+                <div class="pd-r-10">
+                    <a href="">
+                        <div
+                            style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;">
+                            <i class="fa fa-plus-circle" style="font-size: 4em;"></i>
+                            <div style="background:#3b6998; color:white; text-align:center; height:20px;">
+                                <h6>Schedule new post</h6>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bd-r pd-r-10">
-                        <div style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;"> 
-                               <i class="fa fa-facebook" style = "font-size: 4em;"></i>
-                               <div style="background:#3b6998; color:white; text-align:center; height:20px;">
-                                  <h6>Add new fb page</h6> 
-                               </div>
-                            
+                    </a>
+                </div>
+                <div class="bd-r pd-r-10">
+                    <a href="">
+                        <div
+                            style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;">
+                            <i class="fa fa-facebook" style="font-size: 4em;"></i>
+                            <div style="background:#3b6998; color:white; text-align:center; height:20px;">
+                                <h6>Add new fb page</h6>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bd-r pd-x-10">
-                        <label class="tx-18" style='color: #3b6998;'>Posts in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['pLast72']; ?></p>
-                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up" style = "font-size: 2em;"></i> 6</span></p>
-                    </div>
-                    <div class="bd-r pd-x-10">
-                        <label class="tx-18" style='color: #3b6998;'>Reactions in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['rLast72']; ?></p>
-                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger"><i class="fa fa-arrow-circle-o-down" style = "font-size: 2em;"></i> -6</span></p>
-                    </div>
-                    <div class="bd-r pd-x-10">
-                        <label class="tx-18" style='color: #3b6998;'> &nbsp;Comments in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold tx-24">&nbsp;<span
-                                style="text-size: 24px"><?php echo $global['cLast72']; ?></span></p>
-                                <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up" style = "font-size: 2em;"></i> 6</span></p>
-                    </div>
-                    <div class="pd-x-10">
-                        <label class="tx-18" style='color: #3b6998;'>Shares in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['sLast72']; ?></p>
-                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up" style = "font-size: 2em;"></i> 6</span></p>
-                    </div>
-                   
-                <div >
-                         
-                            
-                         
+                    </a>
+                </div>
+                <div class="bd-r pd-x-10">
+                    <label class="tx-18" style='color: #3b6998;'>Posts in last 72h</label>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['pLast72']; ?></p>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
+                                style="font-size: 2em;"></i> 6</span></p>
+                </div>
+                <div class="bd-r pd-x-10">
+                    <label class="tx-18" style='color: #3b6998;'>Reactions in last 72h</label>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['rLast72']; ?></p>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger"><i class="fa fa-arrow-circle-o-down"
+                                style="font-size: 2em;"></i> -6</span></p>
+                </div>
+                <div class="bd-r pd-x-10">
+                    <label class="tx-18" style='color: #3b6998;'> &nbsp;Comments in last 72h</label>
+                    <p class="tx-lato tx-inverse tx-bold tx-24">&nbsp;<span
+                            style="text-size: 24px"><?php echo $global['cLast72']; ?></span></p>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
+                                style="font-size: 2em;"></i> 6</span></p>
+                </div>
+                <div class="pd-x-10">
+                    <label class="tx-18" style='color: #3b6998;'>Shares in last 72h</label>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['sLast72']; ?></p>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
+                                style="font-size: 2em;"></i> 6</span></p>
+                </div>
+
+                <div>
+
+
+
                     <!-- </div> -->
                 </div><!-- d-flex -->
             </div><!-- card pd-20 -->
         </div><!-- row m-t-30 -->
-     
+
 
         <div class="card pd-20 pd-sm-40">
             <div class="table-wrapper">
                 <?php echo form_open('dashboard', 'id='.'myform'); ?>
                 <div class="row form-group">
-                    <div class="col col-sm-3">
+                    <div class="col col-sm-2">
                         <input type="text" id="pagename" name="pagename" placeholder="Filter by page name"
                             class="form-control" onkeyup="searchFilter()" />
                     </div>
@@ -114,23 +123,27 @@ function searchFilter(page_num) {
                             <option value="3">Option #3</option>
                         </select>
                     </div>
-                    
-                <!-- </div>
+
+                    <!-- </div>
                 <div class="row form-group"> -->
-                    <div class="col col-sm-2">
-                        <label for="pwithoutPL24" class="form-check-label ">
-                            <input type="checkbox" id="pwithoutPL24" class="form-check-input" name="pwithoutPL24" 
-                                onchange="searchFilter()" />Pages without post in last 24h
+                    <div class="col col-sm-3">
+                        <label for="pwithoutPL24" class="ckbox">
+                            <input type="checkbox" id="pwithoutPL24" name="pwithoutPL24"
+                                onchange="searchFilter()" /><span class="tx-16"><b>Pages without post in last
+                                    24h</b></span>
+                        </label>
+                    </div>
+                    <div class="col col-sm-3">
+                        <label for="pwithoutPL72" class="ckbox">
+                            <input type="checkbox" id="pwithoutPL72" name="pwithoutPL72"
+                                onchange="searchFilter()" /><span class="tx-16"><b>Pages without post in last
+                                    72h</b></span>
                         </label>
                     </div>
                     <div class="col col-sm-2">
-                        <label for="pwithoutPL72" class="form-check-label ">
-                            <input type="checkbox" id="pwithoutPL72" class="form-check-input" name="pwithoutPL72" 
-                                onchange="searchFilter()" />Pages without post in last 72h
-                        </label>
-                    </div>
-                    <div class="col col-sm-2">
-                        <input id="button" onclick="resetform()" type="button" name="reset" value="Reset">
+                        <a id="button" href="" onclick="resetform()" name="reset" value="Reset"
+                            class="btn  btn-icon rounded-circle" style='font-size: xx-large;' data-toggle="tooltip"
+                            data-placement="top" title="Reset filter"><i class="fa fa-refresh"></i></a>
                     </div>
                 </div>
 
@@ -157,7 +170,13 @@ function searchFilter(page_num) {
 
                         <tr>
                             <td><?php echo $statistic['pname']; ?></td>
-                            <td class="process"><?php echo $statistic['pageLikes']; ?></td>
+                            <td><?php echo $statistic['pageLikes']; ?>
+                                <?php if($statistic['diffLikes'] >= 0): ?>
+                                <span class="tx-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-circle-o-up">&nbsp;<?php echo $statistic['diffLikes']; ?></i> </span>
+                                <?php else: ?>
+                                <span class="tx-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-circle-o-down">&nbsp;</i><?php echo $statistic['diffLikes']; ?></span>
+                                <?php endif; ?>
+                            </td>
                             <td>Group</td>
                             <td><?php echo $statistic['p24']; ?></td>
                             <td><?php echo $statistic['p72']; ?></td>
@@ -180,3 +199,8 @@ function searchFilter(page_num) {
 </div><!-- kt-pagebody -->
 
 <?php $this->load->view('includes/footer'); ?>
+<script> 
+     function resetform() {
+        location.reload();
+    }
+</script>

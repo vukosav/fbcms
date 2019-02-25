@@ -14,16 +14,12 @@
              <td><?php echo $group['addedby']; ?></td>
              <td><?php echo $group['createDate']; ?></td>
              <td>
-                 <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                     href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>" data-toggle="tooltip"
-                     data-placement="top" title="Edit group">
-                     <div><i class="fa fa-edit"></i></div>
-                 </a>
-                 <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
-                     onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href=""
-                     data-toggle="tooltip" data-placement="top" title="Delete group">
-                     <div><i class="fa fa-trash"></i></div>
-                 </a>
+                <a href="<?=base_url()?>editgrup/<?php echo $group['id']; ?>">
+                    <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit group"></span>
+                </a>
+                <a onclick="dellData(<?php echo $group['id'] .',&#39;' . base_url() . 'deletegrup/&#39;'; ?>)" href="">
+                    <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Delete group'></span>
+                </a>
              </td>
          </tr>
 

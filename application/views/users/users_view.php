@@ -62,9 +62,9 @@ function searchFilter(page_num) {
                         <?php endforeach; endif; ?>
                     </select>
                 </div>
-                <div class="col col-sm-3">
-                    <input id="button" onclick="resetform()" type="button" name="reset" value="Reset">
-                    <!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
+                <div class="col col-sm-1">
+                        <a id="button" href="" onclick="resetform()" name="reset" value="Reset"
+                         class="btn  btn-icon rounded-circle" style='font-size: xx-large;'  data-toggle="tooltip" data-placement="top" title="Reset filter"><i class="fa fa-refresh"></i></a>
                 </div>
             </div>
             <div class="table-wrapper" id="postList">
@@ -91,14 +91,11 @@ function searchFilter(page_num) {
                             <td><?php echo $user['addedby']; ?></td>
                             <td><?php echo $user['rname']; ?></td>
                             <td>
-                                <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    href="<?=base_url()?>showusers/<?php echo $user['id']; ?>">
-                                    <div><i class="fa fa-edit"></i></div>
+                                <a href="<?=base_url()?>showusers/<?php echo $user['id']; ?>">
+                                    <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit user"></span>
                                 </a>
-                                <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    onclick="dellData(<?php echo $user['id']  .',&#39;' . base_url() . 'deleteusr/&#39;'; ?>)"
-                                    href="">
-                                    <div><i class="fa fa-trash"></i></div>
+                                <a onclick="dellData(<?php echo $user['id']  .',&#39;' . base_url() . 'deleteusr/&#39;'; ?>)" href="">
+                                    <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Delete user'></span>
                                 </a>
                             </td>
                         </tr>
@@ -116,6 +113,9 @@ function searchFilter(page_num) {
 
     <?php $this->load->view('includes/footer'); ?>
     <script>
+    function resetform() {
+        location.reload();
+    }
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form
@@ -159,12 +159,5 @@ function searchFilter(page_num) {
             }
         });
 
-    }
-
-    function resetform() {
-        // document.getElementById("srcForm").reset();
-        document.getElementById("username").value = '';
-        document.getElementById("role").value = '';
-        location.reload();
     }
     </script>

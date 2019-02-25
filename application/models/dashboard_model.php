@@ -8,7 +8,7 @@ class Dashboard_model extends CI_Model{
     }
     
     function getRows($params = array()){
-        $this->db->select('page_statistic.pageLikes, page_statistic.p24, page_statistic.p72, pages.fbPageName as pname, users.username as addedby');
+        $this->db->select('page_statistic.pageLikes, page_statistic.diffLikes, page_statistic.p24, page_statistic.p72, pages.fbPageName as pname, users.username as addedby');
         $this->db->from('page_statistic');
         $this->db->join('pages', 'pages.id = page_statistic.page_id');
         $this->db->join('users', 'users.id = pages.userId');        

@@ -18,15 +18,13 @@
              <td><?php echo $page['addedby']; ?></td>
              <td><?php echo $page['group']; ?></td>
              <td>
-                 <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                     href="<?=base_url()?>editpage/<?php echo $page['id']; ?>" data-toggle="tooltip"
-                     data-placement="top" title="Edit page">
-                     <div><i class="fa fa-edit"></i></div>
+                 <a href="<?=base_url()?>editpage/<?php echo $page['id']; ?>">
+                     <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"
+                         data-toggle="tooltip" data-placement="top" title="Edit page"></span>
                  </a>
-                 <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
-                     onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)" href=""
-                     data-toggle="tooltip" data-placement="top" title="Delete page">
-                     <div><i class="fa fa-trash"></i></div>
+                 <a onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)" href="">
+                     <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'
+                         data-toggle='tooltip' data-placement='top' title='Delete page'></span>
                  </a>
              </td>
          </tr>

@@ -93,7 +93,7 @@ class Post extends MY_controller {
         
         //get posts data
         $data['posts'] = $this->post_model->getRows($conditions, $post_status);
-       
+        $data['pos'] = $post_status;
        // print_r($this->db->last_query());
         //load the view
         //$this->output->enable_profiler();

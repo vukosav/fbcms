@@ -1,4 +1,3 @@
- 
 <table id="datatable11" class="table table-striped">
                     <thead>
                     <tr>
@@ -48,28 +47,23 @@
                             <td><?php echo $q['pages']; ?></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-default" href="#">
-                                    <span class="fa fa-edit"></span>
-                                </a>
-                                <a class="btn btn-default" href="#">
-                                    <span class="fa fa-copy"></span>
-                                </a>
+                                <div class="btn-group1" role="group" aria-label="Basic example">
+                                 <a href="#"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"></span></a>
+                                 <a href="#"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;"></span></a>
+                                
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-calendar-o'></span></a>";
-                                }
-                                else{
+                                    echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
+                                }if($q['PostStatus']==3){
                                     if($q['ActionStatus']==1){
-                                    echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
+                                    echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pauze posting'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
+                                        echo "<a href='#'><span class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;' data-toggle='tooltip' data-placement='top' title='Continue posting'></span></a>";
                                     }
                                 } ?>
-                                <a class="btn btn-danger" href="#">
-                                    <span class="fa fa-trash"></span>
-                                </a>
+                                <a href="#"><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'></span></a>
+                                
                                 </div>
                             </td>
                         </tr>

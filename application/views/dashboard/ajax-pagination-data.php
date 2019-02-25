@@ -12,7 +12,15 @@
          <?php if(!empty($p_statistics)):  foreach ($p_statistics as $statistic): ?>
          <tr>
              <td><?php echo $statistic['pname']; ?></td>
-             <td class="process"><?php echo $statistic['pageLikes']; ?></td>
+             <td><?php echo $statistic['pageLikes']; ?>
+                 <?php if($statistic['diffLikes'] >= 0): ?>
+                 <span class="tx-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+                         class="fa fa-arrow-circle-o-up">&nbsp;<?php echo $statistic['diffLikes']; ?></i> </span>
+                 <?php else: ?>
+                 <span class="tx-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+                         class="fa fa-arrow-circle-o-down">&nbsp;</i><?php echo $statistic['diffLikes']; ?></span>
+                 <?php endif; ?>
+             </td>
              <td>Group</td>
              <td><?php echo $statistic['p24']; ?></td>
              <td><?php echo $statistic['p72']; ?></td>

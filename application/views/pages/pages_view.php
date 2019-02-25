@@ -53,11 +53,11 @@ function searchFilter(page_num) {
                 </div>
             </div>
             <div class="row form-group">
-                <div class="col col-sm-3">
+                <div class="col col-sm-2">
                     <input type="text" class="form-control" id="pagename" placeholder="Filter by page name"
                         onkeyup="searchFilter()" />
                 </div>
-                <div class="col col-sm-3">
+                <div class="col col-sm-2">
                     <select id="group" class="form-control" onchange="searchFilter()">
                         <option value="">Filter By group name</option>
                         <?php if(!empty($group)): foreach ($group as $gr): ?>
@@ -65,6 +65,10 @@ function searchFilter(page_num) {
                             <?php endforeach; endif; ?>
                     </select>
                 </div>
+                <div class="col col-sm-1">
+                        <a id="button" href="" onclick="resetform()" name="reset" value="Reset"
+                         class="btn  btn-icon rounded-circle" style='font-size: xx-large;'  data-toggle="tooltip" data-placement="top" title="Reset filter"><i class="fa fa-refresh"></i></a>
+                    </div>
             </div>
             <div class="table-wrapper" id="postList">
 
@@ -88,15 +92,11 @@ function searchFilter(page_num) {
                             <td><?php echo $page['addedby']; ?></td>
                             <td><?php echo $page['group']; ?></td>
                             <td>
-                                <a class="btn btn-default btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    href="<?=base_url()?>editpage/<?php echo $page['id']; ?>" data-toggle="tooltip"
-                                    data-placement="top" title="Edit page">
-                                    <div><i class="fa fa-edit"></i></div>
+                                <a href="<?=base_url()?>editpage/<?php echo $page['id']; ?>">
+                                    <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit page"></span>
                                 </a>
-                                <a class="btn btn-danger btn-icon rounded-circle mg-r-5 mg-b-10"
-                                    onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)"
-                                    href="" data-toggle="tooltip" data-placement="top" title="Delete page">
-                                    <div><i class="fa fa-trash"></i></div>
+                                <a onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)" href="">
+                                    <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Delete page'></span>
                                 </a>
                             </td>
                         </tr>
@@ -115,6 +115,9 @@ function searchFilter(page_num) {
     <?php $this->load->view('includes/footer'); ?>
 
     <script>
+    function resetform() {
+        location.reload();
+    }
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form

@@ -87,7 +87,6 @@ function searchFilter(page_num) {
                     <div class="col col-sm-2">
                         <a id="button" href="" onclick="resetform()" name="reset" value="Reset"
                          class="btn  btn-icon rounded-circle" style='font-size: xx-large;'  data-toggle="tooltip" data-placement="top" title="Reset filter"><i class="fa fa-refresh"></i></a>
-                        <!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
                     </div>
                 </div>
                 <div class="row form-group">
@@ -213,22 +212,22 @@ function searchFilter(page_num) {
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
-                                 <a href="#"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"></span></a>
-                                 <a href="#"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;"></span></a>
+                                 <a href="#"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
+                                 <a href="#"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
                                 
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;'></span></a>";
-                                }
-                                else{
+                                    echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
+                                }if($q['PostStatus']==3){
                                     if($q['ActionStatus']==1){
-                                    echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;'></span></a>";
+                                    echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pauze posting'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;'></span></a>";
+                                        echo "<a href='#'><span class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;' data-toggle='tooltip' data-placement='top' title='Continue posting'></span></a>";
                                     }
-                                } ?>
-                                <a href="#"><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'></span></a>
+                                }
+                                 ?>
+                                <a href="#"><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
                                 
                                 </div>
                             </td>
