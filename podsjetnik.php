@@ -1,15 +1,6 @@
-Iz view brisati news
-Iz models brisati news_model
+Ovaj alter ne mogu da uradim
+alter table `posts` add column post_type tinytext(10) not null; //moguce vrijednosti: message, link, image, video
 
-
-Za sve redove ukoliko je null rezultat upita da ne vrati gresku na stranici
-
-checkbox da se implementira kod search
-
-chackbox all post ne treba. To je kad nista nije cekirano.
-chackbox scheduled post da vidimo koja je ta situacija 
-chackbox post with error da vidimo kako te postove vratiti
-chackbox paused i in progres treba jedan drugog da iskuljucuju
 
 
 
