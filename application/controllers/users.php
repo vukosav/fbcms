@@ -191,7 +191,7 @@ class Users extends MY_controller {
         if($pwd['username']!=$this->input->post('username')){
             $is_uniqueUn =  '|is_unique[users.username]';
         } else {
-           $$is_uniqueUn =  '';
+           $is_uniqueUn =  '';
         }
         if($pwd['email']!=$this->input->post('email')){
             $is_uniqueEm =  '|is_unique[users.email]';
@@ -256,10 +256,76 @@ class Users extends MY_controller {
             redirect('/users/index');
         }
     }
+    
     public function show ($id){
         $data['users'] = $this->users_model->get_users($id);
         $data['users'] = array_shift($data['users']);
         $data['title'] = 'Edit user';
         $this->load->view('users/edit_users_view', $data);
+    }
+
+    public function editprofile (){
+        $this->load->helper(array('form', 'url'));
+        //$pwd = $this->users_model->get_users($this->session->userdata('user')['user_id']);
+        //$pwd = array_shift($pwd);
+        
+        
+        if($this->session->userdata('user')['username']!=$this->input->post('username')){
+            $is_uniqueUn =  '|is_unique[users.username]';
+        } else {
+           $is_uniqueUn =  '';
+        }
+        if($this->session->userdata('user')['email']!=$this->input->post('email')){
+            $is_uniqueEm =  '|is_unique[users.email]';
+        } else {
+           $is_uniqueEm =  '';
+        }
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules(
+            'username', 'Username',
+            'trim|required|min_length[2]'.$is_uniqueUn,
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        $this->form_validation->set_rules(
+            'email', 'E-mail',
+            'trim|required'.$is_uniqueEm,
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        
+        $data = array(
+            'username' => $this->input->post('username'),
+            'email' => $this->input->post('email'),
+            'name' => $this->input->post('fullname')
+        );
+      
+        if ($this->form_validation->run() === FALSE){
+            $data['title'] = 'Edit profile';
+            $data['users'] = false;
+            // $this->load->view('templates/header', $data);
+            // $this->load->view('news/create');
+            // $this->load->view('templates/footer');
+            // $this->load->view('users/users_view', $data);
+            //$this->output->enable_profiler();
+            // print_r($this->session->userdata);
+           $this->load->view('users/edit_profile_view', $data);
+        }else{
+            $newSessionData = array(
+                'username' => $this->input->post('username'),
+                'email' => $this->input->post('email'),
+                'name' => $this->input->post('fullname'),
+                'logged_in' => TRUE
+            );
+            $this->users_model->update($data, $this->session->userdata('user')['user_id']);
+            $data['title'] = 'Edit profile';
+            $this->session->set_userdata('user', $newSessionData);
+            redirect('dashboard');
+        }
     }
 }
