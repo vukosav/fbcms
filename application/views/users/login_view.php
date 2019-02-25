@@ -4,7 +4,7 @@
     <?php echo form_open('login'); ?>
       <div class="signbox">
         <div class="signbox-header">
-          <h4>DATADATA</h4>
+          <h4>DATADAT</h4>
           <p class="mg-b-0">Please type your email and password!</p>
         </div><!-- signbox-header -->
         <div class="signbox-body">

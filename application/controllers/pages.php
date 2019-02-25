@@ -1,15 +1,15 @@
 <?php
 
-class Pages extends CI_Controller {
+class Pages extends MY_controller {
 
     public function __construct()
     {
             parent::__construct();
             $this->load->model('pages_model');
-            $this->load->helper('url_helper');
-            $this->load->model('other_model');
-            $this->load->library('Ajax_pagination');
-            $this->perPage = 2;
+            // $this->load->helper('url_helper');
+            // $this->load->model('other_model');
+            // $this->load->library('Ajax_pagination');
+            // $this->perPage = 2;
     }
 
     function ajaxPaginationData(){

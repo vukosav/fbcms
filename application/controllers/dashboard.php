@@ -1,14 +1,14 @@
 <?php
 
-class Dashboard extends CI_Controller {
+class Dashboard extends MY_controller {
 
     public function __construct()
     {
             parent::__construct();
             $this->load->model('dashboard_model');
-            $this->load->helper('url_helper');
-            $this->load->library('Ajax_pagination');
-            $this->perPage = 4;
+            // $this->load->helper('url_helper');
+            // $this->load->library('Ajax_pagination');
+            // $this->perPage = 4;
     }
 
     function ajaxPaginationData(){

@@ -85,7 +85,8 @@ function searchFilter(page_num) {
                         </select>
                     </div>
                     <div class="col col-sm-2">
-                        <input id="button" onclick="resetform()" type="button" name="reset" value="Reset">
+                        <a id="button" href="" onclick="resetform()" name="reset" value="Reset"
+                         class="btn  btn-icon rounded-circle" style='font-size: xx-large;'  data-toggle="tooltip" data-placement="top" title="Reset filter"><i class="fa fa-refresh"></i></a>
                         <!-- <button class="btn btn-info btn-sm" name="reset">Reset</button> -->
                     </div>
                 </div>
@@ -114,44 +115,45 @@ function searchFilter(page_num) {
                             </div> -->
                             <?php if($this->uri->segment(2) == 1): ?>
                             <div class="col col-sm-2">
-                                <label for="scheduled" class="form-check-label ">
-                                    <input type="checkbox" id="scheduled" class="form-check-input" name="scheduled" onchange="searchFilter()" />Scheduled
-                                    posts
+                                <label for="scheduled" class="ckbox">
+                                    <input type="checkbox" id="scheduled" name="scheduled" onchange="searchFilter()" />
+                                    <span class="tx-16"><b>Scheduled posts</b></span>
                                 </label>
                             </div>
                     <div class="col col-sm-2">
-                        <label for="inProgres" class="form-check-label ">
-                            <input type="checkbox" id="inProgres" class="form-check-input" name="inProgres" onchange="searchFilter()"
-                                />In progres posts
+                        <label for="inProgres" class="ckbox">
+                            <input type="checkbox" id="inProgres" name="inProgres" onchange="searchFilter()"
+                                /><span class="tx-16"><b>In progres posts</b></span>
                         </label>
                     </div>
                     <div class="col col-sm-2">
-                        <label for="paused" class="form-check-label ">
-                            <input type="checkbox" id="paused" class="form-check-input" name="paused" onchange="searchFilter()"
-                                />Paused posts
+                        <label for="paused" class="ckbox">
+                            <input type="checkbox" id="paused"  name="paused" onchange="searchFilter()"
+                                /><span class="tx-16"><b>Paused posts</b></span>
                         </label>
                     </div>
                     <div class="col col-sm-2">
-                        <label for="errors" class="form-check-label ">
-                            <input type="checkbox" id="errors" class="form-check-input" name="errors" onchange="searchFilter()"
-                                >Posts with errors
+                        <label for="errors" class="ckbox">
+                            <input type="checkbox" id="errors"  name="errors" onchange="searchFilter()"
+                                ><span class="tx-16"><b>Posts with errors</b></span>
                         </label>
                     
                     </div>
                     <?php elseif($this->uri->segment(2) == 3): ?>
                     <div class="col col-sm-2">
-                        <label for="errors" class="form-check-label ">
-                            <input type="checkbox" id="errors" class="form-check-input" name="errors" onchange="searchFilter()"
-                                >Posts with errors
+                        <label for="errors" class="ckbox">
+                            <input type="checkbox" id="errors"  name="errors" onchange="searchFilter()"
+                                ><span class="tx-16"><b>Posts with errors</b></span>
                         </label>
                     </div>
                     <?php endif; ?>
-                    <div class="col col-sm-2">
-                        <label for="archived" class="form-check-label ">
-                            <input type="checkbox" id="archived" class="form-check-input" name="archived" onchange="searchFilter()"
-                                />Archived posts
+                    
+                    <div class="col col-sm-2"> 
+                        <label for="archived" class="ckbox">
+                            <input type="checkbox" id="archived"  name="archived" onchange="searchFilter()"/><span class="tx-16"><b>Archived posts</b></span>
                         </label>
-                    </div>
+                     </div>
+                   
                 </div>
 
                 </form>
@@ -211,27 +213,23 @@ function searchFilter(page_num) {
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
-                                <a class="btn btn-default" href="#">
-                                    <span class="fa fa-edit"></span>
-                                </a>
-                                <a class="btn btn-default" href="#">
-                                    <span class="fa fa-copy"></span>
-                                </a>
+                                 <a href="#"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"></span></a>
+                                 <a href="#"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;"></span></a>
+                                
                                 <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<br><a class='btn btn-default' href='#'><span class='fa fa-calendar-o'></span></a>";
+                                    echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;'></span></a>";
                                 }
                                 else{
                                     if($q['ActionStatus']==1){
-                                    echo "<br><a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
+                                    echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<br><a class='btn btn-default' href='#'><span class='fa fa-pause'></span></a>";
+                                        echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;'></span></a>";
                                     }
                                 } ?>
-                                <a class="btn btn-danger" href="#">
-                                    <span class="fa fa-trash" style="font-size: 14px"></span>
-                                </a>
+                                <a href="#"><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'></span></a>
+                                
                                 </div>
                             </td>
                         </tr>
@@ -248,12 +246,11 @@ function searchFilter(page_num) {
     </div><!-- kt-pagebody -->
 
     <?php $this->load->view('includes/footer'); ?>
-    <!-- <script>
-    function resetform() {
-        document.getElementById("myform").reset();
+  
+    <script> 
+     function resetform() {
+        location.reload();
     }
-    </script> -->
-    <script>
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form

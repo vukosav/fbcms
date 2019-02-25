@@ -54,14 +54,11 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['posting/(:any)'] = 'post/index/$1';
-// $route['draft'] = 'post/draft';
-// $route['sent'] = 'post/sent';
-// $route['addpost'] = 'post/addpost';
 $route['addusers'] = 'users/addusr';
 $route['editusers'] = 'users/edit';
 $route['showusers/(:any)'] = 'users/show/$1';
-$route['login'] = 'users/login';
-$route['logout'] = 'users/logout';
+$route['login'] = 'login/login';
+$route['logout'] = 'login/logout';
 $route['users'] = 'users/index';
 $route['deleteusr/(:any)'] = 'users/delete/$1';
 $route['createuesrs'] = 'users/createusr';

@@ -1,15 +1,15 @@
 <?php
 
-class Groups extends CI_Controller {
+class Groups extends MY_controller {
 
     public function __construct()
     {
             parent::__construct();
             $this->load->model('groups_model');
             $this->load->model('pages_model');
-            $this->load->model('other_model');
-            $this->load->library('Ajax_pagination');
-            $this->perPage = 4;
+            // $this->load->model('other_model');
+            // $this->load->library('Ajax_pagination');
+            // $this->perPage = 4;
     }
     
     function ajaxPaginationData(){
@@ -83,7 +83,7 @@ class Groups extends CI_Controller {
         $data['usr'] = $this->other_model->get_users();
 
         //load the view
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('groups/manual_group_view', $data);
 
         // $status['IsActive'] = true;
@@ -146,7 +146,7 @@ class Groups extends CI_Controller {
         $data['title'] = 'Edit Groups';
         // print_r($data);
         $this->load->view('groups/edit_group', $data);
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
     }
     public function insertPagesGroups() {
         //$this->load->helper(array('form', 'url'));

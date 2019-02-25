@@ -45,56 +45,58 @@ function searchFilter(page_num) {
     </div><!-- kt-pagetitle -->
 
     <div class="kt-pagebody">
-    <div class="card pd-20">
-            <!-- <div class="form-group">
-                <div class="col-lg-2">
-                    <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i>&nbsp; Shedule new
-                        post</button>
-                </div>
-
-                <div class="col-lg-2">
-                    <button type="button" class="btn btn-default"> <i class="fa fa-facebook"></i>&nbsp; Add new FB
-                        page</button>
-                </div>
-            </div> -->
             <div class="card pd-20">
-                <h6 class="tx-12 tx-uppercase tx-info tx-bold mg-b-15">Facebook Report</h6>
+                <h6 class="tx-12 tx-uppercase tx-info tx-bold mg-b-15"></h6>
                 <div class="d-flex mg-b-5">
+                    <div class="pd-r-10">
+                        <div style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;"> 
+                               <i class="fa fa-plus-circle" style = "font-size: 4em;"></i>
+                               <div style="background:#3b6998; color:white; text-align:center; height:20px;">
+                                  <h6>Schedule new post</h6> 
+                               </div>
+                            
+                        </div>
+                    </div>
                     <div class="bd-r pd-r-10">
-                        <label class="tx-12">Posts in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold"><?php echo $global['pLast72']; ?></p>
+                        <div style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;"> 
+                               <i class="fa fa-facebook" style = "font-size: 4em;"></i>
+                               <div style="background:#3b6998; color:white; text-align:center; height:20px;">
+                                  <h6>Add new fb page</h6> 
+                               </div>
+                            
+                        </div>
                     </div>
                     <div class="bd-r pd-x-10">
-                        <label class="tx-12">Reactions in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold"><?php echo $global['rLast72']; ?></p>
+                        <label class="tx-18" style='color: #3b6998;'>Posts in last 72h</label>
+                        <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['pLast72']; ?></p>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up" style = "font-size: 2em;"></i> 6</span></p>
                     </div>
-                    <div class="bd-r pd-r-10">
-                        <label class="tx-12"> &nbsp;Comments in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold">&nbsp;<span
+                    <div class="bd-r pd-x-10">
+                        <label class="tx-18" style='color: #3b6998;'>Reactions in last 72h</label>
+                        <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['rLast72']; ?></p>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger"><i class="fa fa-arrow-circle-o-down" style = "font-size: 2em;"></i> -6</span></p>
+                    </div>
+                    <div class="bd-r pd-x-10">
+                        <label class="tx-18" style='color: #3b6998;'> &nbsp;Comments in last 72h</label>
+                        <p class="tx-lato tx-inverse tx-bold tx-24">&nbsp;<span
                                 style="text-size: 24px"><?php echo $global['cLast72']; ?></span></p>
+                                <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up" style = "font-size: 2em;"></i> 6</span></p>
                     </div>
                     <div class="pd-x-10">
-                        <label class="tx-12">Shares in last 72h</label>
-                        <p class="tx-lato tx-inverse tx-bold"><?php echo $global['sLast72']; ?></p>
+                        <label class="tx-18" style='color: #3b6998;'>Shares in last 72h</label>
+                        <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['sLast72']; ?></p>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up" style = "font-size: 2em;"></i> 6</span></p>
                     </div>
-                    <div class="form-group">
-                        <div class="col-lg-2">
-                            <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i>&nbsp; Shedule new
-                                post</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-lg-2">
-                            <button type="button" class="btn btn-default"> <i class="fa fa-facebook"></i>&nbsp; Add new
-                                FB
-                                page</button>
-                        </div>
-                    </div>
+                   
+                <div >
+                         
+                            
+                         
+                    <!-- </div> -->
                 </div><!-- d-flex -->
             </div><!-- card pd-20 -->
         </div><!-- row m-t-30 -->
-        <div class="form-group">
-        </div>
+     
 
         <div class="card pd-20 pd-sm-40">
             <div class="table-wrapper">

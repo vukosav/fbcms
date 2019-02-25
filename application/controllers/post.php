@@ -1,15 +1,15 @@
 <?php
 
-class Post extends CI_Controller {
+class Post extends MY_controller {
 
     public function __construct()
     {
             parent::__construct();
             $this->load->model('post_model');
-            $this->load->helper('url_helper');
-            $this->load->model('other_model');
-            $this->load->library('Ajax_pagination');
-            $this->perPage = 50;
+            // $this->load->helper('url_helper');
+            // $this->load->model('other_model');
+            // $this->load->library('Ajax_pagination');
+            // $this->perPage = 4;
     }
 
     function ajaxPaginationData(){

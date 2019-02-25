@@ -47,21 +47,44 @@ function searchFilter(page_num) {
 
     <div class="kt-pagebody">
         <div class="card pd-20 pd-sm-40">
-            <div class="form-group">
-                <?php echo form_open('creategrp'); ?>
-                <span class="tx-danger"><?php echo validation_errors(); ?></span>
+           <div class="form-group">
+              <!--    <?php //echo form_open('creategrp'); ?>
+                <span class="tx-danger"><?php// echo validation_errors(); ?></span>
                 <div class="input-group">
                     <input type="text" name="groupname" class="col col-md-6 form-control" placeholder="Type grup name"
-                        required value="<?php echo set_value('groupname'); ?>">
+                        required value="<?php //echo set_value('groupname'); ?>">
                     <div class="input-group-btn">
                         <button class="btn btn-default" data-toggle="tooltip" data-placement="top"
                             title="Add new group">Add new group</button>
                     </div>
                 </div>
             </div>
-            </form>
+            </form> -->
 
-
+            
+            
+            <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content tx-size-sm">
+              <div class="modal-header pd-x-20">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Message Preview</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body pd-20">
+                  <form name="formGroupName" action = "<?=base_url()?>creategrp" method="POST">
+                      <input type="text" name="groupname" class="col col-md-12 form-control" placeholder="Type grup name"required >
+                 </form>
+            </div><!-- modal-body -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pd-x-20" onclick="submitform()">Save changes</button>
+                <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div><!-- modal-dialog -->
+        </div>
+            <!------------------------------>
             <div class="row form-group">
                 <div class="col col-sm-2">
                     <input type="text" class="form-control" id="grname" placeholder="Type group name"
@@ -82,6 +105,7 @@ function searchFilter(page_num) {
                         <?php endforeach; endif; ?>
                     </select>
                 </div>
+                <a href="" class="btn btn-default" data-toggle="modal" data-target="#modaldemo3">Add new group</a>
             </div>
             <div class="table-wrapper" id="postList">
 
@@ -128,6 +152,12 @@ function searchFilter(page_num) {
     <?php $this->load->view('includes/footer'); ?>
 
     <script>
+
+function submitform()
+{
+  document.formGroupName.submit();
+}
+
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form
