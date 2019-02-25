@@ -60,7 +60,7 @@ class Upload extends CI_Controller {
 		date_default_timezone_set($this->currentUser['timezone']);
 
 		$this->userFolder = UPLOADS_FOLDER . "/" . $this->currentUser['username'];*/
-		$this->userFolder = "files/jelena";
+		$this->userFolder = "files/ksenija";
 	}
 
 	public function upload_video(){
@@ -136,7 +136,7 @@ class Upload extends CI_Controller {
 
 		if (!file_exists($this->userFolder . '/index.html')) {
 			$handle = fopen($this->userFolder . '/index.html','w+'); 
-			fwrite($handle,"<h1>404 Not Found</h1>\nThe page that you have requested could not be found."); 
+			fwrite($handle,"<h1>404 Not Found</h1>\nThe page that you have AAAAAAAAAAAAAAAAAAArequested could not be found."); 
 			fclose($handle); 
 		}
 

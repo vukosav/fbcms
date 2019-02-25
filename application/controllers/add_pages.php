@@ -6,7 +6,7 @@ class Add_Pages extends CI_Controller {
          parent::__construct();
          $this->load->helper('url_helper');
          $this->load->library('FacebookPersistentDataInterface');
-         $this->load->model('pages_model');
+         $this->load->model('fb_model');
     }
 
     public function index(){
@@ -47,7 +47,7 @@ class Add_Pages extends CI_Controller {
                 $user_id=1;
                 $_SESSION['user_id']=$user_id;
                                
-                $this->pages_model->insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken);
+                $this->fb_model->insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken);
 
                          
             $fb = new \Facebook\Facebook([
@@ -79,7 +79,7 @@ class Add_Pages extends CI_Controller {
            //echo '<br> 1. niz pages: ';
            //var_dump($pages);
            
-          $new_pages = $this->pages_model->list_new_pages($pages,$user_id);
+          $new_pages = $this->fb_model->list_new_pages($pages,$user_id);
           // $new_pages=$fb_pages['data'];
          //   echo '<br><br> 2. niz new pages: ';
            // var_dump($new_pages);
@@ -123,7 +123,7 @@ class Add_Pages extends CI_Controller {
                                 $fbpage_id=substr ($strval , 6 , $pos-6);
                                 $fbPage_name=substr ($strval ,$pos+5);
                                 
-                                $res= $this->pages_model->insert_page($fbpage_id, $fbPage_name, $user_id);
+                                $res= $this->fb_model->insert_page($fbpage_id, $fbPage_name, $user_id);
                                 if($res>0){
                                    // echo '<br>Page id:' . $fbpage_id;
                                    // echo '<br>Page name:' . $fbPage_name; 

@@ -1,0 +1,10 @@
+---------------------DATABASE UPDATE-------------
+alter table `posts` add column post_type tinytext(10) not null; //moguce vrijednosti: message, link, image, video
+alter table `posts` add column isScheduled int(10) not null default 0;
+alter table `posts` add column scheduledTime  datetime null;
+
+---------------- funkcije za konvevrziju iz date() u unix timestamp i nazad, 
+----------------potrebne za slanje scheduled fb posta
+strtotime('2012-07-25 14:35:08' );// vraca unix timestamp, int(11) datatype in mysql
+date("Y-m-d H:i:s", $unixTimestamp);
+

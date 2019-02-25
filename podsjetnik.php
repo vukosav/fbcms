@@ -40,6 +40,7 @@ CREATE TABLE `fb_users` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ----------------------------------
+//jelena odradila update baze//
 
 ////----------END UPDATE BAZE ---------------/////
 
