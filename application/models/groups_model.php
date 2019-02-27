@@ -105,6 +105,7 @@ class Groups_model extends CI_Model{
     public function delete($id){
         $this->db->set('IsActive', false);
         $this->db->where('id', $id);
+        $this->db->where('userId', $this->session->userdata('user')['user_id']);
         $this->db->update('groups');
         //$this->db->delete('users', $id);
         return $this->db->affected_rows();

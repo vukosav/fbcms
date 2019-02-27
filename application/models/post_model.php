@@ -29,6 +29,9 @@ class Post_model extends CI_Model{
             $this->db->where('posts_pages.pageId',$params['search']['fbpage']);
         }
         //filter data by searched keywords
+        if($this->session->userdata('user')['role'] == 2){
+            $this->db->where('posts.created_by = ',$this->session->userdata('user')['user_id']);
+        }
         if(!empty($params['search']['createdBy'])){
             $this->db->where('posts.created_by = ',$params['search']['createdBy']);
         }

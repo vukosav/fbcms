@@ -19,7 +19,7 @@
           </ul>
         </li>nav-item -->
         <li class="nav-item">
-          <a href="<?=base_url()?>/posting/1" class="nav-link <?php if($this->uri->segment(1)=="posting"){echo "active";}?>">
+          <a href="<?=base_url()?>posting/1" class="nav-link <?php if($this->uri->segment(1)=="posting"){echo "active";}?>">
             <i class="icon ion-ios-list-outline"></i>
             <span>Posting</span>
           </a>

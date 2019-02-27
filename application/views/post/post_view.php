@@ -98,10 +98,14 @@ function searchFilter(page_num) {
                     </div>
                     <div class="col col-sm-2">
                         <select class="form-control" id="createdBy" name="createdBy" onchange="searchFilter()">
+                            <?php if($this->session->userdata('user')['role'] == 2): ?>
+                            <option value="<?php echo $this->session->userdata('user')['user_id']; ?>"><?php echo $this->session->userdata('user')['username']; ?></option>
+                            <?php else: ?>
                             <option value="">created by</option>
                             <?php if(!empty($usr)): foreach ($usr as $user): ?>
                             <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
                             <?php endforeach; endif; ?>
+                            <?php endif; ?>
                         </select>
                     </div>
                 </div>

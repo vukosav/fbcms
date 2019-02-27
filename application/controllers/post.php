@@ -26,7 +26,11 @@ class Post extends MY_controller {
         
         //set conditions for search
         $wtitle = $this->input->post('wtitle');
-        $createdBy = $this->input->post('createdBy');
+        if($this->session->userdata('user')['role'] == 2){
+            $createdBy = $this->session->userdata('user')['user_id'];
+        }else{
+            $createdBy = $this->input->post('createdBy');
+        }
         // $group = $this->input->post('group');
         $fbpage = $this->input->post('fbpage');
         $date_from = $this->input->post('date_from')?  $this->input->post('date_from') .' 00:00:00':false;

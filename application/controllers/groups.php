@@ -138,8 +138,13 @@ class Groups extends MY_controller {
     }
 
     public function edit($id){
-        $status['IsActive'] = true;
         $data['groups'] = $this->groups_model->get_groups($id);
+        $aa = $data['groups'];
+        $aa = array_shift($aa);
+        if($aa['userId'] !== $this->session->userdata('user')['user_id']){
+            redirect('/groups/index');
+        }
+
         $data['added_pages'] = $this->pages_model->get_added_pages($id);
         $data['free_pages'] = $this->pages_model->get_free_pages($id);
 

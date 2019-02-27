@@ -53,54 +53,91 @@ function searchFilter(page_num) {
                 </figure>
 
 
+                <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content tx-size-sm">
+                            <div class="modal-header pd-x-20">
+                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Resset password</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body pd-20">
+                            <?php  $attributes = array('name' => 'formRessetPass');
+                            echo form_open('ressetpwd', $attributes); ?>
+                                <!-- <form name="formRessetPass" action="<?//=base_url()?>ressetpwd" method="POST"> -->
+
+                                    <div class='error_msg'>
+                                        <span class="tx-danger"><?php echo validation_errors(); ?></span>
+                                    </div>
+                                    <input type="password" id="password" name="password"
+                                        class="col col-md-12 form-control" placeholder="Type password" required />
+                                    <input type="password" id="conpassword" name="conpassword"
+                                        class="col col-md-12 form-control" placeholder="Retype password" required>
+                                </form>
+                            </div><!-- modal-body -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pd-x-20"
+                                    onclick="submitform()">Resset</button>
+                                <button type="button" class="btn btn-secondary pd-x-20"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div><!-- modal-dialog -->
+                </div>
+                <!------------------------------>
+
+
+
+
+
+
             </div><!-- col-3 -->
             <div class="col-md-8 col-lg-9 mg-t-30 mg-md-t-0">
                 <label class="content-left-label">Personal Information</label>
                 <div class="card bg-gray-200 bd-0">
                     <div class="edit-profile-form">
-                    <?php echo form_open('editprofile'); ?>
-                    <span class="tx-danger"><?php echo validation_errors(); ?></span>
+                        <?php echo form_open('editprofile'); ?>
+                        <span class="tx-danger"><?php echo validation_errors(); ?></span>
                         <div class="form-group row">
-                            <label class="col-sm-3 form-control-label">Fullname:<span
-                                    class="tx-danger">*</span></label>
+                            <label class="col-sm-3 form-control-label">Fullname:<span class="tx-danger">*</span></label>
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
-                                <input class="form-control" id="fullname" name="fullname" type="text" value="<?php echo  set_value('fullname')?set_value('fullname'):$this->session->userdata('user')['name']?>">
+                                <input class="form-control" id="fullname" name="fullname" type="text" required
+                                    value="<?php echo  set_value('fullname')?set_value('fullname'):$this->session->userdata('user')['name']?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-3 form-control-label">Email: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
-                                <input class="form-control" id="email" name="email" type="email"
-                                value="<?php echo set_value('email')? set_value('email'):$this->session->userdata('user')['email']?>">
+                                <input class="form-control" id="email" name="email" type="email" required
+                                    value="<?php echo set_value('email')? set_value('email'):$this->session->userdata('user')['email']?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-3 form-control-label">Username: <span
                                     class="tx-danger">*</span></label>
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
-                                <input class="form-control" type="text" id="username" name="username" 
-                                value="<?php echo set_value('username') ? set_value('username'):$this->session->userdata('user')['username']; ?>">
+                                <input class="form-control" type="text" id="username" name="username" required
+                                    value="<?php echo set_value('username') ? set_value('username'):$this->session->userdata('user')['username']; ?>">
                             </div>
                         </div>
                         <div class="form-group row">
-                        <label class="col-sm-3 form-control-label">Password: <span
-                                    class="tx-danger"></span></label>
+                            <label class="col-sm-3 form-control-label">Password: <span class="tx-danger"></span></label>
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
-                                <a href="">Change Password</a>
+                                <a href="" data-toggle="modal" data-target="#modaldemo3">Change Password</a>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 form-control-label"> <span
-                                    class="tx-danger"></span></label>
+                            <label class="col-sm-3 form-control-label"> <span class="tx-danger"></span></label>
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
                                 <button class="btn btn-default">Update</button>
-                                
+
                             </div>
                         </div>
                         </form>
                     </div><!-- wd-60p -->
                 </div><!-- card -->
-     
+
 
             </div><!-- col-9 -->
         </div><!-- row -->
@@ -108,3 +145,8 @@ function searchFilter(page_num) {
     </div><!-- kt-pagebody -->
 
     <?php $this->load->view('includes/footer'); ?>
+    <script>
+    function submitform() {
+        document.formRessetPass.submit();
+    }
+      </script>

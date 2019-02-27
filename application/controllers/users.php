@@ -5,13 +5,12 @@ class Users extends MY_controller {
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('users_model');
-            $this->load->helper('url_helper');
-            $this->load->model('other_model');
-            $this->load->library('Ajax_pagination');
-            $this->perPage = 4;
-            $this->load->helper('cookie');
-    
+            // $this->load->model('users_model');
+            // $this->load->helper('url_helper');
+            // $this->load->model('other_model');
+            // $this->load->library('Ajax_pagination');
+            // $this->perPage = 4;
+            // $this->load->helper('cookie');
     }
 
     function ajaxPaginationData(){
@@ -59,6 +58,8 @@ class Users extends MY_controller {
     }
 
     public function index(){
+        $this->no_Admin_permition();
+
         $data = array();
         
         //total rows count
@@ -90,18 +91,16 @@ class Users extends MY_controller {
 
     public function addusr(){
 
-        
-        // $q_post['title'] = 'Queued posts';
-        // $this->output->enable_profiler();
-        // $this->load->view('post/post_queued_view', $q_post);
+        $this->no_Admin_permition();
 
-        // $s_post['sent'] = $this->post_model->get_sent();
         $s_post['title'] = 'Add new user';
         $this->load->view('users/create_users_view',$s_post);
     }
     
     public function createusr(){
         
+        $this->no_Admin_permition();
+
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation');
 
@@ -180,11 +179,14 @@ class Users extends MY_controller {
     }
 
     public function delete ($id){
+        $this->no_Admin_permition();
         $this->users_model->delete($id);
         redirect('/users/index');
     }
 
     public function edit (){
+        $this->no_Admin_permition();
+
         $this->load->helper(array('form', 'url'));
         $pwd = $this->users_model->get_users($this->input->post('id'));
         $pwd = array_shift($pwd);
@@ -258,6 +260,7 @@ class Users extends MY_controller {
     }
     
     public function show ($id){
+        $this->no_Admin_permition();
         $data['users'] = $this->users_model->get_users($id);
         $data['users'] = array_shift($data['users']);
         $data['title'] = 'Edit user';
@@ -265,10 +268,7 @@ class Users extends MY_controller {
     }
 
     public function editprofile (){
-        $this->load->helper(array('form', 'url'));
-        //$pwd = $this->users_model->get_users($this->session->userdata('user')['user_id']);
-        //$pwd = array_shift($pwd);
-        
+        $this->load->helper(array('form', 'url'));    
         
         if($this->session->userdata('user')['username']!=$this->input->post('username')){
             $is_uniqueUn =  '|is_unique[users.username]';
@@ -308,23 +308,67 @@ class Users extends MY_controller {
         if ($this->form_validation->run() === FALSE){
             $data['title'] = 'Edit profile';
             $data['users'] = false;
-            // $this->load->view('templates/header', $data);
-            // $this->load->view('news/create');
-            // $this->load->view('templates/footer');
-            // $this->load->view('users/users_view', $data);
-            //$this->output->enable_profiler();
+            // $this->output->enable_profiler();
             // print_r($this->session->userdata);
-           $this->load->view('users/edit_profile_view', $data);
+            $this->load->view('users/edit_profile_view', $data);
         }else{
             $newSessionData = array(
-                'username' => $this->input->post('username'),
-                'email' => $this->input->post('email'),
-                'name' => $this->input->post('fullname'),
-                'logged_in' => TRUE
+                'user_id'   => $this->session->userdata('user')['user_id'],
+                'username'  => $this->input->post('username'),
+                'name'      => $this->input->post('fullname'),
+                'email'     => $this->input->post('email'),
+                'logged_in' => TRUE,
+                'role'      => $this->session->userdata('user')['role']
             );
             $this->users_model->update($data, $this->session->userdata('user')['user_id']);
             $data['title'] = 'Edit profile';
             $this->session->set_userdata('user', $newSessionData);
+            redirect('dashboard');
+        }
+    }
+    public function no_Admin_permition(){
+        if(!isset($this->session->userdata('user')['role'])){
+            return redirect('dashboard');
+        }
+        if($this->session->userdata('user')['role']== 2){
+            return redirect('dashboard');
+        }
+    return true;
+    }
+
+    public function ressetpassword (){
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules(
+            'password', 'Password',
+            'trim|required|min_length[6]',
+            array(
+                    'required'      => 'You have not provided %s.'
+            )
+        );
+        
+        $this->form_validation->set_rules(
+            'conpassword', 'Confirm Password',
+            'trim|required|matches[password]',
+            array(
+                    'required'      => 'You have not provided %s.'
+            )
+        );
+
+        $data['salt'] = substr(md5(uniqid(rand(), true)), 0, 32);
+        $data['password'] = $this->hash_password($this->input->post('password'),  $data['salt']);
+
+        if ($this->form_validation->run() === FALSE){
+            $data['title'] = 'Edit profile';
+            $data['users'] = false;
+            // $this->output->enable_profiler();
+            // print_r($this->session->userdata);
+            //echo $this->get_list();
+            $this->load->view('users/edit_profile_view', $data);
+        }else{
+            $this->users_model->update($data, $this->session->userdata('user')['user_id']);
+            $data['title'] = 'Edit profile';
             redirect('dashboard');
         }
     }

@@ -89,12 +89,5 @@ class Dashboard extends MY_controller {
         //load the view
         //$this->output->enable_profiler();
         $this->load->view('dashboard/dashboard_view', $data);
-
-        // $status['IsActive'] = true;
-        // $data['groups'] = $this->groups_model->get_groups();
-        // $data['title'] = 'Manual Groups';
-        // $this->output->enable_profiler();
-        // $this->load->view('groups/manual_group', $data);
-
     }
 }
