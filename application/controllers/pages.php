@@ -5,9 +5,9 @@ class Pages extends MY_controller {
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('pages_model');
+            $this->load->model('Pages_model');
             // $this->load->helper('url_helper');
-            // $this->load->model('other_model');
+            // $this->load->model('Other_model');
             // $this->load->library('Ajax_pagination');
             // $this->perPage = 2;
     }
@@ -34,7 +34,7 @@ class Pages extends MY_controller {
         }
 
         //total rows count
-        $totalRec = count($this->pages_model->getRows($conditions));
+        $totalRec = count($this->Pages_model->getRows($conditions));
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -49,7 +49,7 @@ class Pages extends MY_controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['pages'] = $this->pages_model->getRows($conditions);
+        $data['pages'] = $this->Pages_model->getRows($conditions);
         
         //print_r($this->db->last_query());
         //load the view
@@ -62,7 +62,7 @@ class Pages extends MY_controller {
         $data = array();
         
         //total rows count
-        $totalRec = count($this->pages_model->getRows());
+        $totalRec = count($this->Pages_model->getRows());
 
         //pagination configuration
         $config['target']      = '#postList';
@@ -73,12 +73,12 @@ class Pages extends MY_controller {
         $this->ajax_pagination->initialize($config);
 
         //get the posts data
-        $data['pages'] = $this->pages_model->getRows(array('limit'=>$this->perPage));
+        $data['pages'] = $this->Pages_model->getRows(array('limit'=>$this->perPage));
         
         $data['title'] = 'Pages';
 
         //load users for filter
-        $data['group'] = $this->other_model->get_group();
+        $data['group'] = $this->Other_model->get_group();
 
         //load the view
         //$this->output->enable_profiler();
@@ -87,14 +87,14 @@ class Pages extends MY_controller {
 
     }
     public function delete ($id){
-        $this->pages_model->delete($id);
+        $this->Pages_model->delete($id);
         redirect('/pages/index');
     }
 
     public function edit($id){
-        $data['pages'] = $this->pages_model->get_pages($id);
-        $data['added_groups'] = $this->pages_model->get_added_groups($id);
-        $data['free_groups'] = $this->pages_model->get_free_groups($id);
+        $data['pages'] = $this->Pages_model->get_pages($id);
+        $data['added_groups'] = $this->Pages_model->get_added_groups($id);
+        $data['free_groups'] = $this->Pages_model->get_free_groups($id);
 
         $data['title'] = 'Edit Pages';
         // print_r($data);

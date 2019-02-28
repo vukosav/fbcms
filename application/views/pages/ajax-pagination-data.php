@@ -16,7 +16,7 @@
              <td><?php echo $page['fbPageId']; ?></td>
              <td><?php echo $page['dateAdded']; ?></td>
              <td><?php echo $page['addedby']; ?></td>
-             <td><?php echo $page['group']; ?></td>
+             <td><?php echo $page['groups']; ?></td>
              <td>
                  <a href="<?=base_url()?>editpage/<?php echo $page['id']; ?>">
                      <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"

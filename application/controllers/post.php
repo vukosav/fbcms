@@ -5,9 +5,9 @@ class Post extends MY_controller {
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('post_model');
+            $this->load->model('Post_model');
             // $this->load->helper('url_helper');
-            // $this->load->model('other_model');
+            // $this->load->model('Other_model');
             // $this->load->library('Ajax_pagination');
             // $this->perPage = 4;
     }
@@ -81,7 +81,7 @@ class Post extends MY_controller {
 //print_r( $conditions);
 // print_r($this->db->last_query());
         //total rows count
-        $totalRec = count($this->post_model->getRows($conditions, $post_status));
+        $totalRec = count($this->Post_model->getRows($conditions, $post_status));
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -96,7 +96,7 @@ class Post extends MY_controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['posts'] = $this->post_model->getRows($conditions, $post_status);
+        $data['posts'] = $this->Post_model->getRows($conditions, $post_status);
         $data['pos'] = $post_status;
        // print_r($this->db->last_query());
         //load the view
@@ -117,7 +117,7 @@ class Post extends MY_controller {
       
         
         //total rows count
-        $totalRec = count($this->post_model->getRows(array() ,$pos));
+        $totalRec = count($this->Post_model->getRows(array() ,$pos));
 
         //pagination configuration
         $config['target']      = '#postList';
@@ -128,14 +128,14 @@ class Post extends MY_controller {
         $this->ajax_pagination->initialize($config);
 
         //get the posts data
-        $data['posts'] = $this->post_model->getRows(array('limit'=>$this->perPage), $pos);
+        $data['posts'] = $this->Post_model->getRows(array('limit'=>$this->perPage), $pos);
         
         //$data['title'] = 'Queued posts';
 
         //load users for filter
-        $data['usr'] = $this->other_model->get_users();
+        $data['usr'] = $this->Other_model->get_users();
         //load pages for filter
-        $data['fbpg'] = $this->other_model->get_fbpage();
+        $data['fbpg'] = $this->Other_model->get_fbpage();
 
         $data['pos']= $pos;
         //load the view
@@ -152,28 +152,10 @@ class Post extends MY_controller {
         // $this->input->post('inProgres')? $data['ActionStatus'] = $this->input->post('inProgres'):false;
         // $this->input->post('paused')? $data['ActionStatus'] = $this->input->post('paused'):false;
         
-        // $q_post['queued'] = $this->post_model->get_queued($data);
+        // $q_post['queued'] = $this->Post_model->get_queued($data);
         // // $q_post['title'] = 'Queued posts';
         // $this->output->enable_profiler();
         // $this->load->view('post/post_view', $q_post);
-    }
-
-    public function draft(){
-        $d_post['draft'] = $this->post_model->get_draft();
-        $d_post['title'] = 'Draft posts';
-        $this->load->view('post/post_draft_view', $d_post);
-    }
-
-    public function sent(){
-        $s_post['sent'] = $this->post_model->get_sent();
-        $s_post['title'] = 'Sent posts';
-        $this->load->view('post/post_sent_view', $s_post);
-    }
-
-    public function addpost(){
-        // $s_post['sent'] = $this->post_model->get_sent();
-        $s_post['title'] = 'Add new posts';
-        $this->load->view('post/post_add_post_view',$s_post);
     }
 
     //jelena start
@@ -201,7 +183,7 @@ class Post extends MY_controller {
             $add_link=$this->input->post('link');
              
            
-           $res= $this->post_model->insert_post($user_id, $w_title, $message, $upload_img, $upload_video, $add_link);
+           $res= $this->Post_model->insert_post($user_id, $w_title, $message, $upload_img, $upload_video, $add_link);
                              
             echo 'Inserted Post id: ' . $res;
         }

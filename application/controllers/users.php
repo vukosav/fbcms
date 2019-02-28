@@ -5,9 +5,9 @@ class Users extends MY_controller {
     public function __construct()
     {
             parent::__construct();
-            // $this->load->model('users_model');
+            // $this->load->model('Users_model');
             // $this->load->helper('url_helper');
-            // $this->load->model('other_model');
+            // $this->load->model('Other_model');
             // $this->load->library('Ajax_pagination');
             // $this->perPage = 4;
             // $this->load->helper('cookie');
@@ -35,7 +35,7 @@ class Users extends MY_controller {
         }
 
         //total rows count
-        $totalRec = count($this->users_model->getRows($conditions));
+        $totalRec = count($this->Users_model->getRows($conditions));
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -50,7 +50,7 @@ class Users extends MY_controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['users'] = $this->users_model->getRows($conditions);
+        $data['users'] = $this->Users_model->getRows($conditions);
         
         //load the view
       //  $this->output->enable_profiler();
@@ -63,7 +63,7 @@ class Users extends MY_controller {
         $data = array();
         
         //total rows count
-        $totalRec = count($this->users_model->getRows());
+        $totalRec = count($this->Users_model->getRows());
 
         //pagination configuration
         $config['target']      = '#postList';
@@ -74,12 +74,12 @@ class Users extends MY_controller {
         $this->ajax_pagination->initialize($config);
 
         //get the posts data
-        $data['users'] = $this->users_model->getRows(array('limit'=>$this->perPage));
+        $data['users'] = $this->Users_model->getRows(array('limit'=>$this->perPage));
         
         $data['title'] = 'Users';
 
         //load users for filter
-        $data['roles'] = $this->other_model->get_role();
+        $data['roles'] = $this->Other_model->get_role();
 
         //$data['userdata']  =   $this->session->userdata('name');
         
@@ -167,7 +167,7 @@ class Users extends MY_controller {
 
             // $this->input->post('role')? $data['roleid'] = $this->input->post('role'):false;
 
-            $q_post['queued'] = $this->users_model->insert($data);
+            $q_post['queued'] = $this->Users_model->insert($data);
             $data['title'] = 'Users';
             //$this->output->enable_profiler();
             redirect('/users/index');
@@ -180,7 +180,7 @@ class Users extends MY_controller {
 
     public function delete ($id){
         $this->no_Admin_permition();
-        $this->users_model->delete($id);
+        $this->Users_model->delete($id);
         redirect('/users/index');
     }
 
@@ -188,7 +188,7 @@ class Users extends MY_controller {
         $this->no_Admin_permition();
 
         $this->load->helper(array('form', 'url'));
-        $pwd = $this->users_model->get_users($this->input->post('id'));
+        $pwd = $this->Users_model->get_users($this->input->post('id'));
         $pwd = array_shift($pwd);
         if($pwd['username']!=$this->input->post('username')){
             $is_uniqueUn =  '|is_unique[users.username]';
@@ -252,7 +252,7 @@ class Users extends MY_controller {
             $this->load->view('users/edit_users_view', $data);
         }else{
 
-            $this->users_model->update($data, $this->input->post('id'));
+            $this->Users_model->update($data, $this->input->post('id'));
             $data['title'] = 'Users';
             //$this->output->enable_profiler();
             redirect('/users/index');
@@ -261,7 +261,7 @@ class Users extends MY_controller {
     
     public function show ($id){
         $this->no_Admin_permition();
-        $data['users'] = $this->users_model->get_users($id);
+        $data['users'] = $this->Users_model->get_users($id);
         $data['users'] = array_shift($data['users']);
         $data['title'] = 'Edit user';
         $this->load->view('users/edit_users_view', $data);
@@ -320,18 +320,18 @@ class Users extends MY_controller {
                 'logged_in' => TRUE,
                 'role'      => $this->session->userdata('user')['role']
             );
-            $this->users_model->update($data, $this->session->userdata('user')['user_id']);
+            $this->Users_model->update($data, $this->session->userdata('user')['user_id']);
             $data['title'] = 'Edit profile';
             $this->session->set_userdata('user', $newSessionData);
-            redirect('dashboard');
+            redirect('/');
         }
     }
     public function no_Admin_permition(){
         if(!isset($this->session->userdata('user')['role'])){
-            return redirect('dashboard');
+            return redirect('/');
         }
         if($this->session->userdata('user')['role']== 2){
-            return redirect('dashboard');
+            return redirect('/');
         }
     return true;
     }
@@ -367,9 +367,9 @@ class Users extends MY_controller {
             //echo $this->get_list();
             $this->load->view('users/edit_profile_view', $data);
         }else{
-            $this->users_model->update($data, $this->session->userdata('user')['user_id']);
+            $this->Users_model->update($data, $this->session->userdata('user')['user_id']);
             $data['title'] = 'Edit profile';
-            redirect('dashboard');
+            redirect('/');
         }
     }
 }

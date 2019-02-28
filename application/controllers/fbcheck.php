@@ -5,14 +5,14 @@ class FBCheck extends CI_Controller {
     //  public function __construct()
     // {
     //     parent::__construct();
-    //     $this->load->model('dashboard_model');
+    //     $this->load->model('Dashboard_model');
     //     $this->load->helper('url_helper');
     // }
 
     public function __construct()
     {
             parent::__construct();
-            //$this->load->model('dashboard_model');
+            //$this->load->model('Dashboard_model');
             $this->load->helper('url_helper');
             $this->load->library('FacebookPersistentDataInterface');
     }
@@ -45,7 +45,7 @@ class FBCheck extends CI_Controller {
         $loginUrl = $helper->getLoginUrl(base_url() . '/logincallback', $permissions);
 
         $data = array('loginUrl' => $loginUrl);
-       
+        $data['title'] = 'Chack fb page';
         $this->load->view('users/fbcheck', $data);
         
 

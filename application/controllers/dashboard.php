@@ -5,7 +5,7 @@ class Dashboard extends MY_controller {
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('dashboard_model');
+            $this->load->model('Dashboard_model');
             // $this->load->helper('url_helper');
             // $this->load->library('Ajax_pagination');
             // $this->perPage = 4;
@@ -42,7 +42,7 @@ class Dashboard extends MY_controller {
         }
 
         //total rows count
-        $totalRec = count($this->dashboard_model->getRows($conditions));
+        $totalRec = count($this->Dashboard_model->getRows($conditions));
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -57,7 +57,7 @@ class Dashboard extends MY_controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['p_statistics'] = $this->dashboard_model->getRows($conditions);
+        $data['p_statistics'] = $this->Dashboard_model->getRows($conditions);
         
         //load the view
       //  $this->output->enable_profiler();
@@ -68,7 +68,7 @@ class Dashboard extends MY_controller {
         $data = array();
         
         //total rows count
-        $totalRec = count($this->dashboard_model->getRows());
+        $totalRec = count($this->Dashboard_model->getRows());
 
         //pagination configuration
         $config['target']      = '#postList';
@@ -79,11 +79,11 @@ class Dashboard extends MY_controller {
         $this->ajax_pagination->initialize($config);
 
         //get the posts data
-        $data['p_statistics'] = $this->dashboard_model->getRows(array('limit'=>$this->perPage));
+        $data['p_statistics'] = $this->Dashboard_model->getRows(array('limit'=>$this->perPage));
         
         $data['title'] = 'Dashboard';
 
-        $gstat = $this->dashboard_model->get_gstatistic();
+        $gstat = $this->Dashboard_model->get_gstatistic();
         $data['global'] = $gstat[0];
 
         //load the view

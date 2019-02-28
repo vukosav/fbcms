@@ -4,10 +4,10 @@ class Users_model extends CI_Model{
     
     public $errors;
 
-    public function __construct()
-    {
-            //$this->load->database();
-    }
+    // public function __construct()
+    // {
+    //         //$this->load->database();
+    // }
 
     public function isLoggedIn(){
 		if(isset($this->session->userdata('user')['logged_in']))

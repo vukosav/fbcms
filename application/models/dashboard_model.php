@@ -2,10 +2,10 @@
 
 class Dashboard_model extends CI_Model{
     
-    public function __construct()
-    {
-            // $this->load->database();
-    }
+    // public function __construct()
+    // {
+    //         // $this->load->database();
+    // }
     
     function getRows($params = array()){
         $this->db->select('page_statistic.pageLikes, page_statistic.diffLikes, page_statistic.p24, page_statistic.p72, pages.fbPageName as pname, users.username as addedby');

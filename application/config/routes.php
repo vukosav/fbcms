@@ -49,37 +49,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'dashboard';
+$route['default_controller'] = 'Dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['posting/(:any)'] = 'post/index/$1';
-$route['addusers'] = 'users/addusr';
-$route['editusers'] = 'users/edit';
-$route['showusers/(:any)'] = 'users/show/$1';
-$route['login'] = 'login/login';
-$route['logout'] = 'login/logout';
-$route['users'] = 'users/index';
-$route['deleteusr/(:any)'] = 'users/delete/$1';
-$route['createuesrs'] = 'users/createusr';
-$route['groups'] = 'groups/index';
-$route['pages'] = 'pages/index';
-$route['addgrp'] = 'groups/addgroup';
-$route['creategrp'] = 'groups/creategroup';
-$route['insertPG/(:any)/(:any)'] = 'groups/insertPagesGroups/1/1';
-$route['deletePG/(:any)/(:any)'] = 'groups/deletePagesGroups/1/1';
-$route['deletegrup/(:any)'] = 'groups/delete/$1';
-$route['deletepage/(:any)'] = 'pages/delete/$1';
-$route['editgrup/(:any)'] = 'groups/edit/$1';
-$route['editpage/(:any)'] = 'pages/edit/$1';
-$route['editprofile'] = 'users/editprofile';
-$route['ressetpwd'] = 'users/ressetpassword';
+$route['posting/(:any)'] = 'Post/index/$1';
+$route['editusers'] = 'Users/edit';
+$route['showusers/(:any)'] = 'Users/show/$1';
+$route['login'] = 'Login/login';
+$route['logout'] = 'Login/logout';
+$route['users'] = 'Users/index';
+$route['deleteusr/(:any)'] = 'Users/delete/$1';
+$route['createuesrs'] = 'Users/createusr';
+$route['groups'] = 'Groups/index';
+$route['pages'] = 'Pages/index';
+$route['addgrp'] = 'Groups/addgroup';
+$route['creategrp'] = 'Groups/creategroup';
+$route['insertPG/(:any)/(:any)'] = 'Groups/insertPagesGroups/1/1';
+$route['deletePG/(:any)'] = 'Groups/deletePagesGroups/1';
+$route['deletegrup/(:any)'] = 'Groups/delete/$1';
+$route['deletepage/(:any)'] = 'Pages/delete/$1';
+$route['editgrup/(:any)'] = 'Groups/edit/$1';
+$route['editpage/(:any)'] = 'Pages/edit/$1';
+$route['editprofile'] = 'Users/editprofile';
+$route['ressetpwd'] = 'Users/ressetpassword';
 
 // $route['news/(:any)'] = 'news/view/$1';
-// $route['(:any)'] = 'pages/view/$1';
+// $route['(:any)'] = 'Pages/view/$1';
 // $route['default_controller'] = 'pages/view';
 
 //jelena start
-$route['insert_pages'] = 'add_pages/insert_pages';
-$route['insert_post'] = 'post/insert_post';
+$route['insert_pages'] = 'Add_pages/insert_pages';
+$route['insert_post'] = 'Post/insert_post';
 //jelena end

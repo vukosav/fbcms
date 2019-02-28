@@ -2,10 +2,10 @@
 
 class Groups_model extends CI_Model{
     
-    public function __construct()
-    {
-            //$this->load->database();
-    }
+    // public function __construct()
+    // {
+    //         //$this->load->database();
+    // }
     
     /**
      * @usage
@@ -19,7 +19,6 @@ class Groups_model extends CI_Model{
             $this->db->select('groups.*, users.username as addedby');
             $this->db->from('groups');
             $this->db->join('users', 'users.id = groups.userId');
-            // $this->db->where('IsActive', 1);
             $query = $this->db->get();
         }elseif(is_array($id)){
             $this->db->where('groups.IsActive = ', 1);
@@ -28,7 +27,6 @@ class Groups_model extends CI_Model{
             $this->db->from('groups');
             $this->db->join('users', 'users.id = groups.userId');
             $query = $this->db->get();
-            // $query = $this->db->get();
         }else{
             $this->db->where('groups.IsActive = ', 1);
             $this->db->select('groups.*, users.username as addedby');

@@ -6,7 +6,7 @@ class LoginCallback extends CI_Controller {
             parent::__construct();
             $this->load->helper('url_helper');
             $this->load->library('FacebookPersistentDataInterface');
-            $this->load->model('pages_model');
+            $this->load->model('Pages_model');
     }
 
     public function index(){
@@ -126,7 +126,7 @@ class LoginCallback extends CI_Controller {
   $fbPage_name=$pages['data'][$i]['name'];*/
  // $user_id=1;
 
- // $res=$this->pages_model->add_pages($pages, $user_id);
+ // $res=$this->Pages_model->add_pages($pages, $user_id);
 
  //   echo 'rezultat inserta: ' . $res;
 

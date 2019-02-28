@@ -6,8 +6,8 @@ class FB_Post extends CI_Controller {
     {
             parent::__construct();
             $this->load->helper('url_helper');
-            $this->load->model('fb_model');
-            //$this->load->model('post_model');
+            $this->load->model('FB_model');
+            //$this->load->model('Post_model');
   }
 
   public function index($post_id){ 
@@ -129,12 +129,12 @@ class FB_Post extends CI_Controller {
                
 
             if($post_id==0) {
-                $res= $this->fb_model->insert_post($user_id, $w_title, $post_type, $message, $upload_img, $upload_video, $add_link);
+                $res= $this->FB_model->insert_post($user_id, $w_title, $post_type, $message, $upload_img, $upload_video, $add_link);
                              
             echo 'Inserted Post id: ' . $res;
             } 
             else{
-                $this->fb_model->update_post($user_id, $w_title, $post_type, $message, $upload_img, $upload_video, $add_link);
+                $this->FB_model->update_post($user_id, $w_title, $post_type, $message, $upload_img, $upload_video, $add_link);
             }
 
             //redirect ('');

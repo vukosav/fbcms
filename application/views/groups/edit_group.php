@@ -38,7 +38,12 @@
                                 </div><!-- card-header -->
                                 <div class="card-body bg-gray-200">
                                     <?php foreach ($free_pages as $pag): ?>
-                                        <div class="form-group"><?php echo $pag['fbPageName']; ?> <a class="btn btn-outline-primary btn-icon rounded-circle sm" href="<?=base_url()?>insertPG/<?=$groups[0]['id']?>/<?=$pag['id']?>"><div><i class="fa fa-plus mg-r-2"></i></div></a></div>
+                                        <!-- <div class="form-group"> -->
+                                        <table>
+                                                <td style="width:100%"><?php echo $pag['fbPageName']; ?></td>
+                                                <td><a class="btn btn-outline-primary btn-icon rounded-circle sm" href="<?=base_url()?>insertPG/<?=$groups[0]['id']?>/<?=$pag['id']?>"><div><i class="fa fa-plus mg-r-2"></i></div></a></td>
+                                        </table>
+                                    <!-- </div> -->
                                     <?php endforeach; ?>
                                 </div><!-- card-body -->
                             </div><!-- card -->
@@ -58,14 +63,15 @@
                                 </div><!-- card-header -->
                                 <div class="card-body bg-gray-200">
                                     <?php foreach ($added_pages as $page): ?>
-                                        <div class="form-group"><?php echo $page['fbPageName']; ?> <a class="btn btn-outline-danger btn-icon rounded-circle sm" href="<?=base_url()?>deletePG/<?=$groups[0]['id']?>/<?=$page['pgid']?>"><div><i class="fa fa-trash mg-r-2"></i></div></a></div>
+                                        <table>
+                                                <td style="width:100%"><?php echo $page['fbPageName']; ?></td>
+                                                <td><a onclick="dellData(<?php echo $page['pgid'] .',&#39;' . base_url() . 'deletePG/&#39;'; ?>)" class="btn btn-outline-danger btn-icon rounded-circle sm" href=""><div><i class="fa fa-trash mg-r-2"></i></div></a></div></td>
+                                        </table>
                                     <?php endforeach; ?>
                                 </div><!-- card-body -->
                             </div><!-- card -->
                         </div><!-- col-6 -->
                     </div>
-
-
 
 
                 </div><!-- form-group -->
@@ -92,6 +98,52 @@
     <?php $this->load->view('includes/footer'); ?>
 
     <script>
+
+function dellData(id, url) {
+            event.preventDefault(); // prevent form submit
+            var form = event.target.form; // storing the form
+            console.log('url', url);
+            swal.fire({
+                text: "Are you sure you want to delete?",
+                showCancelButton: true,
+                confirmButtonText: "Yes!",
+                cancelButtonText: "No!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }).then((result) => {
+                if (result.value) {
+                    console.log('klik na yes u modal', id);
+                    $.ajax({
+                        type: 'POST',
+                        url: url + id,
+                        //data: {
+                        //    id: id
+                        //},
+                        success: function(data) {
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            ).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+
+                            // window.location(url); 
+                        },
+                        error: function(data) {
+                            swal("NOT Deleted!", "Something blew up.", "error");
+                        }
+                    });
+                } else {
+                    console.log('klik na no u modal');
+                }
+            });
+        }
+
+
     (function() {
 
         //exclude older browsers by the features we need them to support

@@ -15,13 +15,14 @@ class Pages_model extends CI_Model{
      */
     function getRows($params = array()){
         $this->db->where('pages.IsActive = ', 1);
-        $this->db->select('pages.*, groups.name as group, users.username as addedby');
+        $this->db->select('pages.*, users.username as addedby, GroupsForPages(pages.id) AS groups');
         $this->db->from('pages');
         $this->db->join('users', 'users.id = pages.userId');
-        $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
-        $this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
-        $wtitle = $this->input->post('pagename');
-        $group = $this->input->post('group');
+       // $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
+        //$this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
+
+        // $wtitle = $this->input->post('pagename');
+        // $group = $this->input->post('group');
         //filter data by user
         if(!empty($params['search']['group'])){
             $this->db->where('groups.id = ',$params['search']['group']);
@@ -85,10 +86,14 @@ class Pages_model extends CI_Model{
     }
 
     public function get_added_pages($gid){
-        $query = $this->db->query('SELECT pages_groups.id pgid, pages.id, pages.fbPageName FROM pages
-                          JOIN pages_groups ON pages.id = pages_groups.pageId
-                          JOIN groups ON groups.id = pages_groups.groupId
-                          WHERE pages.id IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        $query = $this->db->query('SELECT pages.id, pages_groups.id as pgid, pages.fbPageName FROM pages
+        JOIN pages_groups ON pages.id = pages_groups.pageId
+        WHERE pages_groups.groupId = ' .$gid.' AND pages.id IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        // $query = $this->db->query('SELECT pages_groups.id pgid, pages.id, pages.fbPageName FROM pages
+        //                   JOIN pages_groups ON pages.id = pages_groups.pageId
+        //                   JOIN groups ON groups.id = pages_groups.groupId
+        //                   WHERE pages.id IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')
+        //                   GROUP BY  pages.id');
         if($query){
             return $query->result_array();
         }
@@ -106,9 +111,8 @@ class Pages_model extends CI_Model{
 
     public function get_added_groups($pid){
         $query = $this->db->query('SELECT pages_groups.id pgid, groups.id, groups.name FROM groups
-                          JOIN pages_groups ON groups.id = pages_groups.groupId
-                          JOIN pages ON pages.id = pages_groups.pageId
-                          WHERE groups.id IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        JOIN pages_groups ON groups.id = pages_groups.groupId
+        WHERE pages_groups.pageId = ' .$pid.' AND groups.id IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
         if($query){
             return $query->result_array();
         }

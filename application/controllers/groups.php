@@ -5,9 +5,9 @@ class Groups extends MY_controller {
     public function __construct()
     {
             parent::__construct();
-            $this->load->model('groups_model');
-            $this->load->model('pages_model');
-            // $this->load->model('other_model');
+            $this->load->model('Groups_model');
+            $this->load->model('Pages_model');
+            // $this->load->model('Other_model');
             // $this->load->library('Ajax_pagination');
             // $this->perPage = 4;
     }
@@ -38,7 +38,7 @@ class Groups extends MY_controller {
         }
         
         //total rows count
-        $totalRec = count($this->groups_model->getRows($conditions));
+        $totalRec = count($this->Groups_model->getRows($conditions));
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -53,7 +53,7 @@ class Groups extends MY_controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['groups'] = $this->groups_model->getRows($conditions);
+        $data['groups'] = $this->Groups_model->getRows($conditions);
         
         //load the view
       //  $this->output->enable_profiler();
@@ -64,7 +64,7 @@ class Groups extends MY_controller {
         $data = array();
         
         //total rows count
-        $totalRec = count($this->groups_model->getRows());
+        $totalRec = count($this->Groups_model->getRows());
 
         //pagination configuration
         $config['target']      = '#postList';
@@ -75,19 +75,19 @@ class Groups extends MY_controller {
         $this->ajax_pagination->initialize($config);
 
         //get the posts data
-        $data['groups'] = $this->groups_model->getRows(array('limit'=>$this->perPage));
+        $data['groups'] = $this->Groups_model->getRows(array('limit'=>$this->perPage));
         
         $data['title'] = 'Manual Groups';
 
         //load users for filter
-        $data['usr'] = $this->other_model->get_users();
+        $data['usr'] = $this->Other_model->get_users();
 
         //load the view
         //$this->output->enable_profiler();
         $this->load->view('groups/manual_group_view', $data);
 
         // $status['IsActive'] = true;
-        // $data['groups'] = $this->groups_model->get_groups();
+        // $data['groups'] = $this->Groups_model->get_groups();
         // $data['title'] = 'Manual Groups';
         // $this->output->enable_profiler();
         // $this->load->view('groups/manual_group', $data);
@@ -95,8 +95,8 @@ class Groups extends MY_controller {
     }
 
     public function delete ($id){
-        $this->groups_model->delete($id);
-        redirect('/groups/index');
+        $this->Groups_model->delete($id);
+        redirect('/Groups/index');
     }
 
     // public function addgroup(){
@@ -130,23 +130,23 @@ class Groups extends MY_controller {
             $data['groups'] = false;
             $this->load->view('groups/index', $data);
         }else{
-            $q_post['queued'] = $this->groups_model->insert($data);
+            $q_post['queued'] = $this->Groups_model->insert($data);
             $data['title'] = 'Groups';
             //$this->output->enable_profiler();
-            redirect('/groups/index');
+            redirect('/Groups/index');
         }
     }
 
     public function edit($id){
-        $data['groups'] = $this->groups_model->get_groups($id);
+        $data['groups'] = $this->Groups_model->get_groups($id);
         $aa = $data['groups'];
         $aa = array_shift($aa);
         if($aa['userId'] !== $this->session->userdata('user')['user_id']){
-            redirect('/groups/index');
+            redirect('/Groups/index');
         }
 
-        $data['added_pages'] = $this->pages_model->get_added_pages($id);
-        $data['free_pages'] = $this->pages_model->get_free_pages($id);
+        $data['added_pages'] = $this->Pages_model->get_added_pages($id);
+        $data['free_pages'] = $this->Pages_model->get_free_pages($id);
 
         $data['title'] = 'Edit Groups';
         // print_r($data);
@@ -165,7 +165,7 @@ class Groups extends MY_controller {
             'dateCreate' => date('Y-m-d h:i:s', time()),
             'userId' => $this->session->userdata('user')['user_id']
         );
-        $this->groups_model->insertPG($data);
+        $this->Groups_model->insertPG($data);
         // }
         $url = $_SERVER['HTTP_REFERER'];
         redirect($url);
@@ -175,9 +175,8 @@ class Groups extends MY_controller {
 
     public function deletePagesGroups() {
         $this->load->helper(array('form', 'url'));
-        //$gid =  $this->uri->segment(2);
-        $pid =  $this->uri->segment(3);
-        $this->groups_model->deletePG($pid);
+        $id =  $this->uri->segment(2);
+        $this->Groups_model->deletePG($id);
         $url = $_SERVER['HTTP_REFERER'];
         redirect($url);
         //redirect('editgrup/'.$this->uri->segment(2));

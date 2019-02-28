@@ -134,7 +134,15 @@ GROUP BY posts.id
  );
  
 
-
+ CREATE OR replace FUNCTION GroupsForPages (pageId INT)
+RETURNS text DETERMINISTIC
+RETURN (SELECT  REPLACE(GROUP_CONCAT(ifNull(groups.name,'<br>'),'<br>'),',','') AS groups
+FROM pages
+left JOIN pages_groups ON pages.id = pages_groups.pageId
+left JOIN groups ON groups.id = pages_groups.groupId
+WHERE pages.id = pageId
+GROUP BY pages.id
+ );
 
  **
  SELECT PagesForPost(5) AS postspages;
