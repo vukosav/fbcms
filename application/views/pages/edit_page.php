@@ -71,7 +71,7 @@ function dellData(id, url) {
             var form = event.target.form; // storing the form
             console.log('url', url);
             swal.fire({
-                text: "Are you sure you want to delete?",
+                text: "Are you sure you want remove group from selected page?",
                 showCancelButton: true,
                 confirmButtonText: "Yes!",
                 cancelButtonText: "No!",
@@ -89,8 +89,8 @@ function dellData(id, url) {
                         success: function(data) {
 
                             Swal.fire(
-                                'Deleted!',
-                                'Your file has been deleted.',
+                                'Removed!',
+                                'Your group has been removed from selected pages.',
                                 'success'
                             ).then((result) => {
                                 if (result.value) {
