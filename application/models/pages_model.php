@@ -18,14 +18,13 @@ class Pages_model extends CI_Model{
         $this->db->select('pages.*, users.username as addedby, GroupsForPages(pages.id) AS groups');
         $this->db->from('pages');
         $this->db->join('users', 'users.id = pages.userId');
-       // $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
+        
         //$this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
 
-        // $wtitle = $this->input->post('pagename');
-        // $group = $this->input->post('group');
         //filter data by user
         if(!empty($params['search']['group'])){
-            $this->db->where('groups.id = ',$params['search']['group']);
+            $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
+            $this->db->where('pages_groups.groupId = ',$params['search']['group']);
         }
         //filter data by page name        
         if(!empty($params['search']['pagename'])){
