@@ -73,7 +73,7 @@ $route['editgrup/(:any)'] = 'Groups/edit/$1';
 $route['editpage/(:any)'] = 'Pages/edit/$1';
 $route['editprofile'] = 'Users/editprofile';
 $route['ressetpwd'] = 'Users/ressetpassword';
-
+$route['fbcheck'] = 'FBCheck';
 // $route['news/(:any)'] = 'news/view/$1';
 // $route['(:any)'] = 'Pages/view/$1';
 // $route['default_controller'] = 'pages/view';

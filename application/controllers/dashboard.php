@@ -1,5 +1,5 @@
 <?php
-
+require_once './core/MY_controller.php';
 class Dashboard extends MY_controller {
 
     public function __construct()
