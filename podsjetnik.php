@@ -150,3 +150,4 @@ GROUP BY pages.id
 
  http://jsfiddle.net/uqs3wgmh/
  
+ ALTER TABLE `users` ADD COLUMN `user_image` BLOB NULL DEFAULT NULL AFTER `last_login`;

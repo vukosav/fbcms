@@ -40,6 +40,9 @@ class Groups_model extends CI_Model{
 
     function getRows($params = array()){
         $this->db->where('groups.IsActive = ', 1);
+        if($this->session->userdata('user')['role'] == 2){
+        $this->db->where('userId = ', $this->session->userdata('user')['user_id']);
+        }
         $this->db->select('groups.*, users.username as addedby');
         $this->db->from('groups');
         $this->db->join('users', 'users.id = groups.userId');

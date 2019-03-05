@@ -135,7 +135,12 @@ class Post extends MY_controller {
         //load users for filter
         $data['usr'] = $this->Other_model->get_users();
         //load pages for filter
-        $data['fbpg'] = $this->Other_model->get_fbpage();
+        if($this->session->userdata('user')['role'] == 1){
+            $data['fbpg'] = $this->Other_model->get_fbpage();
+        }else{
+            $data['fbpg'] = $this->Other_model->get_fbpage($this->session->userdata('user')['user_id']);
+        }
+        
 
         $data['pos']= $pos;
         //load the view

@@ -29,8 +29,9 @@ class Other_model extends CI_Model{
         return $query->result_array();
     }
 
-    public function get_fbpage($id = null){
+    public function get_fbpage($userid = null){
         $this->db->where('IsActive = ', 1);
+        isset($userid)?$this->db->where('userId = ', $userid):FALSE;
         $this->db->order_by('fbPageName','asc');
         $query = $this->db->get('pages');
     return $query->result_array();
