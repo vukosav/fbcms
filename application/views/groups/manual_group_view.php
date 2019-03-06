@@ -71,18 +71,18 @@ function searchFilter(page_num) {
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
+                            <form name="formGroupName" action="<?=base_url()?>creategrp" method="POST">
                             <div class="modal-body pd-20">
-                                <form name="formGroupName" action="<?=base_url()?>creategrp" method="POST">
                                     <input type="text" name="groupname" class="col col-md-12 form-control"
-                                        placeholder="Type grup name" required>
-                                </form>
+                                        placeholder="Type grup name" required>  
                             </div><!-- modal-body -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default pd-x-20" onclick="submitform()">Add
+                                <button type="submit" class="btn btn-default pd-x-20" >Add
                                     group</button>
                                 <button type="button" class="btn btn-secondary pd-x-20"
                                     data-dismiss="modal">Close</button>
                             </div>
+                            </form>
                         </div>
                     </div><!-- modal-dialog -->
                 </div>

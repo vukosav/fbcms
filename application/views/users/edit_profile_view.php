@@ -74,14 +74,14 @@ function searchFilter(page_num) {
                                         class="col col-md-12 form-control" placeholder="Type password" required />
                                     <input type="password" id="conpassword" name="conpassword"
                                         class="col col-md-12 form-control" placeholder="Retype password" required>
-                                </form>
+                                
                             </div><!-- modal-body -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default pd-x-20"
-                                    onclick="submitform()">Resset</button>
+                                <button type="submit" class="btn btn-default pd-x-20">Resset</button>
                                 <button type="button" class="btn btn-secondary pd-x-20"
                                     data-dismiss="modal">Close</button>
                             </div>
+                            </form>
                         </div>
                     </div><!-- modal-dialog -->
                 </div>

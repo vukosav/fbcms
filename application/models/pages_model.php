@@ -145,6 +145,7 @@ class Pages_model extends CI_Model{
     public function delete($id){
         $this->db->set('isActive', false);
         $this->db->where('id', $id);
+        $this->db->where('userId', $this->session->userdata('user')['user_id']);
         $this->db->update('pages');
         //$this->db->delete('users', $id);
         return $this->db->affected_rows();
