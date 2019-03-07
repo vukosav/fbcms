@@ -12,11 +12,14 @@ class Dashboard_model extends CI_Model{
         $this->db->from('page_statistic');
         $this->db->join('pages', 'pages.id = page_statistic.page_id');
         $this->db->join('users', 'users.id = pages.userId');        
-
+        $this->db->where('pages.isActive = 1');
         //filter data by user
         // if(!empty($params['search']['group'])){
         //     $this->db->where('users.id = ',$params['search']['group']);
         // }
+        if($this->session->userdata('user')['role'] == 2){
+            $this->db->where('pages.userId = ',$this->session->userdata('user')['user_id']);
+        }
         //filter data by user
         if(!empty($params['search']['pwithoutPL24'])){
             $this->db->where('page_statistic.p24',0);

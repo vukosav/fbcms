@@ -15,6 +15,9 @@ class Pages_model extends CI_Model{
      */
     function getRows($params = array()){
         $this->db->where('pages.IsActive = ', 1);
+        if($this->session->userdata('user')['role'] == 2){
+            $this->db->where('userId = ', $this->session->userdata('user')['user_id']);
+        }
         $this->db->select('pages.*, users.username as addedby, GroupsForPages(pages.id) AS groups');
         $this->db->from('pages');
         $this->db->join('users', 'users.id = pages.userId');
@@ -142,6 +145,7 @@ class Pages_model extends CI_Model{
     public function delete($id){
         $this->db->set('isActive', false);
         $this->db->where('id', $id);
+        $this->db->where('userId', $this->session->userdata('user')['user_id']);
         $this->db->update('pages');
         //$this->db->delete('users', $id);
         return $this->db->affected_rows();

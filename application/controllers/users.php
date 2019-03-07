@@ -298,11 +298,13 @@ class Users extends MY_controller {
                     'is_unique'     => 'This %s already exists.'
             )
         );
+        //$file_name = $_FILES['test']['picture'];
         
         $data = array(
             'username' => $this->input->post('username'),
             'email' => $this->input->post('email'),
             'name' => $this->input->post('fullname')
+            //'user_image' => isset($file_name)? $file_name:FALSE
         );
       
         if ($this->form_validation->run() === FALSE){

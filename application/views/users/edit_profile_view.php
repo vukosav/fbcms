@@ -48,7 +48,7 @@ function searchFilter(page_num) {
                 <!-- <figure class="edit-profile-photo">
                     <img src="<?//=base_url()?>theme/img/img1.jpg" class="img-fluid" alt="">
                     <figcaption>
-                        <a href="" class="btn btn-dark">Edit Photo</a>
+                        <!-- <a href="" class="btn btn-dark">Edit Photo</a> -->
                     </figcaption>
                 </figure> -->
 
@@ -75,14 +75,13 @@ function searchFilter(page_num) {
                                         class="col col-md-12 form-control" placeholder="Type password" required />
                                     <input type="password" id="conpassword" name="conpassword"
                                         class="col col-md-12 form-control" placeholder="Retype password" required>
-                               
+                                
                             </div><!-- modal-body -->
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-default pd-x-20"
-                                   >Resset</button>
+                                <button type="submit" class="btn btn-default pd-x-20">Resset</button>
                                 <button type="button" class="btn btn-secondary pd-x-20"
                                     data-dismiss="modal">Close</button>
-                            </div> 
+                            </div>
                             </form>
                         </div>
                     </div><!-- modal-dialog -->
@@ -99,7 +98,7 @@ function searchFilter(page_num) {
                 <label class="content-left-label">Personal Information</label>
                 <div class="card bg-gray-200 bd-0">
                     <div class="edit-profile-form">
-                        <?php echo form_open('editprofile'); ?>
+                        <?php echo form_open('editprofile', 'enctype="multipart/form-data"'); ?>
                         <span class="tx-danger"><?php echo validation_errors(); ?></span>
                         <div class="form-group row">
                             <label class="col-sm-3 form-control-label">Fullname:<span class="tx-danger">*</span></label>
@@ -121,6 +120,14 @@ function searchFilter(page_num) {
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
                                 <input class="form-control" type="text" id="username" name="username" required
                                     value="<?php echo set_value('username') ? set_value('username'):$this->session->userdata('user')['username']; ?>">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">Picture: <span
+                                    class="tx-danger">*</span></label>
+                            <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
+                                <input type="file" class="form-control" name="picture" id="">
                             </div>
                         </div>
                         <div class="form-group row">
