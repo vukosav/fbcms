@@ -1,7 +1,7 @@
 $( document ).ready(function() {
 
    	$('#postForm #enable360Image').change(function() {
-        imagePostPreview(); 
+       // imagePostPreview(); 
     });
 
 	// postTypeMessage click event when click (define post type and make current post type active) 
@@ -36,7 +36,7 @@ $( document ).ready(function() {
 		$(".postTypeLink").removeClass("postTypeActive");
 		$(".postTypeVideo").removeClass("postTypeActive");
 		$("input[name='postType']").val("image");
-		imagePostPreview();
+	//	imagePostPreview();
 	});
 
 	// postTypeVideo click event when click (define post type and make current post type active) 

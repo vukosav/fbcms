@@ -25,7 +25,7 @@
                 <?php if (isset($_SESSION['facebook_access_token'])){?>
 
                         <?php echo form_open('insert_pages'); ?>     
-                        <div class="row">
+                        <div class="row" style="width:60%; margin: 0 auto;">
                                 <?php  
                                     $numofpages = count( $fbpages);
                                     $last= $numofpages-1;
@@ -45,7 +45,10 @@
                                                 echo '<div class="card-body bd bd-b-0">';
                                                 echo '<h6 class="mg-b-3"><a href="" class="tx-dark">' . $fbpages[$i]['name'] . '</a></h6>';
                                                 echo '<span class="tx-12"><input type="checkbox" name="chk'.  ($i+1) . '">Add page</input></span>';
-                                                echo '<input type="hidden" name="fbp' . ($i+1) . '" value="fbpid=' . $fbpages[$i]['id'] . 'fbpn=' . $fbpages[$i]['name'] . '"</input>' ;
+                                                echo '<input type="hidden" name="fbp' . ($i+1) . '" value="fbpid=' . $fbpages[$i]['id'] . 'fbpn=' . $fbpages[$i]['name'] . '_fbpAT=_' . $fbpages[$i]['access_token'] .'"</input>' ;
+                                               
+                                                //added fbpage access token as fbpAT
+                                               
                                                 echo '</div><!-- card-body -->';
                                                 echo '<img class="card-img-bottom img-fluid" src="' . $fbpages[$i]['picture']['data']['url'] . '" alt="Image">';
                                                 echo '</div><!-- card -->';
@@ -57,9 +60,10 @@
                                         }
                                 ?>
                             </div>
+                            <br>
                             
-                          <button type="submit" class="btn btn-default btn-block" style="width:200px; margin:0 auto">Add selected pages</button>
-                          
+                              <button type="submit" class="btn btn-default btn-block" style="width:200px; margin:0 auto">Add selected pages</button>
+                            
                           <a class="btn btn-block" href="<?=base_url()?>pages" style="width:200px; margin:0 auto">Cancel</a>     
                           </div>       
                         </div><!-- card -->

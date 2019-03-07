@@ -66,23 +66,25 @@ function searchFilter(page_num) {
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content tx-size-sm">
                             <div class="modal-header pd-x-20">
-                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Message Preview</h6>
+                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add new group</h6>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                            </div>
+                            </div>  
+                            <form name="formGroupName" action="<?=base_url()?>creategrp" method="POST">
                             <div class="modal-body pd-20">
-                                <form name="formGroupName" action="<?=base_url()?>creategrp" method="POST">
+                                
                                     <input type="text" name="groupname" class="col col-md-12 form-control"
                                         placeholder="Type grup name" required>
-                                </form>
+                                
                             </div><!-- modal-body -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default pd-x-20" onclick="submitform()">Add
+                                <button type="submit" class="btn btn-default pd-x-20">Add
                                     group</button>
                                 <button type="button" class="btn btn-secondary pd-x-20"
                                     data-dismiss="modal">Close</button>
-                            </div>
+                            </div> 
+                            </form>
                         </div>
                     </div><!-- modal-dialog -->
                 </div>
@@ -160,9 +162,9 @@ function searchFilter(page_num) {
         <?php $this->load->view('includes/footer'); ?>
 
         <script>
-        function submitform() {
-            document.formGroupName.submit();
-        }
+        //function submitform() {
+         //   document.formGroupName.submit();
+       // }
         function resetform() {
         location.reload();
         }

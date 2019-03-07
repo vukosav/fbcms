@@ -2,10 +2,47 @@
 
 class FB_model extends CI_Model{
 
+public function get_post_data($post_id){
+   // $this->db->where('PostStatus =', 4);
+    if($post_id>0){
+        $this->db->where('id', $post_id);
+        $query = $this->db->get('posts');
+        return $query->result_array();
+        //return ($query->num_rows() > 0)?$query->result_array():array();
+    }
+    else {
+        return 0; //message that there is no ppst with such id
+    }
+}
 
+public function get_post_attachments($post_id, $post_type){
+    // $this->db->where('PostStatus =', 4);
+     if($post_id>0){
+        
+        $this->db->where('post_id', $post_id);
+        $this->db->where('attach_type', $post_type);
+        $query = $this->db->get('post_attachments');
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
+    else {
+         return 0; //message that there is no post with such id
+     }
+ }
 
-public function insert_post($user_id, $w_title, $post_type, $message, $upload_img, $upload_video, $add_link) {
+ public function delete_post_attachments($post_id){
+    // $this->db->where('PostStatus =', 4);
+     if($post_id>0){
+         $query = $this->db->delete('post_attachments', $post_id);
+         return $this->db->affected_rows();
+    }
+    else {
+         return 0; //
+     }
+ }
 
+public function insert_post($user_id, $selected_page_id, $w_title, $post_type, $message, $upload_video, $add_link, $upload_images_list) {
+
+  
     $this->db->set('created_by',$user_id);
     $this->db->set('title',$w_title);
     $this->db->set('content',$message);
@@ -18,14 +55,9 @@ public function insert_post($user_id, $w_title, $post_type, $message, $upload_im
     
     $inserted_post_id=$this->db->insert_id();
 
+    
     if(  $inserted_post_id!== null){
-        if($post_type!=="message"){
-
-            if($post_type=="image" && $upload_img!==""){
-                $attach_type="image";
-                $attach_location=$upload_img;
-            } 
-
+        if($post_type!=="message"){            
             if ($post_type=="video" && $upload_video!=="") {
                 $attach_type="video";
                 $attach_location=$upload_video;
@@ -35,25 +67,60 @@ public function insert_post($user_id, $w_title, $post_type, $message, $upload_im
                 $attach_type="link";
                 $attach_location=$add_link;
             }
-
+            if($post_type !="image"){
                 $this->db->set('post_id', $this->db->insert_id());
                 $this->db->set('attach_type',$attach_type);
                 $this->db->set('attach_location',$attach_location);
                 $this->db->set('caption', "");
                 $this->db->set('localResources', 1);
                 $query = $this->db->insert('post_attachments');
+            }
+
+            if($post_type=="image"){
+                $image_array = explode(',',$upload_images_list);
+                
+               // var_dump($image_array);
+                foreach($image_array as $image ){
+                    //echo 'imagesrc ' . $image;
+                    $attach_type="image";
+                    $attach_location=$image;
+
+                    $this->db->set('post_id', $inserted_post_id);
+                    $this->db->set('attach_type',$attach_type);
+                    $this->db->set('attach_location',$attach_location);
+                    $this->db->set('caption', "");
+                    $this->db->set('localResources', 1);
+                    $query = $this->db->insert('post_attachments');
+                }
+            } 
                 
         }
+
+        //page(s)to post on   
+        if($selected_page_id>0){
+        
+            
+            $this->db->set('postId', $inserted_post_id);
+            $this->db->set('pageId', $selected_page_id);
+            $this->db->set('postingStatus',1); //Not started
+            $this->db->set('actionStatus', 1); //Draft
+            $this->db->set('dateCreated',date("Y-m-d H:i:s"));
+            $query = $this->db->insert('posts_pages');
+    
+        }
+            
+
         return $inserted_post_id ;
     }
     else {
         echo 'no post inserted';
     }
 
+
+
 }   
 
-
- public function get_groups_for_user($user_id) {
+public function get_groups_for_user($user_id) {
     $this->db->select('id, name');
     $this->db->where('userId',$user_id);
     $this->db->where('isActive',true);
@@ -62,33 +129,33 @@ public function insert_post($user_id, $w_title, $post_type, $message, $upload_im
     return ($query->num_rows() > 0)?$query->result_array():array();
 }
 
-//jelena start
-public function list_new_pages( $fb_pages, $user_id){
+
+    public function list_new_pages( $fb_pages, $user_id){
 
       
-    $new_pages=$fb_pages['data'];
-    $last = count( $new_pages)-1;
-     
-     for ($i = 0; $i <= $last; $i++) {
+        $new_pages=$fb_pages['data'];
+        $last = count( $new_pages)-1;
+        
+        for ($i = 0; $i <= $last; $i++) {
 
-          $fbpage_id=$fb_pages['data'][$i]['id'];
-          $fbPage_name=$fb_pages['data'][$i]['name'];
-          $fbPage_at=$fb_pages['data'][$i]['access_token'];
+            $fbpage_id=$fb_pages['data'][$i]['id'];
+            $fbPage_name=$fb_pages['data'][$i]['name'];
+            $fbPage_at=$fb_pages['data'][$i]['access_token'];
 
-          $this->db->where('userId',$user_id);
-          $this->db->where('fbPageId',$fbpage_id);
-          $q = $this->db->get('pages');
-       
-         if ( $q->num_rows() > 0 ){
-             $res = $q->result_array();
-             if( $res[0]['isActive']==true) { 
-                 unset($new_pages[$i]);
-             } 
-         }
-     } 
-     return (is_array($new_pages)) ? array_values($new_pages) : null;  
+            $this->db->where('userId',$user_id);
+            $this->db->where('fbPageId',$fbpage_id);
+            $q = $this->db->get('pages');
+        
+            if ( $q->num_rows() > 0 ){
+                $res = $q->result_array();
+                if( $res[0]['isActive']==true) { 
+                    unset($new_pages[$i]);
+                } 
+            }
+        } 
+        return (is_array($new_pages)) ? array_values($new_pages) : null;  
 
- }
+    }
 
   public function add_new_pages( $fb_pages, $user_id){
 
@@ -101,12 +168,12 @@ public function list_new_pages( $fb_pages, $user_id){
           $fbPage_name=$fb_pages['data'][$i]['name'];
           $fbPage_at=$fb_pages['data'][$i]['access_token'];
 
-          $ins_num=$ins_num + $this->insert_page($fbpage_id, $fbPage_name, $user_id);
+          $ins_num=$ins_num + $this->insert_page($fbpage_id, $fbPage_name, $fbPageAccessToken, $user_id);
          } 
      return $ins_num;    
   } 
  
- public function insert_page($fbpage_id, $fbPage_name, $user_id){
+ public function insert_page($fbpage_id, $fbPage_name, $fbPageAccessToken, $user_id){
      //check if page is already inserted for user
      $this->db->where('userId',$user_id);
      $this->db->where('fbPageId',$fbpage_id);
@@ -117,6 +184,7 @@ public function list_new_pages( $fb_pages, $user_id){
         $this->db->set("userId",$user_id);
         $this->db->set("fbPageId",$fbpage_id);
         $this->db->set("fbPageName",$fbPage_name);
+        $this->db->set("fbPageAT",$fbPageAccessToken);
         $this->db->set("dateAdded",date("Y-m-d H:i:s")); 
         $this->db->insert('pages');
      
@@ -129,6 +197,7 @@ public function list_new_pages( $fb_pages, $user_id){
              $this->db->where("userId",$user_id);
              $this->db->where("fbPageId",$fbpage_id);
              $this->db->set("fbPageName",$fbPage_name);
+             $this->db->set("fbPageAT",$fbPageAccessToken);
              $this->db->set("isActive",true); 
              $this->db->update('pages');
 
@@ -172,7 +241,17 @@ public function list_new_pages( $fb_pages, $user_id){
      return ($query->num_rows() > 0)?$query->result_array():array();
  }
 
-//jelena end
+
+ public function get_pages_for_post_with_fbid_and_fbAT($post_id){
+
+    $this->db->where('posts_pages.postId=', $post_id);
+    $this->db->select('posts_pages.pageId, pages.fbPageId, pages.fbPageAT ');
+    $this->db->from('posts_pages');
+    $this->db->join('pages', 'posts_pages.pageId = pages.id');
+    $query = $this->db->get();
+       
+    return ($query->num_rows() > 0)?$query->result_array():array();
+ }
 
 
 }

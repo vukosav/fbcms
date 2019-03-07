@@ -58,7 +58,9 @@ function extractDomain(url) {
 	  return regexp.test(url);	  
 }
 
- function defaultPreview(){
+//ovo jevaljdaveyano ya link subfield nije potrebno
+
+function defaultPreview(){
 	 if(!$("input[name='picture']").val()){
 		$(".postPreview .picture").html('src',"");
 	 }
@@ -72,6 +74,7 @@ function extractDomain(url) {
 		$(".postPreview .caption").html("<span class='defaultCaption'></span>");
 	}
  }
+
  
 $( document ).ready(function() {
 
@@ -173,7 +176,7 @@ $( document ).ready(function() {
 	});
 	
 	// Preview instant update (picture)
-	$('#picture').bind('input propertychange change', function() {
+	/*$('#picture').bind('input propertychange change', function() {
 		var picture = spin($(this).val());
 		if($.trim(picture) != ""){
 			 $(".postPreview .previewLink").html("<img onerror='defaultPreviewImg(this)' src='"+picture+"' />");
@@ -219,10 +222,12 @@ $( document ).ready(function() {
 			$(".postPreview .description").html("<span class='defaultDescription'></span><span class='defaultDescription'></span><span class='defaultDescription'></span><span class='defaultDescription'></span><span class='defaultDescription'></span>");
 		}
 	});
+	*/
 
-	$(".multiImages").on('input propertychange change', 'input', function () {
-    	imagePostPreview();
-    });
+	/*$(".multiImages").on('input propertychange change', 'input', function () {
+    	//imagePostPreview();
+	});
+	*/
 	
 	$("#postVideoDetails").on('input propertychange change', '#video', function () {
     	videoPostPreview();
@@ -234,9 +239,11 @@ $( document ).ready(function() {
 		linkPostPreview();
 	}
 
+	//????????
+
 	if( $( "#postType" ).val() == "image" ){
 		$( "#imageURL" ).trigger('propertychange');
-		imagePostPreview();
+		//imagePostPreview(); //?????????
 	}
 
 	if( $( "#postType" ).val() == "video" ){
@@ -247,56 +254,7 @@ $( document ).ready(function() {
 	
 });
 
-function imagePostPreview(){
-	resetPostPreview();
 
-	if($("#enable360Image").is(":checked")) {
-      	$("#postForm .addNewImageField").hide();
-      	$('.multiImages .input-group').hide();
-		$('.multiImages .input-group:first').show();
-    }else{
-    	$('.multiImages .input-group').show();
-    	$("#postForm .addNewImageField").show();
-    }
-
-	var ic = $(".multiImages > .input-group").length;
-		
-	imageCount = ic > 4 ? 4 : ic;
-
-	if($('#enable360Image').prop('checked')){
-		imageCount = 1;
-	}
-
-	var imgblock = "<div class='previewImageType pit"+imageCount+"'>";
-		for (var i = 1; i <= imageCount; i++) {
-			imgblock += "<div class='image_"+i+"'>";
-
-			if(ic > 4 && i == 4){
-				imgblock += "<div class='moreImages'>+"+(ic-4)+"</div>";
-			}
-
-			if($.trim($("#imageURL_"+(i-1)).val()) != ""){
-				imgblock += "<img src='"+spin($("#imageURL_"+(i-1)).val())+"'";
-				if($('#enable360Image').prop('checked')){
-					imgblock += "class='reel' ";
-					imgblock += "height='350' ";
-			        imgblock += "data-image='"+spin($("#imageURL_"+(i-1)).val())+"' ";
-			        imgblock += "data-stitched='1300' ";
-			        imgblock += "data-orientable='true' ";
-			        imgblock += "data-responsive='true' ";
-				}
-				imgblock += " />";
-			}
-			imgblock += "</div>";
-		}
-
-		console.log('pregled posta', imgblock);
-	$('.postPreview').append(imgblock);
-
-	if($('#enable360Image').prop('checked')){
-		$.reel.scan()
-	}
-}
 
 function linkPostPreview(){
 	resetPostPreview();

@@ -9,6 +9,10 @@
 <!-- kt-breadcrumb -->
 
 <script>
+function CreateNewPost(){
+    console.log('before');
+    window.location.replace('<?php echo base_url()?>create_post');
+}
 function searchFilter(page_num) {
     page_num = page_num ? page_num : 0;
     var pagename = $('#pagename').val();
@@ -50,7 +54,7 @@ function searchFilter(page_num) {
             <h6 class="tx-12 tx-uppercase tx-info tx-bold mg-b-15"></h6>
             <div class="d-flex mg-b-5">
                 <div class="pd-r-10">
-                    <a href="">
+                    <a href="<?php echo base_url()?>create_post">
                         <div
                             style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;">
                             <i class="fa fa-plus-circle" style="font-size: 4em;"></i>
@@ -61,7 +65,7 @@ function searchFilter(page_num) {
                     </a>
                 </div>
                 <div class="bd-r pd-r-10">
-                    <a href="">
+                    <a href="<?=base_url()?>fbcheck">
                         <div
                             style="background:#3b6998; color:white; text-align:center; height:90px; border-radius:5px;padding:10px;">
                             <i class="fa fa-facebook" style="font-size: 4em;"></i>

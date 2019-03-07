@@ -1,0 +1,833 @@
+CREATE TABLE LAST_UPLOAD_FB_USER(
+id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+fb_user_id text NOT NULL,
+last_upload_time DATETIME
+)
+CREATE TABLE LAST_UPLOAD_FB_PAGE(
+id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+fb_page_id text NOT NULL,
+last_upload_time DATETIME
+)
+CREATE TABLE GLOBAL_PARAMETERS(
+id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+period_in_sec_fb INT NOT NULL,
+user_or_page INT NOT NULL
+)
+CREATE TABLE CRON_JOBS(
+id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+cron_job_id INT NOT NULL,
+cron_job_status INT NOT NULL,
+cron_job_START DATETIME,
+cron_job_END DATETIME,
+finish_status INT NOT NULL,
+cron_job_errors text  NULL
+)
+CREATE TABLE JOBS_THREAD(
+job_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+cron_job_id INT NOT NULL,
+last_action_time DATETIME NOT NULL,
+cron_job_id_owner INT NOT NULL,
+post_id_owner INT NOT NULL,
+user_id_owner INT NOT NULL
+)
+CREATE TABLE TASK_TO_FINISH(
+id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+job_id INT NOT NULL,
+task_end_status  VARCHAR(30) NOT NULL,
+queue_id INT NOT NULL,
+active INT  NOT NULL
+)
+
+
+delimiter |
+CREATE FUNCTION  fb_valid_queue_id(queue_id INT)
+RETURNS bool
+DETERMINISTIC
+BEGIN
+	DECLARE last_date DATETIME;
+	DECLARE fb_user_page_param INT;
+	DECLARE fb_sec_period INT;
+	DECLARE user_id text;
+	DECLARE page_id text;
+	
+	
+	SELECT pages.fbPageId, fb_users.fb_user_id INTO page_id, user_id
+	FROM pages JOIN posts_pages ON pages.id = posts_pages.pageId
+	JOIN fb_users ON pages.userId = fb_users.user_id
+	WHERE posts_pages.id = queue_id;
+	
+	SELECT user_or_page, period_in_sec_fb INTO fb_user_page_param, fb_sec_period FROM global_parameters;
+	if user_or_page = 1 then
+	SELECT ifNull(last_upload_time,'01-01-2018') INTO last_date FROM last_upload_fb_page WHERE fb_page_id = page_id;
+	ELSE
+	SELECT ifNull(last_upload_time,'01-01-2018') INTO last_date FROM last_upload_fb_user WHERE fb_user_id = user_id;
+	END if;
+	
+	 
+	if TIMESTAMPDIFF(SECOND, last_upload_time, NOW()) > fb_sec_period then 
+	 RETURN TRUE;
+	 else
+	 RETURN FALSE;
+	 END if;
+END |
+
+ALTER TABLE posts_pages ADD COLUMN job_id INT
+ALTER TABLE posts_pages ADD COLUMN job_action int
+
+DELIMITER $$
+CREATE PROCEDURE GetFromTaskToFinish(cron_job_id INT)
+BEGIN
+
+UPDATE jobs_thread
+SET cron_job_id_owner = 	cron_job_id
+WHERE post_id_owner IS NULL AND user_id_owner IS NULL		
+AND  job_id IN (
+                SELECT job_id 
+                FROM  task_to_finish 
+					 WHERE fb_valid_queue_id(queue_id) AND active = 1
+					 );
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN task_to_finish TF ON TF.queue_id = PS.id 
+JOIN jobs_thread JT ON TF.job_id = JT.job_id
+SET P.PostsStatus = 2,
+P.ActionStatus = NULL,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 1
+WHERE JT.cron_job_id_owner = cron_job_id
+	AND TF.task_end_status = 'i-o-i-1'
+	AND TF.active = 1;		
+	
+UPDATE posts_pages AS PS JOIN posts P ON PS.postId = P.id JOIN task_to_finish TF ON TF.queue_id = PS.id JOIN jobs_thread JT ON TF.job_id = JT.job_id
+SET P.PostsStatus = 2,
+P.ActionStatus = NULL,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 2
+WHERE JT.cron_job_id_owner = cron_job_id
+	AND TF.task_end_status = 'i-o-i-2'
+	AND TF.active = 1;		
+	
+UPDATE posts_pages AS PS JOIN posts P ON PS.postId = P.id JOIN task_to_finish TF ON TF.queue_id = PS.id JOIN jobs_thread JT ON TF.job_id = JT.job_id
+SET P.PostsStatus = 2,
+P.ActionStatus = NULL,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 3
+WHERE JT.cron_job_id_owner = cron_job_id
+	AND TF.task_end_status = 'i-o-i-3'
+	AND TF.active = 1;										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE SetCronJobForPaused(cron_job_id INT)
+BEGIN
+
+
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET JT.cron_job_id_owner = cron_job_id,
+JT.post_id_owner = NULL,
+JT.user_id_owner = NULL,
+P.PostsStatus = 3,
+P.ActionStatus = 1,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 1
+WHERE JT.cron_job_id_owner = null
+	AND P.PostStatus = 2
+	AND P.ActionStatus = 2
+	AND PS.postingStatus = 1
+	AND PS.job_action = 1
+	AND  fb_valid_queue_id(PS.id);		
+	
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET JT.cron_job_id_owner = cron_job_id,
+JT.post_id_owner = NULL,
+JT.user_id_owner = NULL,
+P.PostsStatus = 3,
+P.ActionStatus = 1,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 2
+WHERE JT.cron_job_id_owner = null
+	AND P.PostStatus = 2
+	AND P.ActionStatus = 2
+	AND PS.postingStatus = 1
+	AND PS.job_action = 2
+	AND  fb_valid_queue_id(PS.id);		
+	
+#------------------I-P-N-1
+#PostStatus 1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#ActionStatus 1 - Ongoing, 2 - Paused
+#PostingStatus 1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET JT.cron_job_id_owner = cron_job_id,
+JT.post_id_owner = NULL,
+JT.user_id_owner = NULL,
+P.PostsStatus = 3,
+P.ActionStatus = 1,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 1
+WHERE JT.cron_job_id_owner = NULL
+AND JT.user_id_owner = NULL 
+	AND P.PostStatus = 3
+	AND P.ActionStatus = 2
+	AND PS.postingStatus = 1
+	AND PS.job_action = 1
+	AND  fb_valid_queue_id(PS.id);		
+
+
+#------------------I-P-N-2	
+#PostStatus 1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#ActionStatus 1 - Ongoing, 2 - Paused
+#PostingStatus 1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET JT.cron_job_id_owner = cron_job_id,
+JT.post_id_owner = NULL,
+JT.user_id_owner = NULL,
+P.PostsStatus = 3,
+P.ActionStatus = 1,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = JT.job_id,
+PS.job_action = 2
+WHERE JT.cron_job_id_owner = NULL
+AND JT.user_id_owner = NULL 
+	AND P.PostStatus = 3
+	AND P.ActionStatus = 2
+	AND PS.postingStatus = 1
+	AND PS.job_action = 2
+	AND  fb_valid_queue_id(PS.id);
+
+
+	
+	
+										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE  PROCEDURE NewThreadJob(cr_job_id INT)
+BEGIN
+DECLARE new_job_id INT;
+INSERT INTO jobs_thread (cron_job_id) VALUES (cr_job_id);
+SET new_job_id = LAST_INSERT_ID();
+
+
+
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+SET 
+P.PostsStatus = 3,
+P.ActionStatus = 1,
+P.IsActive = 1,
+PS.postingStatus = 1,
+PS.job_id = new_job_id
+WHERE PS.job_id = NULL
+   AND P.PostStatus = 2
+	AND P.ActionStatus = NULL
+	AND PS.postingStatus = 1;
+#--	AND PS.job_action = 1;
+
+
+	
+										  
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE PreEdit(p_post_id INT, p_user_id INT)
+BEGIN
+
+
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+# ------------Q-NS-1 -> Q-P-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = p_post_id,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+	
+# ------------Q-NS-2 -> Q-P-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = p_post_id,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+	
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 	
+# ------------I-O-NS-1 -> I-P-N-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = p_post_id,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 1      # Ongoing
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+	
+# ------------I-O-NS-2 -> I-P-N-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = p_post_id,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 1      # Ongoing
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE PostEdit(p_post_id INT, p_user_id INT)
+BEGIN
+
+
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+# ------------S-N-FS-1 -> Q-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+PS.postingStatus = 1,   # 2  Not started
+PS.job_action = 2   # 2 update on fb
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 4        # S
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 3    # FS
+	AND PS.job_action = 1;		
+
+# ------------S-N-FS-2 -> Q-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+PS.postingStatus = 1,   # 2  Not started
+PS.job_action = 2   # 2 update on fb
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 4        # S
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 3    # FS
+	AND PS.job_action = 2;	
+	
+	
+	
+	
+# ------------Q-P-NS-1 -> Q-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+P.ActionStatus = NULL,
+PS.postingStatus = 1   # 2  Not started
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+# ------------Q-P-NS-2 -> Q-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+P.ActionStatus = NULL,
+PS.postingStatus = 1   # 2  Not started
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;	
+		
+	
+	
+	
+	
+	
+	
+	
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+	
+		
+# ------------I-P-N-1 -> I-O-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 1
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+# ------------I-P-N-2 -> I-O-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 1
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+	
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+		
+INSERT INTO task_to_finish(job_id, task_end_status, queue_id, active) 
+SELECT PS.job_id, 'q-ns-2', PS.id, 1
+FROM posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 1      # Ongoing
+	AND PS.postingStatus = 2    # In progres
+	AND (PS.job_action = 1 OR PS.job_action = 2);			
+										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE CancelEdit(p_post_id INT, p_user_id INT)
+BEGIN
+
+
+
+	
+	
+# ------------Q-P-NS-1 -> Q-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+P.ActionStatus = NULL,
+PS.postingStatus = 1   # 2  Not started
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+# ------------Q-P-NS-2 -> Q-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+P.ActionStatus = NULL,
+PS.postingStatus = 1   # 2  Not started
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;	
+		
+	
+	
+	
+	
+	
+	
+	
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+	
+		
+# ------------I-P-N-1 -> I-O-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 1
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+# ------------I-P-N-2 -> I-O-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 1
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND JT.user_id_owner = p_user_id
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+	
+										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE pHalt(p_post_id INT,p_user_id INT)
+BEGIN
+
+
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+# ------------Q-NS-1 -> Q-P-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = NULL,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+	
+# ------------Q-NS-2 -> Q-P-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = NULL ,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+	
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 	
+# ------------I-O-NS-1 -> I-P-N-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = NULL,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 1      # Ongoing
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+	
+# ------------I-O-NS-2 -> I-P-N-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 2,   # 2 Paused
+JT.cron_job_id_owner = NULL,
+JT.post_id_owner = NULL,
+JT.user_id_owner = p_user_id 
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = NULL
+   AND  JT.user_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 1      # Ongoing
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE pResume(p_post_id INT, p_user_id INT)
+BEGIN
+
+
+DECLARE p_role INT;
+
+SELECT roleId into p_role FROM users WHERE id = p_user_id;
+# ------------Q-P-NS-1 -> Q-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+P.ActionStatus = NULL,
+PS.postingStatus = 1   # 2  Not started
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+# ------------Q-P-NS-2 -> Q-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+P.ActionStatus = NULL,
+PS.postingStatus = 1   # 2  Not started
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;	
+		
+	
+	
+	
+	
+	
+	
+	
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+	
+		
+# ------------I-P-N-1 -> I-O-NS-1 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 1
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 1;		
+
+# ------------I-P-N-2 -> I-O-NS-2 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.ActionStatus = 1
+WHERE PS.postId = p_post_id
+   AND JT.post_id_owner = p_post_id
+   AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 3        # QInProgres
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND PS.job_action = 2;		
+	
+	
+			
+										  
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE ArchivePost(p_post_id INT, p_user_id INT)
+BEGIN
+
+DECLARE p_role INT;
+
+SELECT roleId into p_role FROM users WHERE id = p_user_id;
+#1 - Draft, 2 - Qwaiting, 3 - QInProgres, 4 - Sent 
+#1 - Ongoing, 2 - Paused
+#1 - Not started, 2 - In progres, 3 - Finished Success, 4 - Error 
+# ------------S-N-FS-1/2 -> Q-NS-3 -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = 2,   # 2 Qwaiting
+PS.postingStatus = 1,   # 2  Not started
+PS.job_action = 3   # 3 delete from fb
+WHERE PS.postId = p_post_id
+    AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 4        # S
+	AND P.ActionStatus = NULL      #
+	AND PS.postingStatus = 3    # FS
+	AND (PS.job_action = 1 OR PS.job_action = 2);		
+
+ 
+	
+	
+	
+	
+# ------------Q-P-NS-1/2-> archived -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = NULL,   
+P.ActionStatus = NULL,
+P.IsActive = 0,
+PS.postingStatus = NULL ,
+PS.job_action = NULL 
+
+WHERE PS.postId = p_post_id
+   AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = 2      # P
+	AND PS.postingStatus = 1    # NS
+	AND (PS.job_action = 1 OR PS.job_action = 2);		
+
+ 
+	
+	
+	
+	# ------------Q-NS-1/2-> archived -----------------------------------------
+UPDATE posts_pages  PS 
+JOIN posts P ON PS.postId = P.id 
+JOIN jobs_thread JT ON PS.job_id = JT.job_id
+SET  
+P.PostStatus = NULL,   
+P.ActionStatus = NULL,
+P.IsActive = 0,
+PS.postingStatus = NULL ,
+PS.job_action = NULL 
+
+WHERE PS.postId = p_post_id
+    AND (JT.user_id_owner = p_user_id OR p_role = 1)
+   AND JT.cron_job_id_owner = NULL
+	AND P.PostStatus = 2        # Q
+	AND P.ActionStatus = NULL      # 
+	AND PS.postingStatus = 1    # NS
+	AND (PS.job_action = 1 OR PS.job_action = 2);	
+	
+	
+										  
+END $$
+DELIMITER ;

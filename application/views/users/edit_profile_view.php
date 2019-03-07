@@ -44,13 +44,13 @@ function searchFilter(page_num) {
 
         <div class="row">
             <div class="col-md-4 col-lg-3">
-                <label class="content-left-label">Your Profile Photo</label>
-                <figure class="edit-profile-photo">
-                    <img src="<?=base_url()?>theme/img/img1.jpg" class="img-fluid" alt="">
+                <!-- <label class="content-left-label">Your Profile Photo</label> -->
+                <!-- <figure class="edit-profile-photo">
+                    <img src="<?//=base_url()?>theme/img/img1.jpg" class="img-fluid" alt="">
                     <figcaption>
                         <a href="" class="btn btn-dark">Edit Photo</a>
                     </figcaption>
-                </figure>
+                </figure> -->
 
 
                 <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">
@@ -62,9 +62,10 @@ function searchFilter(page_num) {
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
-                            <div class="modal-body pd-20">
-                            <?php  $attributes = array('name' => 'formRessetPass');
+                             <?php  $attributes = array('name' => 'formRessetPass');
                             echo form_open('ressetpwd', $attributes); ?>
+                            <div class="modal-body pd-20">
+                           
                                 <!-- <form name="formRessetPass" action="<?//=base_url()?>ressetpwd" method="POST"> -->
 
                                     <div class='error_msg'>
@@ -74,14 +75,15 @@ function searchFilter(page_num) {
                                         class="col col-md-12 form-control" placeholder="Type password" required />
                                     <input type="password" id="conpassword" name="conpassword"
                                         class="col col-md-12 form-control" placeholder="Retype password" required>
-                                </form>
+                               
                             </div><!-- modal-body -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default pd-x-20"
-                                    onclick="submitform()">Resset</button>
+                                <button type="submit" class="btn btn-default pd-x-20"
+                                   >Resset</button>
                                 <button type="button" class="btn btn-secondary pd-x-20"
                                     data-dismiss="modal">Close</button>
-                            </div>
+                            </div> 
+                            </form>
                         </div>
                     </div><!-- modal-dialog -->
                 </div>
