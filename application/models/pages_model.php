@@ -15,19 +15,17 @@ class Pages_model extends CI_Model{
      */
     function getRows($params = array()){
         $this->db->where('pages.IsActive = ', 1);
-        if($this->session->userdata('user')['role'] == 2){
-            $this->db->where('userId = ', $this->session->userdata('user')['user_id']);
-        }
         $this->db->select('pages.*, users.username as addedby, GroupsForPages(pages.id) AS groups');
         $this->db->from('pages');
         $this->db->join('users', 'users.id = pages.userId');
-        
+       // $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
         //$this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
 
+        // $wtitle = $this->input->post('pagename');
+        // $group = $this->input->post('group');
         //filter data by user
         if(!empty($params['search']['group'])){
-            $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
-            $this->db->where('pages_groups.groupId = ',$params['search']['group']);
+            $this->db->where('groups.id = ',$params['search']['group']);
         }
         //filter data by page name        
         if(!empty($params['search']['pagename'])){
@@ -145,7 +143,6 @@ class Pages_model extends CI_Model{
     public function delete($id){
         $this->db->set('isActive', false);
         $this->db->where('id', $id);
-        $this->db->where('userId', $this->session->userdata('user')['user_id']);
         $this->db->update('pages');
         //$this->db->delete('users', $id);
         return $this->db->affected_rows();

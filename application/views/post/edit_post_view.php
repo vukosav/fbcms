@@ -31,8 +31,67 @@
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>theme/default/css/emojionearea.min.css">
 
 	<link href="<?=base_url()?>theme/default/css/datatables.bootstrap.min.css" rel="stylesheet">
-	<link href="<?=base_url()?>theme/default/plugins/select2/select2.min.css" rel="stylesheet"> 
+	<!--<link href="<?=base_url()?>theme/default/plugins/select2/select2.min.css" rel="stylesheet"> -->
     
+    <style>
+        .addActive {
+
+            background-color: rgba(0, 0, 0, 0.10);
+            
+            animation-name: example;
+            animation-duration: 4s;
+        }
+        @keyframes example {
+            from {background-color: rgba(0, 0, 0, 0.10);}
+            to {background-color: rgba(0, 0, 0, 0.30);}
+        }
+
+        select#pages_list.form-control.select2,
+        select#groups_list.form-control.select2
+        {
+            padding:2px;
+        }
+
+        #addPagesDetails, #addGroupsDetails {
+            padding:px;
+        }
+
+        .addPagesGroups {
+            list-style-type: disc;
+            padding: 0px;
+            margin: 0px; 
+        }
+        .addPG {
+            margin:2px;
+        }
+        .addPagesGroups li a {
+        padding: 12px !important;
+        display: block !important;
+        }
+        .addPagesGroups li {
+        margin: 0px !important;
+        padding: 0 !important;
+        list-style: none;
+        float:left;
+        }
+
+        .addPGActive {    
+        border-color: #8053F5 !important;
+        
+        }
+        
+        .addPagesGroups li a {
+        border-top-style: solid;
+        border-top-width: 3px;
+        border-color: transparent;
+        }
+
+        .addPagesGroups li a:hover {
+            background-color:  rgba(0, 0, 0, 0.10);
+        }
+
+        
+    </style>
 
     <!-- vendor css -->
     
@@ -45,6 +104,10 @@
     
     <script src="<?=base_url()?>theme/default/js/jquery.js"></script>
     <script src="<?=base_url()?>theme/default/js/libs/dashboard.min.js"></script>
+     <!-- 
+    <script type="text/javascript" src="<?=base_url()?>theme/default/bootstrap/js/transition.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>theme/default/bootstrap/js/collapse.js"></script>
+    -->
     <script src="<?=base_url()?>theme/default/bootstrap/js/bootstrap.min.js"></script>
     <script src="<?=base_url()?>theme/default/js/libs/preloader.min.js"></script>
     <script src="<?=base_url()?>theme/default/js/helpers.js"></script>
@@ -65,9 +128,8 @@
         var global_deleted_list = [];
     </script>
 
-<!-- fb presets include !-->
-<?php $this->load->view('style_fb_status_presets'); ?>
-
+    <!-- fb presets include !-->
+    <?php $this->load->view('style_fb_status_presets'); ?>
 </head>
 <body>
 <!-- ##### SIDEBAR LOGO ##### -->
@@ -98,13 +160,18 @@
 <form id="edit_post_form_j" action="">
     <input type="hidden" id = "file_list" name = "file_list">
     <input type="hidden" name="postType" id="postType" value="<?php echo $input_post_type; ?>" />
+    <input type="hidden" name="post_status" id="post_status" value="<?php echo $post_status; ?>" />
     <input type="hidden" name="postId"   id="postId" value="<?php echo $input_post_id; ?>" />
+    <input type="hidden" name="ins_or_upd"   id="ins_or_upd" value="<?php echo $input_ins_or_upd; ?>" />
     <input type="hidden" name="URLFrom"  id="URLFrom" value="" />
     <input type="hidden" name="selected_page_id"  id="selected_page_id" value="0" />
+    <input type="hidden" name="selected_group_id"  id="selected_group_id" value="0" />
     <input type="hidden" name="videoFileName" id="videoFileName"  />
     
+    <div class="container-edit-post" style="padding:10px;width:100%">
     <div class="row">
-        <div class="col-sm-6">
+    
+        <div class="col-sm-5">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <ul class="postType">
@@ -187,7 +254,7 @@
                             
                         </ul>
                     </div>!-->
-                    <div><span class="tx-danger"><?php echo validation_errors(); ?></div>
+                    
             
                     <div id="postLinkDetails" <?php if($input_post_type !== "link") { echo 'style="display:none"' ;} ?> >
                         <div class="formField">
@@ -241,6 +308,9 @@
                         </div>
                     </div>
                 </div>
+
+     
+            
                
                <div class="formField">
                     <button type="button" onclick="SaveAsDraft();" class='btn btn-secondary' id="savepost" name='savepost'>
@@ -249,19 +319,50 @@
                     <!--<button onclick="return false;" class='btn btn-primary' id="savepost" name='savepost'>
                         <i class="fas fa-save" aria-hidden="true"></i> Save draft 
                     </button>-->
-                    <button onclick="return false;" class='btn btn-primary' id="scheduledpost" style = "display : none;">
-                        <i class="fa fa-calendar" aria-hidden="true"></i> Schedule post  
+                    <button type="button" onclick="SaveAsQueued();" class='btn btn-primary' id="qpost"name='qpost' >
+                        <i class="fa fa-calendar" aria-hidden="true"></i> Save post  
                     </button>
                     <button type="button" onclick="SendPostToFB();" class='btn btn-primary' id="post" name='post' style = "display : none;">
                             <i class="fa fa-paper-plane" aria-hidden="true"></i>Share now
                     </button>
+                    <button type="button" onclick="CancelEdit();" class='btn btn-secondary' id="cancel_edit_post" name='cancel_edit_post'>
+                        <i class="fas fa-save" aria-hidden="true"></i> Cancel
+                    </button>              
                 </div>
                 <div class="preloader"></div>
                 <div class="messageBox"></div>
             </div>
+
+              
+        
+        
+           
+   
+        
+        
+        
+        
+        
         </div>
 
         <div class="col-sm-4">
+        <div class="row">        
+                <div class='col-sm-4'>Schedule post</div>
+                 
+                       <div class='col-sm-8'>
+                          
+                          <div class="form-group">
+                              <div class='input-group date' id='datetimepicker1'>
+                                  <input type='text' class="form-control" id="schedule_date_time" name="schedule_date_time" />
+                                  <span class="input-group-addon">
+                                      <span class="glyphicon glyphicon-calendar"></span>
+                                  </span>
+                              </div>
+                          </div>
+                     
+                    
+                </div>
+              </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">POST PREVIEW</h3>
@@ -298,15 +399,30 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">ADD PAGE</h3>
+                    <ul class="addPagesGroups">
+                        <li>
+                        <a href="#" onclick="return false;" class="addPages addPGActive">
+                        <i class="fa fa-file" aria-hidden="true"></i>
+                            <span class="hidden-xs hidden-sm hidden-md">AddPages</span>
+                        </a>
+                        </li>
+
+                        <li>
+                        <a href="#" onclick="return false;"  class="addGroups">
+                        <i class="fa fa-th" aria-hidden="true"></i>
+                            <span class="hidden-xs hidden-sm hidden-md">AddGroups</span>
+                        </a>
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
                 </div>
-                <div style="height:70vh;">
-                    <select id="pages_list" name="pages_list" style="width:100%;">
+                <div id="addPagesDetails">
+                    <select class="form-control select2" id="pages_list" name="pages_list" data-placeholder="Choose Page">
                         <option value="0">Add Page</option>
-                        <?php  
+                         <?php  
                             $numofpages = count( $user_pages);
                             $last= $numofpages-1;
                             for ($i = 0; $i <=  $last; $i++) {
@@ -315,14 +431,106 @@
                         ?>
                         
                     </select>
-                    <br><br><br>
-                    <label for="selected_page">Selected page: </label>                    
-                    <input type="text" id="selected_page" value="..." width="100%" disabled />
-                    <p id = "validation_selected_page_message" style = "color:red; display: none;">You have not selected page to post on</p>
-                </div>   
-            </div>        
-        </div>  
-    </div>   
+                    <div id="selPages"></div>
+                        <br>
+                        <?php  
+                          /* $numofpages = count( $user_pages);
+                            $last= $numofpages-1;
+                            for ($i = 0; $i <=  $last; $i++) {
+                               
+                                echo '<div class="addPG" id="page-'. $user_pages[$i]['id'] . '" style="border: 1px solid grey; border-radius:5px; position: relative; display:none;" >';
+                                echo  '<div style="display:inline-block;" width="50px;"> ' . $user_pages[$i]['id'] . '  ' . $user_pages[$i]['fbPageName'];
+                                echo '</div><a href="#" onclick="RemovePage(' . $user_pages[$i]["id"] . ')">' 
+
+                                     . '<i class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" aria-hidden="true"></i>
+                                           
+                                    </a>';
+                                echo '</div>' ;
+    
+                            }
+                            */
+                            //temp preview of selected paegs from db
+                            if($input_post_id>0){
+                            $num_selected = count( $selected_page_id);
+                            //$last= $num_selected-1;
+                           // echo '<div><br>SELECTED PAGES FROM DB </div>';
+                               // for ($i = 0; $i <  $num_selected; $i++) {
+                                //   $id = $selected_page_id[$i]['pageId'];
+                                 //  $name =  $selected_page_id[$i]['fbPageName'];
+                                   /* echo '<div class="addPG" id="page-'. $selected_page_id[$i]['pageId'] . '" style="border: 1px solid grey; border-radius:5px; position: relative; " >';
+                                    echo  '<div style="display:inline-block;" width="50px;"> ' . $selected_page_id[$i]['pageId'] . '  ' . $selected_page_id[$i]['fbPageName'];
+                                    echo '</div><a href="#" onclick="RemovePage(' . $selected_page_id[$i]["pageId"] . ')">' 
+
+                                        . '<i class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" aria-hidden="true"></i>
+                                            
+                                        </a>';
+                                    echo '</div>' ;
+                                     */
+                               // }
+                                   $js_array =json_encode($selected_page_id);
+                                   $script = '<script>var pageArrayFromDB = ' . $js_array . ';</script>';
+                                   echo $script;
+
+                                   $js_group_array  =json_encode( $selected_post_groups);
+                                 $script_g = '<script>var groupArrayFromDB = ' . $js_group_array . ';</script>';
+                                 echo $script_g;
+                                   if($input_post_type == "video"){
+                                    $script_v = '<script>  $(document).ready(function() {videoPostPreview();}</script>';
+                                    echo $script_v;
+                                   }
+
+                            }
+                        ?>
+                </div>
+                                   
+                <div id="addGroupsDetails" style="display:none">
+                    <select class="form-control select2" id="groups_list" name="groups_list" data-placeholder="Choose Group">
+                        <option value="0">Add Group</option>
+                         <?php  
+                            $numofgroups = count( $user_groups);
+                            $last= $numofgroups-1;
+                            for ($i = 0; $i <=  $last; $i++) {
+                                    echo '<option id="' . $user_groups[$i]['id'] . '" value="' . $user_groups[$i]['name'] .'">' . $user_groups[$i]['name'] . '</option>';
+                                }
+                        ?>
+                     </select>
+                        <br>
+                        <?php  
+                                 $js_array  =json_encode( $user_groups);
+                                 $script = '<script>var groupArrayNom = ' . $js_array . ';</script>';
+                                 echo $script;
+                            // var_dump($user_groups); 
+                            // $groups2 = array();
+                            // for ($i = 0; $i < count( $user_groups); $i++) {
+                            // $group = $user_groups[$i];
+                            //     $page_array =json_encode( $group['pages']);
+                            //     $group_id = $group['id'];
+                            //     $group_name =  $group['name'];
+                            //     $script = '<script>var pageArrayFromDB = ' . $js_array . ';</script>';
+                            //     echo $script;
+                                // echo '<div class="addPG addActive" id="group-'. $user_groups[$i]['id'] . 
+                                // '" style="border: 1px solid rgba(0, 0, 0, 0.20);; border-radius:5px; position: relative; display:none;" >';
+                                // echo  '<div style="display:inline-block;" width="50px;"> ' . $user_groups[$i]['id'] . '  ' . $user_groups[$i]['name'];
+                                // echo '</div><a href="#" onclick="RemoveGroup(' . $user_groups[$i]["id"] . ')">' 
+                                //      . '<i class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" aria-hidden="true"></i>
+                                //      </a>';
+                                // echo '</div>' ;
+    
+                            //}
+                        ?>
+                        <div id = "selGroups"></div>
+                  </div>
+               
+
+            </div><!-- panel-default --> 
+            <p id = "validation_selected_page_message" style = "color:red; display: none;">You have not selected page to post on-panel</p>
+        </div> <!-- col-sm-3-->  
+    </div> <!-- row -->  
+                        
+
+
+
+    </div><!-- container -->
 </form>
 
 <div class="kt-footer">
@@ -332,6 +540,158 @@
 </div><!-- kt-mainpanel -->
 
 <script type="text/javascript">
+
+    var arrayGroups =new Array(); 
+    var arrayPages =new Array();  
+    function GeneratePageList(){
+        guideList = document.getElementById("selPages");
+        if (arrayPages.length) {
+            let html = '';
+            arrayPages.forEach(page => {  
+                 const li = `
+                 <div class="addPG" id="page-'${page.id}'" style="border: 1px solid grey; border-radius:5px; position: relative;" > 
+                   <div style="display:inline-block;" width="50px;">${page.name}</div>
+                   <a href="#" onclick="RemovePage(${page.id})">
+                      <i class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" aria-hidden="true"></i>
+                   </a>
+                </div>`;
+        html += li;
+      });
+      console.log("html", html);
+      guideList.innerHTML = html
+    } else {
+      guideList.innerHTML = '<h5 class="center-align">No selected pages</h5>';
+    }
+    }
+    function GenerateGroupList(){
+        guideList = document.getElementById("selGroups");
+        if (arrayGroups.length) {
+            let html = '';
+            arrayGroups.forEach(group => { 
+                 var innerLi = ``;
+                 if(group.pages!=null && group.pages.length > 0){
+                    group.pages.forEach(page => { 
+                        innerLi = innerLi + ` <p>${page.fbPageName} </p> `;
+                    });
+                }
+                 const li = `
+                 <div class="panel-group">
+                        <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse${group.id}">${group.name}
+                                <i onclick="RemoveGroup(${group.id})" class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" ></i>
+                            </a>
+                            </h4>
+                        </div>
+                        <div id="collapse${group.id}" class="panel-collapse collapse">
+                            <div class="panel-body"> 
+                                       ${innerLi}
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                 `;
+        html += li;
+      });
+     // console.log("html", html);
+      guideList.innerHTML = html
+    } else {
+      guideList.innerHTML = '<h5 class="center-align">No selected groups</h5>';
+    }
+    }
+    function listPages(){
+       // event.preventDefault();
+        var ep = document.getElementById("pages_list");
+            if(ep.selectedIndex > 0){
+                var page_id=ep.options[ep.selectedIndex].id;
+                var page_name=ep.options[ep.selectedIndex].value;
+                console.log('page_id',page_id);
+                console.log('page_name',page_name);
+                //document.getElementById("page-" + page_id).style.display = "block";
+                
+               // var index = arrayPages.indexOf(page_id.toString());
+               console.log('arrayPages before',arrayPages);
+                if (arrayPages.filter(function(e) { return e.id === page_id; }).length == 0) {
+                    arrayPages.push({ id: page_id, name: page_name});
+                   
+                }
+                console.log('arrayPages after',arrayPages);
+                // if (index == -1) {
+                //     arrayPages.push(page_id);
+                // }
+                    ep.selectedIndex=0;
+                    GeneratePageList();
+                }
+            }
+    document.getElementById("pages_list").addEventListener("click",listPages);
+
+    function listGroups(){            
+                event.preventDefault();
+                var eg = document.getElementById("groups_list");
+                if(eg.selectedIndex > 0){
+                              
+                    var group_id=eg.options[eg.selectedIndex].id;
+                    var  group_name=eg.options[eg.selectedIndex].value;
+                  //  console.log('group_id', group_id);
+                  //  console.log('group_name', group_name);
+                    console.log('groupArrayNom', groupArrayNom.filter(function(e) { return e.id === group_id; })[0]);
+                   // document.getElementById("group-" + group_id).style.display = "block";
+                   if (groupArrayNom.filter(function(e) { return e.id === group_id; }).length > 0) {
+                        
+                        arrayGroups.push(groupArrayNom.filter(function(e) { return e.id === group_id; })[0] ); 
+                     }
+
+                   //  console.log('arrayGroups', arrayGroups);
+                   // var index = arrayGroups.indexOf(group_id.toString());
+                        
+                   // if (index == -1) {
+                   // arrayGroups.push(group_id);
+                   // }
+                   
+                   // console.log('add group id ' + arrayGroups);
+                    
+                    //document.getElementById("group-" + group_id).addClass("activePG");
+                    // $("#group-" + group_id + " .addPG").addClass("activePG");
+                        
+                    // document.getElementById("group-" + e.options[e.selectedIndex].id).style.display = "block";
+                        //add page in list  ("li #id").value($id)
+
+                    //  document.getElementById("selected_group").value=e.options[e.selectedIndex].value;
+                    // document.getElementById("selected_group_id").value=e.options[e.selectedIndex].id;
+                    eg.selectedIndex=0;
+                    GenerateGroupList();
+                }
+            }  
+            document.getElementById("groups_list").addEventListener("click",listGroups);
+        
+    function RemovePage(page_id){
+            //document.getElementById("page-" + page_id).style.display = "none";  
+            arrayPages.splice(arrayPages.findIndex(v => v.id === page_id), 1);
+           // var index = arrayPages.indexOf(page_id.toString());
+           GeneratePageList();
+            //if (index > -1) {
+           //     arrayPages.splice(index, 1);
+           // } 
+    }
+    
+    function RemoveGroup(group_id){
+            //document.getElementById("group-" + group_id).style.display = "none";
+           // console.log('array groups before remove group id ' + arrayGroups);
+           // var index = arrayGroups.indexOf(group_id.toString());
+            //console.log('groupid: ' + group_id);
+           // console.log('index ' + index);
+            
+           // if (index > -1) {
+             //   arrayGroups.splice(index, 1);
+                
+              //console.log('array groups after remove groupid ' + arrayGroups);
+
+              arrayGroups.splice(arrayGroups.findIndex(v => v.id === group_id), 1);
+              GenerateGroupList();
+            } 
+       
+
 function SendPostToFB(){
     event.preventDefault();
     const id = document.querySelector("#postId").value;
@@ -379,20 +739,110 @@ function SendPostToFB(){
 
       });
     }
+function SaveAsQueued(){
+
+       const form = document.querySelector('#edit_post_form_j');
+
+       event.preventDefault();
+       document.querySelector('#post_status').value=2; //queued
+       
+       document.querySelector('#selected_group_id').value=arrayGroups;
+       document.querySelector('#selected_page_id').value=arrayPages;
+
+       const schedule_date_time = document.querySelector('#schedule_date_time');
+
+      // console.log('schedule_date_time ',schedule_date_time.value);
+
+        
+        var formData = new FormData(form);
+        var valid = true;
+        if(postTitle.value === '' || postTitle.value === null){
+            document.querySelector('#validation_title_message').style.display = "block";
+            valid = false;
+        }else{
+            document.querySelector('#validation_title_message').style.display = "none";
+        }
+
+        if(message.value === ''){
+            document.querySelector('#validation_content_message').style.display = "block";
+            valid = false;
+            }else{
+            document.querySelector('#validation_content_message').style.display = "none";
+        }
+        var page_count = arrayPages.length;
+        var page_in_group_count = 0; 
+        arrayGroups.forEach(group => { 
+            if(group.pages != null){
+                page_in_group_count = page_in_group_count+ group.pages.length;
+                }
+            });
+        var total_page_count = page_count + page_in_group_count;  
+        if(total_page_count == 0){
+           document.querySelector('#validation_selected_page_message').style.display = "block";
+           valid = false;
+         }
+         else{
+            document.querySelector('#validation_selected_page_message').style.display = "none";
+           valid = true;
+         }
+         formData.append('ins_or_upd', document.querySelector('#ins_or_upd').value);
+    if(valid){
+        formData.append("arrayPages", JSON.stringify(arrayPages));
+        formData.append("arrayGroups", JSON.stringify(arrayGroups));
+       // var object = {};
+      //  formData.forEach(function(value, key){
+      //      object[key] = value;
+      //  });
+      //  console.log('arrayGroups',JSON.stringify(arrayGroups));
+      //  console.log('arrayPages',JSON.stringify(arrayPages));
+     //  console.log('formData',JSON.stringify(object));
+
+     $.ajax({
+        url:'<?=base_url()?>FB_post/insert_post',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){
+            console.log('data',data);
+            var dataJ = jQuery.parseJSON (data);
+            console.log('dataJ',dataJ);
+            if(!dataJ.error){
+               // document.querySelector("#post").style.display = "block";
+               // document.querySelector("#savepost").style.display = "none";
+               // console.log('dataJ',dataJ);
+               // document.querySelector("#postId").value = dataJ.id;
+               window.location.replace('<?=base_url()?>posting/1');
+            }
+            else{
+               // alert('alert dataJ ' +dataJ.message);
+                console.log('dataJ.error je true', JSON.stringify(dataJ));
+            }
+        },
+        error:function(e){
+           
+           console.log('error kod insert_post', JSON.stringify(e));
+        }
+
+      });
+      }
+
+    }
+
 
 function SaveAsDraft(){
-   // console.log("event", event);
+   
     event.preventDefault();
-   // console.log("klik");
+
+    document.querySelector('#post_status').value=1;//draft
+   
     const form = document.querySelector('#edit_post_form_j');
 
     const postTitle = document.querySelector('#postTitle');
     const message = document.querySelector('#message');
-    const pages_list = document.querySelector('#pages_list');
+    //const pages_list = document.querySelector('#pages_list');
+   //const schedule_date_time = document.querySelector('#schedule_date_time');
 
-    console.log('postTitle',postTitle.value);
-    console.log('message',message.value);
-    console.log('pages_list',pages_list.value);
     var formData = new FormData(form);
     var valid = true;
     if(postTitle.value === '' || postTitle.value === null){
@@ -408,20 +858,16 @@ function SaveAsDraft(){
         }else{
          document.querySelector('#validation_content_message').style.display = "none";
     }
-
-
-    if(pages_list.value === '0'){
-        document.querySelector('#validation_selected_page_message').style.display = "block";
-        valid = false;
-        }else{
-        document.querySelector('#validation_selected_page_message').style.display = "none";   
-    }
-  //  console.log("form", form);
-  if(valid){
-
+   
+     
+         formData.append('ins_or_upd', document.querySelector('#ins_or_upd').value);
+     
+        formData.append("arrayPages", JSON.stringify(arrayPages));
+        formData.append("arrayGroups", JSON.stringify(arrayGroups)); 
+    if(valid){
 
     $.ajax({
-        url:'<?=base_url()?>fb_post/insert_post',
+        url:'<?=base_url()?>FB_post/insert_post',
         type: 'POST',
         data: formData,
         processData: false,
@@ -431,35 +877,43 @@ function SaveAsDraft(){
             var dataJ = jQuery.parseJSON (data);
           //  console.log('dataJ',dataJ);
             if(!dataJ.error){
-                document.querySelector("#post").style.display = "block";
-                document.querySelector("#savepost").style.display = "none";
-                console.log('id generisanog posta',dataJ.id);
-                document.querySelector("#postId").value = dataJ.id;
+                //document.querySelector("#post").style.display = "block";
+               //document.querySelector("#savepost").style.display = "none";
+                //console.log('id generisanog posta',dataJ.id);
+                //document.querySelector("#postId").value = dataJ.id;
+                window.location.replace('<?=base_url()?>posting/2');
             }
             else{
-                alert(dataJ.message);
+               // alert('alert dataJ 2 ' + dataJ.message);
+                console.log('dataJ.error je true', JSON.stringify(dataJ));
             }
         },
         error:function(e){
-            alert(e);
+            //alert('alert dataJ 2 eeeee' + e);
+            console.log('error', JSON.stringify(e));
         }
 
       });
       }
-    }
-    function listPages(){
-        event.preventDefault();
-        var e = document.getElementById("pages_list");
-        if(e.selectedIndex > 0){
-             // alert(e.options[e.selectedIndex].value) ;
-            document.getElementById("selected_page").value=e.options[e.selectedIndex].value;
-            document.getElementById("selected_page_id").value=e.options[e.selectedIndex].id;
-              //add page in list  ("li #id").value($id)
-             //e.selectedIndex=0;
-        }
-    }
-   document.getElementById("pages_list").addEventListener("click",listPages);
+}
 
+ 
+function CancelEdit(){
+     
+    const id = document.querySelector("#postId").value;
+    console.log("id", id);
+    
+    $.ajax({
+        url:'<?=base_url()?>cancel_edit/'+id,
+        type: 'POST',
+       // postId: id,
+        processData: false,
+        contentType: false, 
+        success: function(data){
+            window.location.replace('<?=base_url()?>posting/1');
+        }
+      });
+    }
 
 </script>
 
@@ -518,7 +972,7 @@ function SaveAsDraft(){
 
                     if(!regexp.test($("#video").val())){
                         $("#postVideoDetails .input-group").addClass("inputError");
-                        alertBox("{{l('Invalid Youtube video link')}}","danger",false,true,true);
+                        alertBox("Invalid Youtube video link","danger",false,true,true);
                     }
 
                     videoBlock += "<iframe src='https://www.youtube.com/embed/"+videoID+"' width='100%' height='300px' frameborder='0' allowfullscreen='allowfullscreen'></iframe>";
@@ -628,17 +1082,17 @@ function SaveAsDraft(){
 	});
 </script>
 
-  <script src="<?=base_url()?>theme/default/js/jsui.js"></script>
+<script src="<?=base_url()?>theme/default/js/jsui.js"></script>
 <script src="<?=base_url()?>theme/default/plugins/select2/select2.min.js"></script>
- <script src="<?=base_url()?>theme/default/js/post_form.js"></script>
- <script src="<?=base_url()?>theme/default/js/libs/jquery.reel.js"></script>
+<script src="<?=base_url()?>theme/default/js/post_form.js"></script>
+<script src="<?=base_url()?>theme/default/js/libs/jquery.reel.js"></script>
 <script src="<?=base_url()?>theme/default/js/postpreview.js"></script>  
-    <script src="<?=base_url()?>theme/default/js/libs/moment.min.js"></script>
-    <script src="<?=base_url()?>theme/default/js/libs/bootstrap-datetimepicker.min.js"></script>
-    <script src="<?=base_url()?>theme/default/js/libs/emojionearea.min.js"></script>
-    <script src="<?=base_url()?>theme/default/js/jquery.dataTables.min.js"></script>
-    <script src="<?=base_url()?>theme/default/js/dataTables.bootstrap.min.js"></script> 
+<script src="<?=base_url()?>theme/default/js/libs/moment.min.js"></script>
 
+<script src="<?=base_url()?>theme/default/js/libs/bootstrap-datetimepicker.min.js"></script>
+<script src="<?=base_url()?>theme/default/js/libs/emojionearea.min.js"></script>
+<script src="<?=base_url()?>theme/default/js/jquery.dataTables.min.js"></script>
+<script src="<?=base_url()?>theme/default/js/dataTables.bootstrap.min.js"></script> 
 <script>
 function UploadVideoJ(){
     var files = document.querySelector("#videoFile").files;
@@ -662,7 +1116,7 @@ function UploadVideoJ(){
                 document.querySelector("#videoFileName").value = dataJ.fileName;
             }
             else{
-                alert(dataJ.message);
+                alert('alert 1 ' + dataJ.message);
             }
             videoPostPreview();
         }
@@ -670,75 +1124,8 @@ function UploadVideoJ(){
     });
 }
 
-    // Global variables --old scripts
-    $(document).ready(function() {
-        //form submit
-        //-------------------
-      /*  document.getElementById('edit_post_form_j').addEventListener("submit",function(e) {
-             // e.preventDefault(); // before the code
-           
-             const form = document.querySelector('#edit_post_form_j');
-             const selected_page_id = form['selected_page_id'].value;
-            console.log('e',e);
-            console.log('selected_page_id',selected_page_id);
-            console.log('form',form);
-            var formData = new FormData(form);
+  
 
-                for (var [key, value] of formData.entries()) { 
-                console.log(key, value);
-                }
-       });*/
-
-
-
-        //------------------------
-        
-        $("#postForm #message").emojioneArea({
-                autoHideFilters: false,
-                pickerPosition: "bottom",
-                autocomplete: false,
-                events: {
-                    keydown: function (editor, event) {
-                        $( "#postForm #message" ).trigger('propertychange');
-                    },
-                    emojibtn_click: function (button, event) {
-                        $( ".emojionearea-editor" ).trigger('keydown');
-                    }
-                }
-            });
-
-        $("#postForm #scheduledpost").click(function(){
-            $("#postForm .scheduledpost").stop().toggle('fast');
-        });
-
-        $('#scheduledPostTime').datetimepicker({
-            format: 'DD/MM/YYYY HH:mm',
-            defaultDate: new Date(),
-        });
-
-        $('#start_on').datetimepicker({format: 'DD/MM/YYYY HH:mm'});
-        $('#end_on').datetimepicker({format: 'DD/MM/YYYY HH:mm'});
-
-        // Trigger click event
-        $('.postTypeActive').click();
-
-        // #postForm #post click event => Post validation 
-        $("#postForm #post").click(function(){
-            $("#postForm .messageBox").removeClass("error");
-            $("#postForm .messageBox").html("");
-            
-            if($("#postForm #postType").val() == "message" && $.trim($("#postForm #message").val()) == ""){
-                alertBox('The post is empty!',"danger","#postForm .messageBox",true);	
-            }else if($("#postForm #postType").val() == "link" && $.trim($("#postForm #link").val()) == ""){
-                alertBox('The post is empty!',"danger","#postForm .messageBox",true);	
-            }else if($("#postForm #postType").val() == "image" && $.trim($("#postForm #imageURL_0").val()) == ""){
-                alertBox('The post is empty!',"danger","#postForm .messageBox",true);	
-            }else{
-                post();
-            }
-        });
-       
-    });
 
     var xhrGetSiteDetails = null;
     function GetSiteDetails(url,callback){
@@ -759,6 +1146,33 @@ function UploadVideoJ(){
         }
      
     $(document).ready(function() {
+        if( typeof pageArrayFromDB  !=='undefined' && pageArrayFromDB!==null){ 
+            pageArrayFromDB.forEach(pageFromDB => { 
+                arrayPages.push({id: pageFromDB.pageId, name: pageFromDB.fbPageName});
+            }); 
+            GeneratePageList(); 
+        }
+        if( typeof groupArrayFromDB  !=='undefined' && groupArrayFromDB !== null){ 
+             groupArrayFromDB.forEach(groupFromDB => { 
+                    arrayGroups.push(groupFromDB);
+             }); 
+            GenerateGroupList();
+        }
+        $('#datetimepicker1').datetimepicker();
+        $("#postForm #message").emojioneArea({
+                autoHideFilters: false,
+                pickerPosition: "bottom",
+                autocomplete: false,
+                events: {
+                    keydown: function (editor, event) {
+                        $( "#postForm #message" ).trigger('propertychange');
+                    },
+                    emojibtn_click: function (button, event) {
+                        $( ".emojionearea-editor" ).trigger('keydown');
+                    }
+                }
+            });
+
                             Dropzone.autoDiscover = false;
                             var dropZoneParams = {
                                     url: '<?=base_url()?>dropzone/upload',

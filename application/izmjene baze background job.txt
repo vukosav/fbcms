@@ -39,40 +39,11 @@ active INT  NOT NULL
 )
 
 
-delimiter |
-CREATE FUNCTION  fb_valid_queue_id(queue_id INT)
-RETURNS bool
-DETERMINISTIC
-BEGIN
-	DECLARE last_date DATETIME;
-	DECLARE fb_user_page_param INT;
-	DECLARE fb_sec_period INT;
-	DECLARE user_id text;
-	DECLARE page_id text;
-	
-	
-	SELECT pages.fbPageId, fb_users.fb_user_id INTO page_id, user_id
-	FROM pages JOIN posts_pages ON pages.id = posts_pages.pageId
-	JOIN fb_users ON pages.userId = fb_users.user_id
-	WHERE posts_pages.id = queue_id;
-	
-	SELECT user_or_page, period_in_sec_fb INTO fb_user_page_param, fb_sec_period FROM global_parameters;
-	if user_or_page = 1 then
-	SELECT ifNull(last_upload_time,'01-01-2018') INTO last_date FROM last_upload_fb_page WHERE fb_page_id = page_id;
-	ELSE
-	SELECT ifNull(last_upload_time,'01-01-2018') INTO last_date FROM last_upload_fb_user WHERE fb_user_id = user_id;
-	END if;
-	
-	 
-	if TIMESTAMPDIFF(SECOND, last_upload_time, NOW()) > fb_sec_period then 
-	 RETURN TRUE;
-	 else
-	 RETURN FALSE;
-	 END if;
-END |
 
 ALTER TABLE posts_pages ADD COLUMN job_id INT
 ALTER TABLE posts_pages ADD COLUMN job_action int
+ALTER TABLE posts_pages ADD COLUMN job_errors TEXT
+ALTER TABLE posts_pages ADD COLUMN fbPostId varchar(50)
 
 DELIMITER $$
 CREATE PROCEDURE GetFromTaskToFinish(cron_job_id INT)
@@ -261,7 +232,18 @@ WHERE PS.job_id = NULL
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE OR REPLACE  PROCEDURE NewCroneJob(OUT cr_job_id INT)
+BEGIN
+INSERT INTO cron_jobs (cron_job_status, cron_job_START) VALUES (1, NOW());
+SET cr_job_id = LAST_INSERT_ID();
 
+CALL GetFromTaskToFinish(cr_job_id);
+CALL SetCronJobForPaused(cr_job_id);
+CALL NewThreadJob(cr_job_id);
+								  
+END $$
+DELIMITER ;
 DELIMITER $$
 CREATE OR REPLACE PROCEDURE PreEdit(p_post_id INT, p_user_id INT)
 BEGIN

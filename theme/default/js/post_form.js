@@ -51,5 +51,23 @@ $( document ).ready(function() {
 		$("input[name='postType']").val("video");
 		videoPostPreview();
 	});
+	// addPages click event when click (define and make current selection active) 
+	$( ".addPages" ).click(function() {
+		$("#addPagesDetails").show();
+		$("#addGroupsDetails").hide();
+		$(this).addClass("addPGActive");
+		$(".addGroups").removeClass("addPGActive");//addPGActive u css
+
+	});
+
+	// addPages click event when click (define and make current selection active) 
+	$( ".addGroups" ).click(function() {
+		$("#addGroupsDetails").show();
+		$("#addPagesDetails").hide();
+		$(this).addClass("addPGActive");
+		$(".addPages").removeClass("addPGActive");
+
+	});
+
 	
 });

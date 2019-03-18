@@ -1,7 +1,7 @@
 <?php
 class Fb_post extends CI_Controller {
 
-    public function __construct()
+public function __construct()
     {
             parent::__construct();
             $this->load->helper('url_helper');
@@ -9,15 +9,16 @@ class Fb_post extends CI_Controller {
             $this->load->model('Users_model');
   }
 
-  public function index($post_id){ 
-      //echo $post_id;
+
+public function index($post_id){ 
+    //echo $post_id;
     //$post_id =0 or >0
    
     if($this->Users_model->isLoggedIn()){
 
         $user_id = $this->session->userdata('user')['user_id'];
-        
-      if($post_id==0){
+        //new post - create post
+        if($post_id==0){
         
             //prepare default parameters for new post
             
@@ -53,6 +54,7 @@ class Fb_post extends CI_Controller {
 
             $input_post_image_list="";
             $image_list="";
+            $post_status="";
 
             /*$res = $this->fb_model->get_groups_for_user($user_id);
             $user_groups = (is_array($res)) ? array_values($res) : null;*/
@@ -60,12 +62,26 @@ class Fb_post extends CI_Controller {
             $res = $this->FB_model->get_pages_for_user($user_id);
             $user_pages = (is_array($res)) ? array_values($res) : null;
 
+            $res2 = $this->FB_model->get_groups_for_user($user_id);
+            $user_groups = (is_array($res)) ? array_values($res2) : null;
+            $ug_num=count($user_groups);
 
+            for($j=0;$j <$ug_num; $j++){
+                $res_pageforgroup = $this->FB_model->get_pages_for_group($user_groups[$j]['id']);
+                $user_groups[$j]['pages'] = $res_pageforgroup ;
+            }
+            $is_scheduled=0;
+            $schedule_date_time=null;
+
+            $selected_page_id=0;
+            $selected_group_id=0;            
+            $selected_post_groups = 0;
         }
         else {
-        //get data from database for post_id = $post_id
-        $image_list="";
-                 
+            //get data from database for post_id = $post_id
+            $image_list="";
+            
+                    
             $this->load->helper('form');
             //$this->load->helper('url');
             
@@ -73,11 +89,22 @@ class Fb_post extends CI_Controller {
            // var_dump($post_data);
            
                 if(count( $post_data)==1) {
+
+                    $post_status=$post_data[0]["PostStatus"];
+
                     $input_post_type = $post_data[0]["post_type"];
                     $input_post_title=$post_data[0]["title"];
 
                    // echo '$input_post_title ' . $input_post_title;
                     $input_post_message=$post_data[0]["content"];
+
+                    $is_scheduled=$post_data[0]["isScheduled"];
+                    if($is_scheduled==1){
+                        $schedule_date_time = $post_data[0]["scheduledTime"];
+                    }
+                    else {
+                        $schedule_date_time=null;
+                    }
                     
                     $input_post_link="";
                     $input_post_name="";
@@ -94,6 +121,8 @@ class Fb_post extends CI_Controller {
                     $fbaccountDetails_fb_id = "";    
                     $fbaccountDetails_firstname = "Page";
                     $fbaccountDetails_lastname = "Name";
+
+                    
 
                     if($input_post_type=='link') {
                         $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'link');
@@ -116,23 +145,42 @@ class Fb_post extends CI_Controller {
                                 $image_list = $image_list . ','  . $post_attachment_data[$i]["attach_location"];
                             }
                         }
-                       //echo $image_list; 
-                    }      
-                //to do: get pages and groups set for post; compare user_id in session and in table
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    }            
+        
 
-                /*$res = $this->fb_model->get_groups_for_user($user_id);
-                $user_groups = (is_array($res)) ? array_values($res) : null;*/
+                    $resg = $this->FB_model->get_groups_for_user($user_id);
+                    $user_groups = (is_array($resg)) ? array_values($resg) : null;
+                    $ug_num=count($user_groups);
 
-                $res = $this->FB_model->get_pages_for_user($user_id);
-                $user_pages = (is_array($res)) ? array_values($res) : null;
+                    for($j=0;$j <$ug_num; $j++){
+                        $res_pageforgroup = $this->FB_model->get_pages_for_group($user_groups[$j]['id']);
+                        $user_groups[$j]['pages'] = $res_pageforgroup ;
+                    }
 
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    $ressg=$this->FB_model->get_groups_for_post($post_id);
+                    $selected_post_groups = (is_array($ressg)) ? array_values($ressg) : null;
+                    $psg_num=count($selected_post_groups);
+
+                    for($k=0;$k <$psg_num; $k++){
+                        $res_pageforgroup_in_post = $this->FB_model->get_pages_for_group_in_post($post_id,$selected_post_groups[$k]['id']);
+                        $selected_post_groups[$k]['pages'] = $res_pageforgroup_in_post ;
+                    }
+
+                    //$selected_group_id=0; 
+
+
+                    $resp = $this->FB_model->get_pages_for_user($user_id);
+                    $user_pages = (is_array($resp)) ? array_values($resp) : null;
+                
+                    //pages set for post
+                    $selected_page_id=$this->FB_model->get_selected_pages_for_post($post_id);
+                  
 
                 }
                 else {echo "error count !=1";}
     }
       $queued_post=false; // hiding PAUSE,RESUME
+      
       $data=array(
                 'user_id' => $user_id,
                 'queued_post' => $queued_post,
@@ -151,9 +199,14 @@ class Fb_post extends CI_Controller {
                 'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
                 'fbaccountDetails_firstname' => $fbaccountDetails_firstname,
                 'fbaccountDetails_lastname' => $fbaccountDetails_lastname,
-                //'user_groups' => $user_groups,
+                'user_groups' => $user_groups,
                 'user_pages' => $user_pages,
-                'input_post_image_list' => $image_list
+                'input_post_image_list' => $image_list,
+                'isScheduled' => $is_scheduled,
+                'scheduleDateTime' => $schedule_date_time,
+                'post_status' => $post_status,
+                'selected_page_id' => $selected_page_id,
+                'selected_post_groups' => $selected_post_groups,
            );
       
         //   var_dump($data);
@@ -162,23 +215,345 @@ class Fb_post extends CI_Controller {
     else {      
       redirect('login'); 
     }
-}  
-public function test_echo(){
-   echo 'rewrwerew';
-   /* echo json_encode(array(
-        'error' => true,
-        'message' => 'validacija',
-        'id' => $res
-        ));*/
+} 
+
+public function create_post(){ 
+  
+    if($this->Users_model->isLoggedIn()){
+
+            $user_id = $this->session->userdata('user')['user_id'];
+              
+            //prepare default parameters for new post
+            
+            $queued_post=false; // hiding PAUSE,RESUME
+            
+            $input_post_type="message";
+        
+            $input_post_title="";
+
+            $input_post_message="";
+              
+            $input_post_link="";
+            $input_post_name="";
+            $input_post_caption="";
+            $input_post_description="";
+
+            $input_post_picture="";
+            $input_post_video="";
+
+            $input_post_fb_preset_id=0;
+
+            $fbaccountDetails="";
+            $fbaccountDetails_fb_id = "";
+
+            $fbaccountDetails_firstname = "Page";
+            $fbaccountDetails_lastname = "Name";
+
+            $res = $this->FB_model->get_groups_for_user($user_id);
+            $user_groups = (is_array($res)) ? array_values($res) : null;
+
+            $res = $this->FB_model->get_pages_for_user($user_id);
+            $user_pages = (is_array($res)) ? array_values($res) : null;
+
+            $input_post_image_list="";
+            $image_list="";
+            $post_status="";
+
+            $res = $this->FB_model->get_pages_for_user($user_id);
+            $user_pages = (is_array($res)) ? array_values($res) : null;
+
+            $res2 = $this->FB_model->get_groups_for_user($user_id);
+            $user_groups = (is_array($res)) ? array_values($res2) : null;
+            $ug_num=count($user_groups);
+
+            for($j=0;$j <$ug_num; $j++){
+                $res_pageforgroup = $this->FB_model->get_pages_for_group($user_groups[$j]['id']);
+                $user_groups[$j]['pages'] = $res_pageforgroup ;
+            }
+            $is_scheduled=0;
+            $schedule_date_time=null;
+
+            $selected_page_id=0;
+            $selected_group_id=0;            
+            $selected_post_groups = 0;
+
+            $queued_post=false; // hiding PAUSE,RESUME
+            $input_ins_or_upd = "insert";
+            
+
+            $post_id=0;
+
+            $data=array(
+                'user_id' => $user_id,
+                'queued_post' => $queued_post,
+                'input_post_type' => $input_post_type,
+                'input_post_id' => $post_id,
+                'input_post_title' => $input_post_title,
+                'input_post_message' => $input_post_message,                
+                'input_post_link' => $input_post_link,
+                'input_post_picture' =>$input_post_picture,
+                'input_post_video' => $input_post_video,
+                'input_post_name' => $input_post_name,
+                'input_post_caption' => $input_post_caption,
+                'input_post_description' => $input_post_description,
+                'input_post_fb_preset_id' => $input_post_fb_preset_id,
+                'fbaccountDetails' =>  $fbaccountDetails,
+                'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
+                'fbaccountDetails_firstname' => $fbaccountDetails_firstname,
+                'fbaccountDetails_lastname' => $fbaccountDetails_lastname,
+                'user_groups' => $user_groups,
+                'user_pages' => $user_pages,
+                'input_post_image_list' => $image_list,
+                'isScheduled' => $is_scheduled,
+                'scheduleDateTime' => $schedule_date_time,
+                'post_status' => $post_status,
+                'selected_page_id' => $selected_page_id,
+                'selected_post_groups' => $selected_post_groups,
+                'input_ins_or_upd' => $input_ins_or_upd
+            );
+           
+        $this->load->view('post/edit_post_view', $data);
+    }
+    else {      
+      redirect('login'); 
+    }
 }
+
+
+private function GetDataFromDB($post_id){
+    $post_data =  $this->FB_model->get_post_data($post_id);
+    // var_dump($post_data);
+    if(count($post_data)==0){
+        return array();
+    } else {
+    
+        $image_list="";
+        $post_status=$post_data[0]["PostStatus"];
+
+        $input_post_type = $post_data[0]["post_type"];
+        $input_post_title=$post_data[0]["title"];
+
+        // echo '$input_post_title ' . $input_post_title;
+        $input_post_message=$post_data[0]["content"];
+
+        $is_scheduled=$post_data[0]["isScheduled"];
+        if($is_scheduled==1){
+            $schedule_date_time = $post_data[0]["scheduledTime"];
+        }
+        else {
+            $schedule_date_time=null;
+        }
+        
+        $input_post_link="";
+        $input_post_name="";
+        $input_post_caption="";
+        $input_post_description="";
+
+        $input_post_picture="";
+        $input_post_video="";
+        //to do - ubaciti u bazu novu kolonu ???
+        $input_post_fb_preset_id=0;
+
+        //ovo ne treba ovdje
+        $fbaccountDetails="";
+        $fbaccountDetails_fb_id = "";    
+        $fbaccountDetails_firstname = "Page";
+        $fbaccountDetails_lastname = "Name";
+
+        if($input_post_type=='link') {
+            $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'link');
+            $input_post_link=$post_attachment_data[0]["attach_location"];
+        
+        }
+        if ($input_post_type=='video') {
+            $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'video');
+            $input_post_video = $post_attachment_data[0]["attach_location"];
+
+        }
+        if ($input_post_type=='image') { 
+
+            $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'image');
+
+            $num_of_images = count($post_attachment_data); 
+            $image_list=$post_attachment_data[0]["attach_location"];
+            if($num_of_images>0){
+                for ($i = 1; $i <= $num_of_images-1; $i++) {
+                    $image_list = $image_list . ','  . $post_attachment_data[$i]["attach_location"];
+                }
+            }
+        }            
+
+        $user_id = $this->session->userdata('user')['user_id'];
+
+        $resg = $this->FB_model->get_groups_for_user($user_id);
+        $user_groups = (is_array($resg)) ? array_values($resg) : null;
+        $ug_num=count($user_groups);
+
+        for($j=0;$j <$ug_num; $j++){
+            $res_pageforgroup = $this->FB_model->get_pages_for_group($user_groups[$j]['id']);
+            $user_groups[$j]['pages'] = $res_pageforgroup ;
+        }
+
+        $ressg=$this->FB_model->get_groups_for_post($post_id);
+        $selected_post_groups = (is_array($ressg)) ? array_values($ressg) : null;
+        $psg_num=count($selected_post_groups);
+
+        for($k=0;$k <$psg_num; $k++){
+            $res_pageforgroup_in_post = $this->FB_model->get_pages_for_group_in_post($post_id,$selected_post_groups[$k]['id']);
+            $selected_post_groups[$k]['pages'] = $res_pageforgroup_in_post ;
+        }
+
+         $resp = $this->FB_model->get_pages_for_user($user_id);
+        $user_pages = (is_array($resp)) ? array_values($resp) : null;
+
+        //pages set for post
+        $selected_page_id=$this->FB_model->get_selected_pages_for_post($post_id);
+    
+    
+
+    $queued_post=false; // hiding PAUSE,RESUME
+
+
+    $data=array(
+        'user_id' => $user_id,
+        'queued_post' => $queued_post,
+        'input_post_type' => $input_post_type,
+        'input_post_id' =>  $post_id,
+        'input_post_title' => $input_post_title,
+        'input_post_message' => $input_post_message,                
+        'input_post_link' => $input_post_link,
+        'input_post_picture' =>$input_post_picture,
+        'input_post_video' => $input_post_video,
+        'input_post_name' => $input_post_name,
+        'input_post_caption' => $input_post_caption,
+        'input_post_description' => $input_post_description,
+        'input_post_fb_preset_id' => $input_post_fb_preset_id,
+        'fbaccountDetails' =>  $fbaccountDetails,
+        'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
+        'fbaccountDetails_firstname' => $fbaccountDetails_firstname,
+        'fbaccountDetails_lastname' => $fbaccountDetails_lastname,
+        'user_groups' => $user_groups,
+        'user_pages' => $user_pages,
+        'input_post_image_list' => $image_list,
+        'isScheduled' => $is_scheduled,
+        'scheduleDateTime' => $schedule_date_time,
+        'post_status' => $post_status,
+        'selected_page_id' => $selected_page_id,
+        'selected_post_groups' => $selected_post_groups,
+        "input_ins_or_upd"=>""
+        
+    );
+    return $data;
+    }
+}   
+
+public function edit_post($post_id){
+    if(!$this->Users_model->isLoggedIn()){
+        redirect('login'); 
+    }
+    $user_id = $this->session->userdata('user')['user_id'];
+
+        //get data from database for post_id = $post_id
+        $image_list="";
+                    
+                        
+        $this->load->helper('form');
+        //$this->load->helper('url');
+       $this->db->query("call PreEdit($post_id, $user_id);");
+       $data = $this->GetDataFromDB($post_id);
+       $data['input_ins_or_upd'] = "update";
+       $this->load->view('post/edit_post_view', $data);
+  
+     
+} 
+
+public function copy_post($post_id){
+    if(!$this->Users_model->isLoggedIn()){
+        redirect('login'); 
+    }
+     
+
+        //get data from database for post_id = $post_id
+        //$image_list="";
+                    
+                        
+        //$this->load->helper('form');
+        //$this->load->helper('url');
+        
+       $data = $this->GetDataFromDB($post_id);
+       $data['input_ins_or_upd'] = "insert";
+       $this->load->view('post/edit_post_view', $data);
+  
+     
+} 
+
+public function cancel_edit_post($post_id){
+    if($post_id > 0){
+       $user = $this->session->userdata('user')['user_id'];
+       $this->db->query("call CancelEdit($post_id, $user);");
+    }
+    redirect('posting/1');
+}
+
+
+
+
+public function halt($post_id){
+    if($post_id > 0){
+       $user = $this->session->userdata('user')['user_id'];
+       $this->db->query("call pHalt($post_id, $user);");
+    }
+   // redirect('posting/1');
+}
+
+
+
+
+
+public function resume($post_id){
+    if($post_id > 0){
+       $user = $this->session->userdata('user')['user_id'];
+       $this->db->query("call pResume($post_id, $user);");
+    }
+    //redirect('posting/1');
+}
+
+
+
+
+
+public function archive_post($post_id){
+    $valid =   $this->db->query("SELECT CanArchive($post_id) as validan");
+    $valid = $valid->result_array();
+
+        if($valid[0]['validan'] == '0'){
+            echo json_encode(array(
+                'error' => false,
+                'message' => 'Can not archive post with id: ' . $post_id . ', because post is in sending process!',
+                'warning' => true
+                )); 
+        }
+        else{ 
+            $user = $this->session->userdata('user')['user_id'];
+            $this->db->query("call ArchivePost($post_id, $user);");
+            echo json_encode(array(
+                'error' => false,
+                'message' => 'Post with id: ' . $post_id . ', is archived!',
+                'warning' => false
+                )); 
+        }
+    //redirect('posting/1');
+}
+
+
 public function insert_post(){
         $this->load->helper('form');
-        $this->load->helper('url');
+        $this->load->helper('url');    
         $this->load->library('form_validation');
         
         
         if($this->Users_model->isLoggedIn()){
-
+            $user = $this->session->userdata('user')['user_id'];
             $this->form_validation->set_rules(
                 'postTitle', 'Post title',
                 'trim|required',
@@ -194,23 +569,14 @@ public function insert_post(){
                         'required'      => 'You have not provided %s.'
                 )
             );
-
-           /* TODO
-           $this->form_validation->set_rules(
-                'selected_page_id', 'any Page to post on!',
-                'trim|required',
-                array(
-                        'required'      => 'You have not selected %s.'
-                )
-            );*/
-
-
+            $ins_or_upd = $this->input->post('ins_or_upd');
+            $post_status = $this->input->post('post_status'); //draft-1 or queued-2 for insert
             $user_id = $this->session->userdata('user')['user_id'];
 
             $post_id=$this->input->post('postId'); 
 
             $post_type=$this->input->post('postType');
-            $post_status=$this->input->post('postStatus');
+            //$post_status=$this->input->post('postStatus');
             $w_title=$this->input->post('postTitle'); 
             $message = $this->input->post('message');
             //$upload_img=$this->input->post('imageURL'); 
@@ -219,6 +585,46 @@ public function insert_post(){
             $upload_video = $this->input->post('videoFileName');
             $add_link=$this->input->post('link');
             
+           $schedule_date_time = $this->input->post('schedule_date_time');
+
+           
+
+           $arrayPages = $this->input->post('arrayPages');
+           $arrayGroups = $this->input->post('arrayGroups');
+           
+           $arrayPagesObj = json_decode($arrayPages);
+           $arrayGroupsObj = json_decode($arrayGroups);
+
+        //    echo json_encode(array(
+        //     'id' => $arrayGroupsObj[0]->id,
+        //     'name' => $arrayGroupsObj[0]->name,
+        //     'pages' => $arrayGroupsObj[0]->pages
+        //     ));
+
+
+        // echo json_encode(array(
+        //     'id' => $arrayGroupsObj[0]->id,
+        //     'name' => $arrayGroupsObj[0]->name,
+        //     'id[0]' => $arrayGroupsObj[0]->pages[0]->id,
+        //     'fbPageName[0]' => $arrayGroupsObj[0]->pages[0]->fbPageName,
+        //     'id[1]' => $arrayGroupsObj[0]->pages[1]->id,
+        //     'fbPageName[1]' => $arrayGroupsObj[0]->pages[1]->fbPageName,
+        //     'id[2]' => $arrayGroupsObj[0]->pages[2]->id,
+        //     'fbPageName[2]' => $arrayGroupsObj[0]->pages[2]->fbPageName
+        //     ));
+
+
+
+
+            if($schedule_date_time !== ''){
+                $schedule_date_time=date("Y-m-d H:i:s", strtotime($schedule_date_time));
+                $is_scheduled=1;
+            }
+            else {
+                $schedule_date_time = NULL; //date_add(date("Y-m-d H:i:s"),date_interval_create_from_date_string("40 days"));
+                $is_scheduled=0;
+            }
+            
             //page(s) to publish post on
             $selected_page_id = $this->input->post('selected_page_id'); 
 
@@ -226,29 +632,32 @@ public function insert_post(){
             $queued_post=false; // hiding PAUSE,RESUME
             $fbaccountDetails='';
 
-            $data=array(
-                      'user_id' => $user_id,
-                      'queued_post' => $queued_post,
-                      'input_post_type' => $post_type,
-                      'input_post_id' => $post_id,
-                      'input_post_title' => $w_title,
-                      'input_post_message' => $message,                
-                      'input_post_link' => $add_link,
-                      'input_post_picture' =>$upload_images_list,
-                      'input_post_video' => $upload_video,
-                      //'input_post_name' => $input_post_name,
-                      //'input_post_caption' => $input_post_caption,
-                      //'input_post_description' => $input_post_description,
-                      'input_post_fb_preset_id' => $input_post_fb_preset_id,
-                      'fbaccountDetails' =>  $fbaccountDetails,
-                      'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
-                      'fbaccountDetails_firstname' => 'Page',//$fbaccountDetails_firstname,
-                      'fbaccountDetails_lastname' => 'Name', //$fbaccountDetails_lastname,
-                      //'user_groups' => $user_groups,
-                      //'user_pages' => $selected_page_id,
-                      'input_post_image_list' => $upload_images_list,
-                      'selected_page_id' => $selected_page_id
-                 );
+            // $data=array(
+            //           'post_status' => $post_status,
+            //           'user_id' => $user_id,
+            //           'queued_post' => $queued_post,
+            //           'input_post_type' => $post_type,
+            //           'input_post_id' => $post_id,
+            //           'input_post_title' => $w_title,
+            //           'input_post_message' => $message,                
+            //           'input_post_link' => $add_link,
+            //           'input_post_picture' =>$upload_images_list,
+            //           'input_post_video' => $upload_video,
+            //           //'input_post_name' => $input_post_name,
+            //           //'input_post_caption' => $input_post_caption,
+            //           //'input_post_description' => $input_post_description,
+            //           'input_post_fb_preset_id' => $input_post_fb_preset_id,
+            //           'fbaccountDetails' =>  $fbaccountDetails,
+            //           'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
+            //           'fbaccountDetails_firstname' => 'Page',//$fbaccountDetails_firstname,
+            //           'fbaccountDetails_lastname' => 'Name', //$fbaccountDetails_lastname,
+            //           //'user_groups' => $user_groups,
+            //           //'user_pages' => $selected_page_id,
+            //           'input_post_image_list' => $upload_images_list,
+            //           'selected_page_id' => $selected_page_id,
+            //           'isScheduled' => $is_scheduled,
+            //           'scheduleDateTime' => $schedule_date_time
+            //      );
 
 
             if ($this->form_validation->run() === FALSE){
@@ -260,13 +669,15 @@ public function insert_post(){
                     'message' => 'validacija',
                     'id' => $res
                     ));
-            }else{
-            
-                    if($post_id==0) {
-                        $res= $this->FB_model->insert_post($user_id, $selected_page_id, $w_title, $post_type, $message, $upload_video, $add_link, $upload_images_list);
+           }else{
+                    if($ins_or_upd =="insert") {
+                        $res= $this->FB_model->insert_post($post_status, $user_id, $selected_page_id, $w_title, 
+                        $post_type, $message, $upload_video, $add_link, $upload_images_list,
+                        $is_scheduled, $schedule_date_time, $arrayPagesObj,$arrayGroupsObj );
                                     
                        // echo 'Inserted Post id: ' . $res;
-
+                       
+                       $this->db->query("call PostEdit($post_id, $user);");
                         echo json_encode(array(
                             'error' => false,
                             'message' => 'OK',
@@ -274,10 +685,27 @@ public function insert_post(){
                             ));
                     } 
                     else{
-                        $this->FB_model->update_post($user_id, $selected_page_id, $w_title, $post_type, $message, $upload_video, $add_link, $upload_images_list);
+                        try {
+                        $res =  $this->FB_model->update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
+                        $post_type, $message, $upload_video, $add_link, $upload_images_list,
+                        $is_scheduled, $schedule_date_time, $arrayPagesObj,$arrayGroupsObj);
+                       
+                        $this->db->query("call PostEdit($post_id, $user);");
+                        echo json_encode(array(
+                            'error' => false,
+                            'message' => 'OK',
+                            'id' => $res
+                            ));
+                        } catch(Exception $e) { 
+                            echo json_encode(array(
+                                'error' => true,
+                                'message' => $e->getMessage(),
+                                'id' => $res
+                                ));
+                          }
                     }
-                    //redirect ('');
-            }        
+                   // redirect ('');
+           }       
         }
         else {
             //not logged in

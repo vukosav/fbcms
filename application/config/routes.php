@@ -54,6 +54,9 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['posting/(:any)'] = 'Post/index/$1';
+$route['cancel_edit/(:any)'] = 'FB_post/cancel_edit_post/$1';
+$route['halt/(:any)'] = 'FB_post/halt/$1';
+$route['resume/(:any)'] = 'FB_post/resume/$1';
 $route['editusers'] = 'Users/edit';
 $route['showusers/(:any)'] = 'Users/show/$1';
 $route['login'] = 'Login/login';
@@ -80,9 +83,18 @@ $route['fbcheck'] = 'FBCheck';
 
 //jelena start
 $route['insert_pages'] = 'Add_pages/insert_pages';
-$route['insert_post'] = 'Post/insert_post';
+// $route['insert_post'] = 'Post/insert_post';
 $route['send_post'] = 'Send_post';
 $route['send_post/index/(:any)'] = 'Send_post/index/$1';
-$route['create_post'] = 'FB_post/index/0';
-$route['fb_post/insert_post'] = 'FB_post/insert_post';
+$route['create_post'] = 'FB_post/create_post';
+$route['edit_post/(:any)'] = 'FB_post/edit_post/$1';
+$route['copy_post/(:any)'] = 'FB_post/copy_post/$1';
+$route['fb_post/insert_post/(:any)'] = 'FB_post/insert_post/$1';
+$route['archive_post/(:any)'] = 'FB_post/archive_post/$1';
 //jelena end
+
+
+
+//job
+$route['start'] = 'Cron_job/start';
+$route['start/(:any)'] = 'Cron_job/start/$1';

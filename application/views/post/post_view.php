@@ -8,8 +8,10 @@
 <!-- kt-breadcrumb -->
 
 <script>
+var g_page = 0;
 function searchFilter(page_num) {
     page_num = page_num ? page_num : 0;
+    g_page = page_num;
     var wtitle = $('#wtitle').val();
     var group = $('#group').val();
     var fbpage = $('#fbpage').val();
@@ -22,6 +24,7 @@ function searchFilter(page_num) {
     var scheduled = $('#scheduled').is(':checked');
     var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').is(':checked');
+    console.log('');
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
@@ -181,21 +184,24 @@ function searchFilter(page_num) {
                     <tbody id = "postListBody">
                         <?php if(!empty($posts)): foreach ($posts as $q): ?>
                         <tr>
-                            <?php if($q['PostStatus'] ==1 ){
+                        <?php if($q['PostStatus'] ==1 ){
                                  echo "<td>Draft</td>";
                             }
                             elseif($q['PostStatus'] ==2 ){
-                                        echo "<td><span class='fa fa-circle-o'></span>";
+                                        echo "<td><span class='fa fa-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                         echo "<br>0/90</td>";
                                         
                                     } elseif($q['PostStatus'] ==3 ){
-                                    echo "<td><span class='fa fa-adjust'></span> ";
-                                    echo "<span class='fa fa-pause'></span>";
+                                        echo "<td><span class='fa fa-adjust' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span> ";
+                                        if($q['ActionStatus'] ==2 ){
+                                            echo "<span class='fa fa-pause-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
+                                        }else{
+                                            echo "<span class='fa fa-play-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
+                                        }
                                     echo "<br>0/90</td>";
-                                    }else{
-                                        echo "<td><span class='fa fa-circle'></span> ";
-                                    echo "<span class='fa fa-pause'></span>";
-                                    echo "<br>0/90</td>";
+                                    }elseif($q['PostStatus'] ==4 ){
+                                        echo "<td><span class='fa fa-circle' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span> ";
+                                    echo "<span style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'><br>0/90</span></td>";
                                     } ?>
                             <!-- <td>
                                         <span class="fa fa-adjust"></span>
@@ -216,22 +222,22 @@ function searchFilter(page_num) {
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
-                                 <a href="#"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
-                                 <a href="#"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
+                                 <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
+                                 <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
                                 
                                 <?php 
                                  if($q['PostStatus']==2){
                                     echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
                                 }if($q['PostStatus']==3){
                                     if($q['ActionStatus']==1){
-                                    echo "<a href='#'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pauze posting'></span></a>";
+                                    echo "<a href='' onclick='Halt(" . $q['id'] . ");'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";
                                     }
                                     if($q['ActionStatus']==2){
-                                        echo "<a href='#'><span class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;' data-toggle='tooltip' data-placement='top' title='Continue posting'></span></a>";
+                                        echo "<a href='' onclick='Resume(" .$q['id']. ");'><span class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;' data-toggle='tooltip' data-placement='top' title='Continue posting'></span></a>";
                                     }
                                 }
                                  ?>
-                                <a href="#"><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
+                                <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
                                 
                                 </div>
                             </td>
@@ -250,10 +256,82 @@ function searchFilter(page_num) {
 
     <?php $this->load->view('includes/footer'); ?>
   
-    <script> 
+<script> 
      function resetform() {
         location.reload();
     }
+
+     
+function Halt(id){
+     console.log('g_page',g_page);
+     $.ajax({
+         url:'<?=base_url()?>halt/'+id,
+         type: 'POST',
+        // postId: id,
+         processData: false,
+         contentType: false, 
+         success: function(data){
+            // window.location.replace('<?=base_url()?>posting/1');
+            searchFilter(g_page);
+         }
+       });
+     }
+
+
+     
+  function ArchivePost(id){
+     
+     $.ajax({
+         url:'<?=base_url()?>archive_post/'+id,
+         type: 'POST',
+        // postId: id,
+         processData: false,
+         contentType: false, 
+         success: function(data){
+            var dataJ = jQuery.parseJSON (data);
+          //  console.log('dataJ',dataJ);
+            if(!dataJ.error){
+                if(dataJ.warning){
+                    Swal.fire(
+                            "Warning",
+                            dataJ.message,
+                            'info'
+                        );
+                }else{
+                    Swal.fire(
+                            "Well done!",
+                            dataJ.message,
+                            'success'
+                        ).then(() => {location.reload();});
+                } 
+                
+            }
+            else{
+                Swal.fire(
+                            "Error!",
+                            dataJ.message,
+                            'error'
+                        );
+                console.log('dataJ.error je true', JSON.stringify(dataJ));
+            }
+            
+         }
+       });
+     }
+      
+function Resume(id){
+     
+     $.ajax({
+         url:'<?=base_url()?>resume/'+id,
+         type: 'POST',
+        // postId: id,
+         processData: false,
+         contentType: false, 
+         success: function(data){
+             window.location.replace('<?=base_url()?>posting/1');
+         }
+       });
+     }
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form
