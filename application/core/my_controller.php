@@ -9,7 +9,7 @@ class MY_controller extends CI_Controller {
             $this->load->helper('url_helper');
             $this->load->model('Other_model');
             $this->load->library('Ajax_pagination');
-            $this->perPage = 4;
+            $this->perPage = 40;
             $this->load->helper('cookie');
             if (!$this->session->userdata('user')['logged_in'])
             { 

@@ -8,8 +8,10 @@
 <!-- kt-breadcrumb -->
 
 <script>
+
 var g_page = 0;
 function searchFilter(page_num) {
+    if(typeof event !== 'undefined')  {event.preventDefault();}
     page_num = page_num ? page_num : 0;
     g_page = page_num;
     var wtitle = $('#wtitle').val();
@@ -24,25 +26,29 @@ function searchFilter(page_num) {
     var scheduled = $('#scheduled').is(':checked');
     var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').is(':checked');
-    console.log('');
+ 
+    var input_data = 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +  '&date_to=' + date_to  + '&group=' + group + '&fbpage=' + fbpage +
+             '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors + '&scheduled=' + scheduled + '&inProgres=' + inProgres;
+
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
-        data: 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +  '&date_to=' + date_to  + '&group=' + group + '&fbpage=' + fbpage +
-             '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors + '&scheduled=' + scheduled + '&inProgres=' + inProgres,
+        data: input_data,
         beforeSend: function() {
+            console.log("before send");
             $('.loading').show();
         },
         success: function(html) {
+           // console.log("html", html);
             $('#postList').html(html);
             $('.loading').fadeOut("slow");
-            $('#datatable1').DataTable({
+           /* $('#datatable1').DataTable({
                 responsive: true,
                 "paging": false,
                 "info": false,
                 searching: false,
                 retrieve: true
-            });
+            });*/
             
         }
     });
@@ -59,6 +65,8 @@ function searchFilter(page_num) {
               <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="1"){echo "active2";}?>" href="<?=base_url()?>posting/1" role="tab">Queued posts</a></li>
               <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="2"){echo "active2";}?>" href="<?=base_url()?>posting/2" role="tab">Draft posts</a></li>
               <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="3"){echo "active2";}?>" href="<?=base_url()?>posting/3" role="tab">Sent posts</a></li>
+              <li class="nav-item" style="position:absolute;right:20px;" id="live"><a class="nav-link" href="" role="tab" onclick="GoLive()">Live</a></li>
+              <li class="nav-item" style="position:absolute;right:20px; display: none" id="stop_live"><a class="nav-link" href="" role="tab" onclick="StopLive()">Stop Live</a></li>
             </ul>
           </div>
         <div class="card pd-20 pd-sm-40 mg-t-5">
@@ -67,7 +75,7 @@ function searchFilter(page_num) {
                 <?php echo form_open('posting'); ?>
                 <div class="row form-group">
                     <div class="col col-sm-2">
-                        <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title" class="form-control"
+                        <input type="text" id="wtitle" name="wtitle" placeholder="Filter by working title or post content" class="form-control"
                         onkeyup="searchFilter()" />
                         <input type="hidden" id="post_status" name="post_status" value="<?php echo $pos; ?>">
                     </div>
@@ -189,19 +197,23 @@ function searchFilter(page_num) {
                             }
                             elseif($q['PostStatus'] ==2 ){
                                         echo "<td><span class='fa fa-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
-                                        echo "<br>0/90</td>";
+                                        echo "<br>{$q['inProgres']}/{$q['ukupno']}</td>";
                                         
                                     } elseif($q['PostStatus'] ==3 ){
                                         echo "<td><span class='fa fa-adjust' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span> ";
                                         if($q['ActionStatus'] ==2 ){
-                                            echo "<span class='fa fa-pause-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
+                                            echo "<span id='span_status_{$q['id']}' class='fa fa-pause-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                         }else{
-                                            echo "<span class='fa fa-play-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
+                                            echo "<span id='span_status_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                         }
-                                    echo "<br>0/90</td>";
+                                    echo "<br>{$q['inProgres']}/{$q['ukupno']}";
+                                    echo $q['error']?"<br><span class='badge badge-success'>{$q['error']} errors</span>":"";
+                                    echo "</td>";
                                     }elseif($q['PostStatus'] ==4 ){
                                         echo "<td><span class='fa fa-circle' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span> ";
-                                    echo "<span style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'><br>0/90</span></td>";
+                                       echo "<span style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'><br>{$q['sent']}/{$q['ukupno']}</span><br>";
+                                       echo $q['error']?"<span class='badge badge-success'>{$q['error']} errors</span>":"";
+                                       echo "</td>";
                                     } ?>
                             <!-- <td>
                                         <span class="fa fa-adjust"></span>
@@ -215,27 +227,27 @@ function searchFilter(page_num) {
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><?php echo substr($q['content'], 0, 60) ."..."; ?></td>
+                            <td><a href="" onclick="Show('<?php echo $q['content']; ?>')"><?php echo substr($q['content'], 0, 60) ."..."; ?></a></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
-                            <td>Group1<br>Group2</td>
-                            <td><?php echo $q['pages']; ?></td>
+                            <td>Grupe<?php //echo $q['groups']; ?></td>
+                            <td><a data-toggle="modal" data-target="#modaldemo3" data-id="<?php echo $q['pages']; ?>" href=""><?php echo $q['pages']; ?></a></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
                                  <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
                                  <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
                                 
-                                <?php 
+                                 <?php 
                                  if($q['PostStatus']==2){
                                     echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
                                 }if($q['PostStatus']==3){
                                     if($q['ActionStatus']==1){
-                                    echo "<a href='' onclick='Halt(" . $q['id'] . ");'><span class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";
-                                    }
+                                    echo "<a  id='halt_{$q['id']}' onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";
+                                    
+                                  }
                                     if($q['ActionStatus']==2){
-                                        echo "<a href='' onclick='Resume(" .$q['id']. ");'><span class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998; margin: 6px;' data-toggle='tooltip' data-placement='top' title='Continue posting'></span></a>";
-                                    }
-                                }
+                                        echo "<a  id='halt_{$q['id']}'  onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";                                   }
+                                  }
                                  ?>
                                 <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
                                 
@@ -254,30 +266,174 @@ function searchFilter(page_num) {
 
     </div><!-- kt-pagebody -->
 
+    <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content tx-size-sm">
+                            <div class="modal-header pd-x-20">
+                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">More data</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <form name="formGroupName" action="" method="POST">
+                            <div class="modal-body pd-20">
+                                    <?php echo $q['pages']; ?>
+                            </div><!-- modal-body -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary pd-x-20"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div><!-- modal-dialog -->
+                </div>
+                <!------------------------------>
+
     <?php $this->load->view('includes/footer'); ?>
   
 <script> 
-     function resetform() {
+
+function Show(txt) {
+        event.preventDefault(); // prevent form submit
+        var form = event.target.form; // storing the form
+       console.log('txt', txt);
+        swal.fire({
+                text: txt,
+                cancelButtonText: "ok!",
+                closeOnCancel: false
+             })
+    }
+
+var refresh_interval = 5 * 1000;
+var go_live = false;
+function RefreshData(page_num) {
+    console.log("refresh");
+    if(!go_live) {return ;}
+    if(typeof event !== 'undefined')  {event.preventDefault();}
+    page_num = page_num ? page_num : 0;
+    g_page = page_num;
+    var wtitle = $('#wtitle').val();
+    var group = $('#group').val();
+    var fbpage = $('#fbpage').val();
+    var date_from = $('#date_from').val();
+    var date_to = $('#date_to').val();
+    var createdBy = $('#createdBy').val();
+    var paused = $('#paused').is(':checked');
+    var errors = $('#errors').is(':checked');
+    var inProgres = $('#inProgres').is(':checked');
+    var scheduled = $('#scheduled').is(':checked');
+    var post_status = $('#post_status').val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
+    var archived = $('#archived').is(':checked');
+    console.log('post_status',post_status);
+    var input_data = 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +  '&date_to=' + date_to  + '&group=' + group + '&fbpage=' + fbpage +
+             '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors + '&scheduled=' + scheduled + '&inProgres=' + inProgres;
+
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
+        data:  input_data,
+        beforeSend: function() {
+            console.log("before send");
+            $('.loading').show();
+        },
+        success: function(html) {
+            //console.log("html", html);
+            $('#postList').html(html);
+            $('.loading').fadeOut("slow");
+           /* $('#datatable1').DataTable({
+                responsive: true,
+                "paging": false,
+                "info": false,
+                searching: false,
+                retrieve: true
+            });*/
+            
+        }
+    });
+}
+$(document).ready(function(){
+    console.log("refresh doc ready", refresh_interval);
+    setInterval(RefreshData,refresh_interval);
+});
+
+function GoLive(){
+    if(typeof event !== 'undefined')  {event.preventDefault();}
+    go_live = true;
+    document.querySelector('#stop_live').style.display = "block";
+    document.querySelector('#live').style.display = "none";
+}
+
+function StopLive(){
+    if(typeof event !== 'undefined')  {event.preventDefault();}
+    go_live = false;
+    document.querySelector('#stop_live').style.display = "none";
+    document.querySelector('#live').style.display = "block";
+}
+     
+
+function resetform() {
         location.reload();
     }
 
-     
+
+ 
+
+function PauseResume(id){
+   if(!$('#span_'+id).hasClass('fa-spin') && $('#span_'+id).hasClass('fa-pause-circle-o'))
+   {
+      Halt(id);
+   }
+   else if(!$('#span_'+id).hasClass('fa-spin') && $('#span_'+id).hasClass('fa-play-circle-o'))
+   {
+    Resume(id);
+   }
+}
+
 function Halt(id){
-     console.log('g_page',g_page);
+    $('#span_'+id).removeClass('fa-pause-circle-o');
+    $('#span_'+id).addClass('fa-refresh'); 
+    $('#span_'+id).addClass('fa-spin'); 
      $.ajax({
          url:'<?=base_url()?>halt/'+id,
          type: 'POST',
         // postId: id,
-         processData: false,
-         contentType: false, 
+       //  processData: false,
+       //  contentType: false, 
          success: function(data){
             // window.location.replace('<?=base_url()?>posting/1');
-            searchFilter(g_page);
+            //searchFilter(g_page);
+            $('#span_'+id).removeClass('fa-refresh'); 
+            $('#span_'+id).removeClass('fa-spin'); 
+            $('#span_'+id).addClass('fa-play-circle-o');
+            $('#span_status_'+id).removeClass('fa-play-circle-o'); 
+            $('#span_status_'+id).addClass('fa-pause-circle-o'); 
+          //  document.querySelector('#halt_'+id).style.display = "none";
+           // document.querySelector('#resume_'+id).style.display = "block";
          }
        });
      }
 
-
+ function Resume(id){
+    $('#span_'+id).removeClass('fa-play-circle-o');
+    $('#span_'+id).addClass('fa-refresh'); 
+    $('#span_'+id).addClass('fa-spin'); 
+     $.ajax({
+         url:'<?=base_url()?>resume/'+id,
+         type: 'POST',
+        // postId: id,
+        // processData: false,
+        // contentType: false, 
+         success: function(data){
+            $('#span_'+id).removeClass('fa-refresh'); 
+            $('#span_'+id).removeClass('fa-spin');
+            $('#span_'+id).addClass('fa-pause-circle-o'); 
+            $('#span_status_'+id).removeClass('fa-pause-circle-o'); 
+            $('#span_status_'+id).addClass('fa-play-circle-o'); 
+           //  document.querySelector('#halt_'+id).style.display = "block";
+           //  document.querySelector('#resume_'+id).style.display = "none";
+         }
+       });
+     }
      
   function ArchivePost(id){
      
@@ -319,19 +475,7 @@ function Halt(id){
        });
      }
       
-function Resume(id){
-     
-     $.ajax({
-         url:'<?=base_url()?>resume/'+id,
-         type: 'POST',
-        // postId: id,
-         processData: false,
-         contentType: false, 
-         success: function(data){
-             window.location.replace('<?=base_url()?>posting/1');
-         }
-       });
-     }
+
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form

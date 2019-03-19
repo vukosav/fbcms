@@ -38,11 +38,11 @@
                         value="<?php echo $users['username']?$users['username']:set_value('username'); ?>">
                 </div><!-- form-group -->
 
-                <!-- <div class="form-group">
+                <div class="form-group">
                     <label class="form-control-label">Password: <span class="tx-danger">*</span></label>
                     <input type="password" name="password" class="form-control" placeholder="Type password" required
-                        value="<?php //echo $users['password']?$users['password']:set_value('password'); ?>">
-                </div> -->
+                        value="<?php echo $users['password']?$users['password']:set_value('password'); ?>">
+                </div>
                 <!-- form-group -->
 
 

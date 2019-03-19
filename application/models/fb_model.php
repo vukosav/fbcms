@@ -274,6 +274,7 @@ class FB_model extends CI_Model{
             }
 
     }   
+   /* 
     public function update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, $post_type, 
         $message, $upload_video, $add_link, $upload_images_list, 
         $is_scheduled, $schedule_date_time, $arrayPagesObj,$arrayGroupsOb) {    
@@ -420,49 +421,6 @@ class FB_model extends CI_Model{
                            } 
                        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     // if($selected_page_id>0){
 
                     //     //delete previous incarnation pages for post
@@ -487,6 +445,138 @@ class FB_model extends CI_Model{
             }
 
     }  
+    */
+
+    public function update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
+        $post_type, $message, $upload_video, $add_link, $upload_images_list, $is_scheduled, 
+        $schedule_date_time, $arrayPagesObj,$arrayGroupsOb) {   
+
+            if($post_status=='1'){
+                    //draft           
+                    $posting_status=null;
+            }
+            if($post_status=='2'){
+                    //queued            
+                    $posting_status=1;
+            }
+            
+            //$this->db->set('created_by',$user_id);
+            $this->db->where('id=', $post_id);
+            $this->db->set('title', $w_title);
+            $this->db->set('content', $message);
+            //$this->db->set('created_date', date("Y-m-d H:i:s"));
+            $this->db->set('PostStatus', $post_status);
+            //$this->db->set('ActionStatus', null);
+            $this->db->set('post_type', $post_type);
+            //$this->db->set('IsActive',1);
+            $this->db->set('scheduledTime', $schedule_date_time);
+            $this->db->set('isScheduled', $is_scheduled);
+            $q = $this->db->update('posts');
+
+            //delete previous post incarnation attachments
+            $ret=$this->delete_post_attachments($post_id);
+            
+            //prepare for insert of new post attacments
+            if ($post_type=="video" && $upload_video!=="") {
+                        $attach_type="video";
+                        $attach_location=$upload_video;
+            }
+            if ($post_type=="link" && $add_link!=="") {
+                        $attach_type="link";
+                        $attach_location=$add_link;
+            }
+            //insert new attachments != image
+            if($post_type !="image"){
+                $this->db->set('post_id',$post_id);
+                $this->db->set('attach_type',$attach_type);
+                $this->db->set('attach_location',$attach_location);
+                $this->db->set('caption', "");
+                $this->db->set('localResources', 1);
+                $query = $this->db->insert('post_attachments');
+            }
+            //insert new images
+            if($post_type=="image"){
+                $image_array = explode(',',$upload_images_list);
+                        
+                // var_dump($image_array);
+                foreach($image_array as $image ){
+                    //echo 'imagesrc ' . $image;
+                    $attach_type="image";
+                    $attach_location=$image;
+
+                    $this->db->set('post_id', $post_id);
+                    $this->db->set('attach_type',$attach_type);
+                    $this->db->set('attach_location',$attach_location);
+                    $this->db->set('caption', "");
+                    $this->db->set('localResources', 1);
+                    $query = $this->db->insert('post_attachments');
+                }
+            }         
+            $valid = $this->db->query("SELECT CanEditPageAndGroups($post_id) as validan");
+            $valid = $valid->result_array();
+
+            if($valid[0]['validan'] == '0'){
+                    return $post_id ;
+            }
+            else{
+
+                $page_id_array =  array();
+                if( $arrayPagesObj != null && is_array($arrayPagesObj)){   
+                    foreach($arrayPagesObj as $pageObj ){
+                       array_push($page_id_array,$pageObj->id); 
+                    }        
+                }
+                
+                if($arrayGroupsOb != null && is_array($arrayGroupsOb)){
+                    foreach($arrayGroupsOb as $group){
+                        if($group->pages != null && is_array($group->pages)){
+                            foreach($group->pages as $pageObj ){
+                                if (!in_array($pageObj->id, $page_id_array, true)) {
+                                    array_push($page_id_array,$pageObj->id); 
+                                }
+                            } 
+                        }
+                    }
+                }
+                
+                $ret=$this->delete_post_pages($post_id);     
+                foreach( $page_id_array as $pid ){
+                    $this->db->set('pageId', $pid);
+                    $this->db->set('postId', $post_id);
+                                
+                    $this->db->set('postingStatus', $posting_status); 
+                    $this->db->set('job_id',null); 
+                    $this->db->set('job_action',1); 
+                                
+                    $this->db->set('dateCreated',date("Y-m-d H:i:s"));
+                    $query = $this->db->insert('posts_pages');
+                }
+                $ret=$this->delete_groups_in_post($post_id);   
+                if($arrayGroupsOb != null && is_array($arrayGroupsOb)){
+                    foreach($arrayGroupsOb as $group){
+                        if($group->pages != null && is_array($group->pages)){
+                            foreach($group->pages as $pageObj ){
+                                $this->db->set('pageId', $pageObj->id);
+                                $this->db->set('postId', $post_id);
+                                $this->db->set('groupId',$group->id);
+                                $query = $this->db->insert('groups_in_post');
+                            } 
+                        }
+                    }
+                }
+                $ret=$this->delete_page_by_hand_in_post($post_id);
+                if( $arrayPagesObj != null && is_array($arrayPagesObj)){   
+                    foreach($arrayPagesObj as $pageObj ){
+                        array_push($page_id_array,$pageObj->id); 
+                        $this->db->set('pageId', $pageObj->id);
+                        $this->db->set('postId', $post_id);
+                        $query = $this->db->insert('page_by_hand_in_post');
+                    } 
+                } 
+            }     
+        return $post_id;
+    }  
+
     public function list_new_pages( $fb_pages, $user_id){
 
         

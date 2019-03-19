@@ -45,7 +45,7 @@ class FBCheck extends CI_Controller {
             $loginUrl = $helper->getLoginUrl(base_url() . 'LoginCallback', $permissions);
 
             $data = array('loginUrl' => $loginUrl);
-                
+            $data['title'] = 'FB chack page';    
             $this->load->view('users/fbcheck', $data);
             
             //   TO REVOKE  PERMISSIONS, with user AT

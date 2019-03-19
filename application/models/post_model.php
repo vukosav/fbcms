@@ -10,14 +10,19 @@ class Post_model extends CI_Model{
     function getRows($params = array(), $pos=null){
         // $this->db->where('posts.IsActive = ', 1);
         // $where = "(PostStatus = 2 or PostStatus = 3)";
-        // $this->db->where($where);
+        // $this->db->where($where);  SUM( case when posts_pages.postingStatus=1 then 1 else 0 end ) as draft,
         $this->db->distinct();
-        $this->db->select('posts.*, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
+        $this->db->select('COUNT(posts_pages.postId) ukupno, 
+        SUM( case when posts_pages.postingStatus=4 then 1 else 0 end ) as error,
+        SUM( case when posts_pages.postingStatus=3 then 1 else 0 end ) as sent, 
+        SUM( case when posts_pages.postingStatus=2 then 1 else 0 end ) as inProgres, 
+        posts.*, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
         //$this->db->from('');
         $this->db->join('posts_pages', 'posts_pages.postId = posts.id', 'left outer');
+        $this->db->group_by('posts_pages.postId');
         
 
         //filter data by searched keywords
@@ -81,6 +86,7 @@ class Post_model extends CI_Model{
         //filter data by title
         if(!empty($params['search']['wtitle'])){
             $this->db->like('posts.title',$params['search']['wtitle']);
+            $this->db->or_like('posts.content', $params['search']['wtitle']);
         }
         //filter data by searched keywords
         // if(!empty($params['search']['post_status'])){
@@ -93,6 +99,7 @@ class Post_model extends CI_Model{
             $this->db->limit($params['limit']);
         }
         //get records
+        $this->db->order_by('posts.id desc');
         $query = $this->db->get();
         //return fetched data
         // $debug_array = []

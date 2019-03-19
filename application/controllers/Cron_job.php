@@ -379,7 +379,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
         //pripremljeni su job_thread-ovi i njima je owner_job upravo obvaj novokreirani cron_job
         
         // uzimamo ih iz db
-        $data = $this->db->query("SELECT * FROM jobs_thread WHERE cron_job_id_owner = $cron_job_owner");
+        $data = $this->db->query("SELECT * FROM jobs_thread WHERE cron_job_id_owner = $cron_job_owner AND post_id_owner IS NULL AND  user_id_owner IS NULL");
         $data = $data->result_array();
 
         //za svaki thread_job
@@ -405,7 +405,8 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                                         WHERE job_id = $job_id
                                         and P.PostStatus = 3
                                         and P.ActionStatus = 1
-                                        and PS.postingStatus =  1 ");
+                                        and PS.postingStatus =  1
+                                        and P.IsActive = 1 ");
             $data = $data->result_array();
             $job_status = 1; //sve je ok, za error stavljamo 2
             $job_error = '';

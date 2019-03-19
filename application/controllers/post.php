@@ -41,7 +41,100 @@ class Post extends MY_controller {
         $inProgres = $this->input->post('inProgres');
         $scheduled = $this->input->post('scheduled');
         $post_status = $this->input->post('post_status');
+        
 
+        $conditions['search']['post_status'] = $post_status;
+       
+        if(!empty($createdBy)){
+            $conditions['search']['createdBy'] = $createdBy;
+        }
+        if(!empty($wtitle)){
+            $conditions['search']['wtitle'] = $wtitle;
+        }
+        // if(!empty($group)){
+        //     $conditions['search']['group'] = $group;
+        // }
+        if(!empty($fbpage)){
+            $conditions['search']['fbpage'] = $fbpage;
+        }
+        if(!empty($date_from)){
+            $conditions['search']['date_from'] = $date_from;
+        }
+        if(!empty($date_to)){
+            $conditions['search']['date_to'] = $date_to;
+        }
+        if($archived == 'true'){
+            $conditions['search']['archived'] = 'nn';
+        }
+        if($paused == 'true'){
+            $conditions['search']['paused'] = 'nn';
+        }
+        if($errors == 'true'){
+            $conditions['search']['errors'] = 'nn';
+        }
+        if($inProgres == 'true'){
+            $conditions['search']['inProgres'] = 'nn';
+        } 
+        if($scheduled == 'true'){
+            $conditions['search']['scheduled'] = 'nn';
+        } 
+
+
+// print_r( $conditions);
+// print_r($this->db->last_query());
+        //total rows count
+        $totalRec = count($this->Post_model->getRows($conditions, $post_status));
+        
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'post/ajaxPaginationData';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+        
+        //set start and limit
+        $conditions['start'] = $offset;
+        $conditions['limit'] = $this->perPage;
+        
+        //get posts data
+        $data['posts'] = $this->Post_model->getRows($conditions, $post_status);
+        $data['pos'] = $post_status;
+       // print_r($this->db->last_query());
+        //load the view
+        // $this->output->enable_profiler();
+        $this->load->view('post/ajax-pagination-data', $data, false);
+    }
+    function ajaxRefreshData($list_type){
+        
+        $conditions = array();
+        
+        //calc offset number
+        $page = $this->input->post('page');
+        if(!$page){
+            $offset = 0;
+        }else{
+            $offset = $page;
+        }
+        
+        //set conditions for search
+        $wtitle = $this->input->post('wtitle');
+        if($this->session->userdata('user')['role'] == 2){
+            $createdBy = $this->session->userdata('user')['user_id'];
+        }else{
+            $createdBy = $this->input->post('createdBy');
+        }
+        // $group = $this->input->post('group');
+        $fbpage = $this->input->post('fbpage');
+        $date_from = $this->input->post('date_from')?  $this->input->post('date_from') .' 00:00:00':false;
+        $date_to = $this->input->post('date_to')? $this->input->post('date_to') .' 23:59:59':false;
+        $archived = $this->input->post('archived');
+        $paused = $this->input->post('paused');
+        $errors = $this->input->post('errors');
+        $inProgres = $this->input->post('inProgres');
+        $scheduled = $this->input->post('scheduled');
+        $post_status = $this->input->post('post_status');
+       
 
         $conditions['search']['post_status'] = $post_status;
        

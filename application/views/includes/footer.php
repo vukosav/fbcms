@@ -15,7 +15,7 @@
     <script src="<?=base_url()?>theme/lib/datatables-responsive/dataTables.responsive.js"></script>
     <script src="<?=base_url()?>theme/lib/select2/js/select2.min.js"></script>
     <script src="<?=base_url()?>theme/lib/d3/d3.js"></script>
-    <script src="<?=base_url()?>theme/lib/rickshaw/rickshaw.min.js"></script>
+    
     <!-- <script src="http://maps.google.com/maps/api/js?key=AIzaSyAEt_DBLTknLexNbTVwbXyq2HSf2UbRBU8"></script> -->
     <script src="<?=base_url()?>theme/lib/gmaps/gmaps.js"></script>
     <script src="<?=base_url()?>theme/lib/chart.js/Chart.js"></script>
@@ -46,7 +46,7 @@
       });
     </script>
     <script src="<?=base_url()?>theme/js/ResizeSensor.js"></script>
-    <script src="<?=base_url()?>theme/js/dashboard.js"></script>
+   
 
   </body>
 </html>

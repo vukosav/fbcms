@@ -29,7 +29,7 @@
 
 
                 <div class="form-group">
-                    <label class="form-control-label">Usernamename: <span class="tx-danger">*</span></label>
+                    <label class="form-control-label">Username: <span class="tx-danger">*</span></label>
                     <input type="text" name="username" class="form-control" placeholder="Type username" required value="<?php echo set_value('username'); ?>">
                 </div><!-- form-group -->
 

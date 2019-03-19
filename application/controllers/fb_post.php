@@ -367,7 +367,7 @@ private function GetDataFromDB($post_id){
         }
         if ($input_post_type=='video') {
             $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'video');
-            $input_post_video = $post_attachment_data[0]["attach_location"];
+            $input_post_video = base_url() . 'uploads/' . $post_attachment_data[0]["attach_location"];
 
         }
         if ($input_post_type=='image') { 
@@ -667,7 +667,7 @@ public function insert_post(){
                 echo json_encode(array(
                     'error' => true,
                     'message' => 'validacija',
-                    'id' => $res
+                    'id' => $post_id
                     ));
            }else{
                     if($ins_or_upd =="insert") {
