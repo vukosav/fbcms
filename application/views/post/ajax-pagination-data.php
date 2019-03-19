@@ -60,7 +60,7 @@
                                 
                                  <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
+                                    echo "<a onclick='SetAsDraft({$q['id']})'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
                                 }if($q['PostStatus']==3){
                                     if($q['ActionStatus']==1){
                                     echo "<a  id='halt_{$q['id']}' onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";

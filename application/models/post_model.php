@@ -22,7 +22,7 @@ class Post_model extends CI_Model{
         //$this->db->select('*');
         //$this->db->from('');
         $this->db->join('posts_pages', 'posts_pages.postId = posts.id', 'left outer');
-        $this->db->group_by('posts_pages.postId');
+        $this->db->group_by('posts.id');
         
 
         //filter data by searched keywords

@@ -56,6 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['posting/(:any)'] = 'Post/index/$1';
 $route['cancel_edit/(:any)'] = 'FB_post/cancel_edit_post/$1';
 $route['halt/(:any)'] = 'FB_post/halt/$1';
+$route['set_draft/(:any)'] = 'FB_post/set_as_draft_post/$1';
 $route['resume/(:any)'] = 'FB_post/resume/$1';
 $route['editusers'] = 'Users/edit';
 $route['showusers/(:any)'] = 'Users/show/$1';

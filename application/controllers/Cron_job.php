@@ -364,7 +364,40 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     }
 
 
+    public function delete_archive_posting($fbPageAT,  $fb_post_id){
+        if (!isset($_SESSION)) { session_start();}  
 
+        require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
+  
+        $fb = new \Facebook\Facebook([
+        'app_id' => '503878473471513',
+        'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
+        'default_graph_version' => 'v3.2'
+        ]);
+        $res =  array(
+                'error' => false,
+                'message' => '',
+                'f_post_id' => ''
+            );
+        
+
+             //delete a posting with post_id on page with page_at
+             try {
+                // Returns a `Facebook\FacebookResponse` object
+                        $response = $fb->delete( '/' . $fb_post_id,array (),$fbPageAT);
+                        $res['message'] = "Your post has been deleted from facebook.";
+                } catch(Facebook\Exceptions\FacebookResponseException $e) {
+                        $res['error'] = true;
+                        $res['message'] = $e->getMessage();
+                } catch(Facebook\Exceptions\FacebookSDKException $e) {
+                        $res['error'] = true;
+                        $res['message'] = $e->getMessage();
+                }
+                
+            
+                return $res;
+
+    }
 
 
 
@@ -394,6 +427,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
         }
         $cron_job_error="'" . $cron_job_error . "'";
        $this->db->query("call CroneJobFinish($cron_job_owner, $cron_job_error,  $cron_job_status);"); 
+       $this->ArchiveJob();
     }
 
     public function runThreadJob($job_id,$cron_job_owner){
@@ -482,4 +516,36 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
        // return "success";
        // return "error";
      }
+
+      public function ArchiveJob(){
+        $data = $this->db->query("SELECT P.id  from  posts_archive    WHERE P.is_deleted_from_fb = 0");
+        $data = $data->result_array();
+        $job_status = 1; //sve je ok, za error stavljamo 2
+        $job_error = '';
+        //prolazimo kroz queue
+        foreach($data as $qid){
+                DeleteArchiveFromDB( $qid['id']);
+        }
+      }
+     public function DeleteArchiveFromDB($post_id){
+        $data = $this->db->query("SELECT P.id post_id, PS.id, PS.fbPostId, pages.fbPageId, pages.fbPageAT
+                                        FROM posts_pages_archive  PS 
+                                        JOIN posts_archive P ON PS.postId = P.id 
+                                        JOIN pages ON PS.pageId = pages.id
+                                        WHERE P.id = $post_id and PS.fbPostId is not null");
+        $data = $data->result_array();
+        $job_status = 1; //sve je ok, za error stavljamo 2
+        $job_error = '';
+        //prolazimo kroz queue
+        foreach($data as $qid){
+                $fbPageAT = $qid['fbPageAT'];
+                $fb_post_id =  $qid['fbPostId'];
+                $post_id =  $qid['post_id'];
+                $res = delete_archive_posting($fbPageAT,  $fb_post_id);
+                if($res['error']){ $job_status = 2;}
+        }
+         if($job_status == 1){
+                $this->db->query("UPDATE posts_archive SET is_deleted_from_fb = 1 WHERE P.id = $post_id");
+         }
+      }
 } 

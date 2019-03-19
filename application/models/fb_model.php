@@ -486,7 +486,7 @@ class FB_model extends CI_Model{
                         $attach_location=$add_link;
             }
             //insert new attachments != image
-            if($post_type !="image"){
+            if($post_type =="video" || $post_type == "link"){
                 $this->db->set('post_id',$post_id);
                 $this->db->set('attach_type',$attach_type);
                 $this->db->set('attach_location',$attach_location);

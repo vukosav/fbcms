@@ -227,10 +227,10 @@ function searchFilter(page_num) {
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><a href="" onclick="Show('<?php echo $q['content']; ?>')"><?php echo substr($q['content'], 0, 60) ."..."; ?></a></td>
+                            <td><a href=""><?php echo substr($q['content'], 0, 60) ."..."; ?></a></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td>Grupe<?php //echo $q['groups']; ?></td>
-                            <td><a data-toggle="modal" data-target="#modaldemo3" data-id="<?php echo $q['pages']; ?>" href=""><?php echo $q['pages']; ?></a></td>
+                            <td><a data-toggle="modal" data-target="#modaldemo3" dejo="<?php echo $q['pages']; ?>" href="" onclick="ShowPages('<?php echo $q['id']; ?>')" id="pages_<?php echo $q['id']; ?>"><?php echo $q['pages']; ?></a></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
@@ -239,7 +239,7 @@ function searchFilter(page_num) {
                                 
                                  <?php 
                                  if($q['PostStatus']==2){
-                                    echo "<a href='#'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
+                                    echo "<a onclick='SetAsDraft({$q['id']})'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
                                 }if($q['PostStatus']==3){
                                     if($q['ActionStatus']==1){
                                     echo "<a  id='halt_{$q['id']}' onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";
@@ -267,23 +267,23 @@ function searchFilter(page_num) {
     </div><!-- kt-pagebody -->
 
     <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content tx-size-sm">
-                            <div class="modal-header pd-x-20">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content bd-0">
+                            <div class="modal-header pd-y-20 pd-x-2">
                                 <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">More data</h6>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
-                            <form name="formGroupName" action="" method="POST">
-                            <div class="modal-body pd-20">
-                                    <?php echo $q['pages']; ?>
+                            
+                            <div id="modal_body_pages" class="modal-body pd-25">
+                               <div id="modal_body_pages_content"></div>
                             </div><!-- modal-body -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary pd-x-20"
                                     data-dismiss="modal">Close</button>
                             </div>
-                            </form>
+                             
                         </div>
                     </div><!-- modal-dialog -->
                 </div>
@@ -292,17 +292,11 @@ function searchFilter(page_num) {
     <?php $this->load->view('includes/footer'); ?>
   
 <script> 
+function ShowPages(id){
+  // console.log("sho pages", document.getElementById("pages_"+id).getAttribute('data-id'));
+   document.getElementById("modal_body_pages_content").innerHTML = document.getElementById("pages_"+id).getAttribute('dejo');
 
-function Show(txt) {
-        event.preventDefault(); // prevent form submit
-        var form = event.target.form; // storing the form
-       console.log('txt', txt);
-        swal.fire({
-                text: txt,
-                cancelButtonText: "ok!",
-                closeOnCancel: false
-             })
-    }
+}
 
 var refresh_interval = 5 * 1000;
 var go_live = false;
@@ -436,7 +430,8 @@ function Halt(id){
      }
      
   function ArchivePost(id){
-     
+    if(typeof event !== 'undefined')  {event.preventDefault();}
+        
      $.ajax({
          url:'<?=base_url()?>archive_post/'+id,
          type: 'POST',
@@ -458,7 +453,7 @@ function Halt(id){
                             "Well done!",
                             dataJ.message,
                             'success'
-                        ).then(() => {location.reload();});
+                        );//.then(() => {location.reload();});
                 } 
                 
             }
@@ -475,7 +470,46 @@ function Halt(id){
        });
      }
       
-
+    function SetAsDraft(id){
+    if(typeof event !== 'undefined')  {event.preventDefault();}
+        
+     $.ajax({
+         url:'<?=base_url()?>set_draft/'+id,
+         type: 'POST',
+        // postId: id,
+         processData: false,
+         contentType: false, 
+         success: function(data){
+            var dataJ = jQuery.parseJSON (data);
+          //  console.log('dataJ',dataJ);
+            if(!dataJ.error){
+                if(dataJ.warning){
+                    Swal.fire(
+                            "Warning",
+                            dataJ.message,
+                            'info'
+                        );
+                }else{
+                    Swal.fire(
+                            "Well done!",
+                            dataJ.message,
+                            'success'
+                        );//.then(() => {location.reload();});
+                } 
+                
+            }
+            else{
+                Swal.fire(
+                            "Error!",
+                            dataJ.message,
+                            'error'
+                        );
+                console.log('dataJ.error je true', JSON.stringify(dataJ));
+            }
+            
+         }
+       });
+     }
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
         var form = event.target.form; // storing the form

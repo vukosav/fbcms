@@ -520,7 +520,28 @@ public function resume($post_id){
 
 
 
+public function set_as_draft_post($post_id){
+    $valid =   $this->db->query("SELECT CanSetAsDraft($post_id) as validan");
+    $valid = $valid->result_array();
 
+        if($valid[0]['validan'] == '0'){
+            echo json_encode(array(
+                'error' => false,
+                'message' => 'Can not set post with id: ' . $post_id . ', as draft, because post is in sending process, or have been already sent!',
+                'warning' => true
+                )); 
+        }
+        else{ 
+            $user = $this->session->userdata('user')['user_id'];
+            $this->db->query("call SetAsDraft($post_id);");
+            echo json_encode(array(
+                'error' => false,
+                'message' => 'Post with id: ' . $post_id . ', is set as draft!',
+                'warning' => false
+                )); 
+        }
+    //redirect('posting/1');
+}
 
 public function archive_post($post_id){
     $valid =   $this->db->query("SELECT CanArchive($post_id) as validan");
@@ -677,7 +698,7 @@ public function insert_post(){
                                     
                        // echo 'Inserted Post id: ' . $res;
                        
-                       $this->db->query("call PostEdit($post_id, $user);");
+                       //$this->db->query("call PostEdit($post_id, $user);");
                         echo json_encode(array(
                             'error' => false,
                             'message' => 'OK',
