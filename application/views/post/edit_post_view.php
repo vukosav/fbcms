@@ -158,7 +158,7 @@
      </div> --><!-- kt-pagetitle -->
 <?php //echo form_open('fb_post/insert_post2','id="edit_post_form_j"'); ?>
 <form id="edit_post_form_j" action="">
-    <input type="hidden" id = "file_list" name = "file_list">
+    <input type="hidden" id = "file_list" name = "file_list" value="<?php echo $input_post_image_list; ?>">
     <input type="hidden" name="postType" id="postType" value="<?php echo $input_post_type; ?>" />
     <input type="hidden" name="post_status" id="post_status" value="<?php echo $post_status; ?>" />
     <input type="hidden" name="postId"   id="postId" value="<?php echo $input_post_id; ?>" />
@@ -167,6 +167,7 @@
     <input type="hidden" name="selected_page_id"  id="selected_page_id" value="0" />
     <input type="hidden" name="selected_group_id"  id="selected_group_id" value="0" />
     <input type="hidden" name="videoFileName" id="videoFileName"  />
+    <input type="hidden" name="can_edit_groups_pages" id="can_edit_groups_pages" value="<?php echo $can_edit_groups_pages; ?>"  />
     
     <div class="container-edit-post" style="padding:10px;width:100%">
     <div class="row">
@@ -267,7 +268,8 @@
                                     title="Link sub fields Are no longer supported from Facebook API">
                                 <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                             </label>
-                            <input type='text' name='link' class="form-control" id="link" value="<?php echo $input_post_link ?>" placeholder="Post link here." />
+                            <input type='text' name='link' class="form-control" id="link" value="<?php echo $input_post_link ?>" placeholder="Post link here."
+                            <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?> />
                             <span class="linkError"></span>
                         </div>
                     </div>
@@ -278,7 +280,8 @@
                                 <a href="#"  onclick="return false;" data-toggle="kp_tooltip" data-placement="top" style="float:right" title="Supportde formats for uplaoded images> jpg, png, bmp."> 
                                 <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                             </label>
-                            <div  class="dropzone" id="myAwesomeDropzone" data-value="<?php echo $input_post_image_list;?>">
+                            <div  class="dropzone" id="myAwesomeDropzone" data-value="<?php echo $input_post_image_list;?>" 
+                            <?php  if( $can_edit_groups_pages=="0") { echo ' style="display:none;" ' ;}; ?> >
                             </div>
                         </div>
                     </div>
@@ -290,14 +293,17 @@
                                     <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                                 </label>
                                 <div class="input-group">
-                                <input type="file" name="videoFile" id="videoFile" class="inputfile"/>
+                                <input type="file" name="videoFile" id="videoFile" class="inputfile" 
+                                <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?>/>
                                 <!--<label for="file">Choose a video</label>-->
                                     <input type='text' 
                                            name='video' 
                                            class="form-control" 
                                            id="video" 
                                            value="<?php echo $input_post_video ; ?>" 
-                                           placeholder="Video link (3gp, avi, mov, mp4, mpeg, mpeg4, vob, wmv...etc)." />
+                                           placeholder="Video link (3gp, avi, mov, mp4, mpeg, mpeg4, vob, wmv...etc)." 
+                                           <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?>
+                                           />
                                    <!-- <div class="input-group-btn">
                                         <button type="button" 
                                         id="mediaLibraryVideo" 
@@ -313,7 +319,8 @@
             
                
                <div class="formField">
-                    <button type="button" onclick="SaveAsDraft();" class='btn btn-secondary' id="savepost" name='savepost'>
+                    <button type="button" onclick="SaveAsDraft();" class='btn btn-secondary' id="savepost" name='savepost' 
+                        <?php  if( $can_save_as_draft=="0") { echo ' style="display: none;" ' ;}; ?>>
                         <i class="fas fa-save" aria-hidden="true"></i> Save as draft 
                     </button>
                     <!--<button onclick="return false;" class='btn btn-primary' id="savepost" name='savepost'>
@@ -420,7 +427,8 @@
                     <div class="clear"></div>
                 </div>
                 <div id="addPagesDetails">
-                    <select class="form-control select2" id="pages_list" name="pages_list" data-placeholder="Choose Page">
+                    <select class="form-control select2" id="pages_list" name="pages_list" data-placeholder="Choose Page"
+                    <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?>>
                         <option value="0">Add Page</option>
                          <?php  
                             $numofpages = count( $user_pages);
@@ -475,7 +483,7 @@
                                  $script_g = '<script>var groupArrayFromDB = ' . $js_group_array . ';</script>';
                                  echo $script_g;
                                    if($input_post_type == "video"){
-                                    $script_v = '<script>  $(document).ready(function() {videoPostPreview();}</script>';
+                                    $script_v = '<script>  $(document).ready(function() {videoPostPreview();});</script>';
                                     echo $script_v;
                                    }
 
@@ -484,7 +492,8 @@
                 </div>
                                    
                 <div id="addGroupsDetails" style="display:none">
-                    <select class="form-control select2" id="groups_list" name="groups_list" data-placeholder="Choose Group">
+                    <select class="form-control select2" id="groups_list" name="groups_list" data-placeholder="Choose Group"
+                    <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?>>
                         <option value="0">Add Group</option>
                          <?php  
                             $numofgroups = count( $user_groups);
@@ -545,16 +554,22 @@
     var arrayPages =new Array();  
     function GeneratePageList(){
         guideList = document.getElementById("selPages");
+        var canEdit=document.getElementById("can_edit_groups_pages").value;
         if (arrayPages.length) {
             let html = '';
             arrayPages.forEach(page => {  
-                 const li = `
-                 <div class="addPG" id="page-'${page.id}'" style="border: 1px solid grey; border-radius:5px; position: relative;" > 
-                   <div style="display:inline-block;" width="50px;">${page.name}</div>
-                   <a href="#" onclick="RemovePage(${page.id})">
-                      <i class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" aria-hidden="true"></i>
-                   </a>
-                </div>`;
+                const li1 = `
+                    <div class="addPG" id="page-'${page.id}'" style="border: 1px solid grey; border-radius:5px; position: relative;" > 
+                    <div style="display:inline-block;" width="50px;">${page.name}</div>`;
+                var li2 = '';   
+                if(canEdit === '1') {
+                         li2 = `<a href="#" onclick="RemovePage(${page.id})">
+                            <i class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" aria-hidden="true"></i>
+                                </a>`;
+                } 
+                const li3 = `</div>`;
+                var li = li1 + li2 +li3;
+       
         html += li;
       });
       console.log("html", html);
@@ -565,6 +580,7 @@
     }
     function GenerateGroupList(){
         guideList = document.getElementById("selGroups");
+        var canEdit=document.getElementById("can_edit_groups_pages").value;
         if (arrayGroups.length) {
             let html = '';
             arrayGroups.forEach(group => { 
@@ -574,14 +590,17 @@
                         innerLi = innerLi + ` <p>${page.fbPageName} </p> `;
                     });
                 }
-                 const li = `
+                 const li1 = `
                  <div class="panel-group">
                         <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapse${group.id}">${group.name}
-                                <i onclick="RemoveGroup(${group.id})" class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" ></i>
-                            </a>
+                            <a data-toggle="collapse" href="#collapse${group.id}">${group.name}`
+                  var li2 = '';
+                  if(canEdit === '1') {
+                         li2 = `<i onclick="RemoveGroup(${group.id})" class="fa fa-times-circle-o" style="position: absolute; top:0; right:0;" ></i>`;
+                       }       
+                  const li3  = `</a>
                             </h4>
                         </div>
                         <div id="collapse${group.id}" class="panel-collapse collapse">
@@ -592,7 +611,7 @@
                     </div>
                     </div>
                  `;
-        html += li;
+            html += li1 + li2 + li3;
       });
      // console.log("html", html);
       guideList.innerHTML = html
@@ -864,6 +883,15 @@ function SaveAsDraft(){
      
         formData.append("arrayPages", JSON.stringify(arrayPages));
         formData.append("arrayGroups", JSON.stringify(arrayGroups)); 
+
+
+     //   var object = {};
+//formData.forEach(function(value, key){
+   // object[key] = value;
+//});
+//var json = JSON.stringify(object);
+
+//console.log('formData', json);
     if(valid){
 
     $.ajax({

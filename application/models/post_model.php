@@ -85,8 +85,9 @@ class Post_model extends CI_Model{
         }
         //filter data by title
         if(!empty($params['search']['wtitle'])){
-            $this->db->like('posts.title',$params['search']['wtitle']);
-            $this->db->or_like('posts.content', $params['search']['wtitle']);
+            // $this->db->like('posts.title',$params['search']['wtitle']);
+            // $this->db->or_like('posts.content', $params['search']['wtitle']);
+            $this->db->where("(posts.title LIKE '%{$params['search']['wtitle']}%' || posts.content LIKE '%{$params['search']['wtitle']}%')");
         }
         //filter data by searched keywords
         // if(!empty($params['search']['post_status'])){
@@ -107,6 +108,98 @@ class Post_model extends CI_Model{
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
     
+    function getRowsArchived($params = array(), $pos=null){
+        $this->db->distinct();
+        $this->db->select('COUNT(posts_pages_archive.postId) ukupno, 
+        SUM( case when posts_pages_archive.postingStatus=4 then 1 else 0 end ) as error,
+        SUM( case when posts_pages_archive.postingStatus=3 then 1 else 0 end ) as sent, 
+        SUM( case when posts_pages_archive.postingStatus=2 then 1 else 0 end ) as inProgres, 
+        posts_archive.*, PagesForPost(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
+        $this->db->from('posts_archive');
+        $this->db->join('users', 'users.id = posts_archive.created_by');
+        //$this->db->select('*');
+        //$this->db->from('');
+        $this->db->join('posts_pages_archive', 'posts_pages_archive.postId = posts_archive.id', 'left outer');
+        $this->db->group_by('posts_archive.id');
+        
+
+        //filter data by searched keywords
+                                                // if(!empty($params['search']['group'])){
+                                                //     $this->db->where('posts_pages_archive.pageId',$params['search']['group']);
+                                                // }
+        //filter data by searched keywords
+        if(!empty($params['search']['fbpage'])){
+            $this->db->where('posts_pages_archive.pageId',$params['search']['fbpage']);
+        }
+        //filter data by searched keywords
+        if($this->session->userdata('user')['role'] == 2){
+            $this->db->where('posts_archive.created_by = ',$this->session->userdata('user')['user_id']);
+        }
+        if(!empty($params['search']['createdBy'])){
+            $this->db->where('posts_archive.created_by = ',$params['search']['createdBy']);
+        }
+        // filter data by searched keywords
+        if(!empty($params['search']['date_from'])){
+            $this->db->where('posts_archive.created_date >=',$params['search']['date_from']);
+        }
+        if(!empty($params['search']['date_to'])){
+            $this->db->where('posts_archive.created_date <=',$params['search']['date_to']);
+        }
+
+        //filter data by searched keywords
+        if(isset($pos)){
+            if($pos==1){
+                if(!empty($params['search']['inProgres'])){ 
+                    if(!empty($params['search']['scheduled'])){
+                        $this->db->where('(PostStatus = 2 or PostStatus = 3)');
+                    }else{
+                        $this->db->where('posts_archive.PostStatus', 3);
+                    }
+                }elseif(!empty($params['search']['scheduled'])){
+                        $this->db->where('posts_archive.PostStatus', 2);
+                         
+                }
+                else{
+                     $this->db->where('(PostStatus = 2 or PostStatus = 3)');
+                }
+            }elseif($pos==2){
+                $this->db->where('(PostStatus = 1)');
+            }else{
+                $this->db->where('(PostStatus = 4)');
+            }
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['paused'])){
+            $this->db->where('posts_archive.ActionStatus', 2);
+        }
+        //filter data by searched keywords
+        if(!empty($params['search']['errors'])){
+            $this->db->where('posts_pages_archive.actionStatus', 4);
+        }
+        //filter data by title
+        if(!empty($params['search']['wtitle'])){
+            // $this->db->like('posts_archive.title',$params['search']['wtitle']);
+            // $this->db->or_like('posts_archive.content', $params['search']['wtitle']);
+            $this->db->where("(posts_archive.title LIKE '%{$params['search']['wtitle']}%' || posts_archive.content LIKE '%{$params['search']['wtitle']}%')");
+        }
+        //filter data by searched keywords
+        // if(!empty($params['search']['post_status'])){
+        //     $this->db->where('posts_archive.PostStatus',$params['search']['post_status']);
+        // }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $this->db->order_by('posts_archive.id desc');
+        $query = $this->db->get();
+        //return fetched data
+        // $debug_array = []
+
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
     
     //-------------QUEUED-----------------------
     /**

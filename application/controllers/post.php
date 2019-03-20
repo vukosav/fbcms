@@ -83,7 +83,12 @@ class Post extends MY_controller {
 // print_r( $conditions);
 // print_r($this->db->last_query());
         //total rows count
-        $totalRec = count($this->Post_model->getRows($conditions, $post_status));
+        if($archived != 'true'){
+            $totalRec = count($this->Post_model->getRows($conditions, $post_status));
+        }else{
+            $totalRec = count($this->Post_model->getRowsArchived($conditions, $post_status));
+        }
+        
         
         //pagination configuration
         $config['target']      = '#postList';
@@ -98,7 +103,12 @@ class Post extends MY_controller {
         $conditions['limit'] = $this->perPage;
         
         //get posts data
-        $data['posts'] = $this->Post_model->getRows($conditions, $post_status);
+        if($archived != 'true'){
+            $data['posts'] = $this->Post_model->getRows($conditions, $post_status);
+        }else{
+            $data['posts'] = $this->Post_model->getRowsArchived($conditions, $post_status);
+        }
+        
         $data['pos'] = $post_status;
        // print_r($this->db->last_query());
         //load the view

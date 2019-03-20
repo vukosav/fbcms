@@ -95,7 +95,8 @@ class FB_model extends CI_Model{
     public function delete_post_attachments($post_id){
         // $this->db->where('PostStatus =', 4);
         if($post_id>0){
-            $query = $this->db->delete('post_attachments', $post_id);
+            $this->db->where('post_id=',$post_id);
+            $query = $this->db->delete('post_attachments');
             return $this->db->affected_rows();
         }
         else {

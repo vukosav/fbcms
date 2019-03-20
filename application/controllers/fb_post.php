@@ -76,6 +76,8 @@ public function index($post_id){
             $selected_page_id=0;
             $selected_group_id=0;            
             $selected_post_groups = 0;
+
+
         }
         else {
             //get data from database for post_id = $post_id
@@ -279,6 +281,9 @@ public function create_post(){
 
             $queued_post=false; // hiding PAUSE,RESUME
             $input_ins_or_upd = "insert";
+
+            $can_edit_groups_pages="1";
+            $can_save_as_draft="1";
             
 
             $post_id=0;
@@ -309,7 +314,9 @@ public function create_post(){
                 'post_status' => $post_status,
                 'selected_page_id' => $selected_page_id,
                 'selected_post_groups' => $selected_post_groups,
-                'input_ins_or_upd' => $input_ins_or_upd
+                'input_ins_or_upd' => $input_ins_or_upd,
+                "can_save_as_draft" => $can_save_as_draft,
+                "can_edit_groups_pages" => $can_edit_groups_pages
             );
            
         $this->load->view('post/edit_post_view', $data);
@@ -409,9 +416,10 @@ private function GetDataFromDB($post_id){
         //pages set for post
         $selected_page_id=$this->FB_model->get_selected_pages_for_post($post_id);
     
-    
+        $can_edit_groups_pages="1";
+        $can_save_as_draft="1";
 
-    $queued_post=false; // hiding PAUSE,RESUME
+        $queued_post=false; // hiding PAUSE,RESUME
 
 
     $data=array(
@@ -440,7 +448,9 @@ private function GetDataFromDB($post_id){
         'post_status' => $post_status,
         'selected_page_id' => $selected_page_id,
         'selected_post_groups' => $selected_post_groups,
-        "input_ins_or_upd"=>""
+        "input_ins_or_upd"=>"",
+        "can_save_as_draft" => $can_save_as_draft,
+        "can_edit_groups_pages" => $can_edit_groups_pages
         
     );
     return $data;
@@ -457,14 +467,25 @@ public function edit_post($post_id){
         $image_list="";
                     
                         
-        $this->load->helper('form');
-        //$this->load->helper('url');
+       $this->load->helper('form');
+       //$this->load->helper('url');
        $this->db->query("call PreEdit($post_id, $user_id);");
        $data = $this->GetDataFromDB($post_id);
        $data['input_ins_or_upd'] = "update";
+
+       $validd =  $this->db->query("SELECT CanSetAsDraft($post_id) as validan");
+       $validd = $validd->result_array();
+       $can_save_as_draft = $validd[0]['validan'];
+      
+       $data['can_save_as_draft'] = $can_save_as_draft;
+       
+       $valide= $this->db->query("SELECT CanEditPageAndGroups($post_id) as validan");
+       $valide = $valide->result_array();
+       $can_edit_groups_pages=$valide[0]['validan'];
+       $data['can_edit_groups_pages'] = $can_edit_groups_pages;
+
        $this->load->view('post/edit_post_view', $data);
-  
-     
+       
 } 
 
 public function copy_post($post_id){
@@ -482,6 +503,8 @@ public function copy_post($post_id){
         
        $data = $this->GetDataFromDB($post_id);
        $data['input_ins_or_upd'] = "insert";
+
+       
        $this->load->view('post/edit_post_view', $data);
   
      
@@ -495,9 +518,6 @@ public function cancel_edit_post($post_id){
     redirect('posting/1');
 }
 
-
-
-
 public function halt($post_id){
     if($post_id > 0){
        $user = $this->session->userdata('user')['user_id'];
@@ -506,10 +526,6 @@ public function halt($post_id){
    // redirect('posting/1');
 }
 
-
-
-
-
 public function resume($post_id){
     if($post_id > 0){
        $user = $this->session->userdata('user')['user_id'];
@@ -517,8 +533,6 @@ public function resume($post_id){
     }
     //redirect('posting/1');
 }
-
-
 
 public function set_as_draft_post($post_id){
     $valid =   $this->db->query("SELECT CanSetAsDraft($post_id) as validan");
@@ -565,7 +579,6 @@ public function archive_post($post_id){
         }
     //redirect('posting/1');
 }
-
 
 public function insert_post(){
         $this->load->helper('form');
@@ -633,9 +646,6 @@ public function insert_post(){
         //     'id[2]' => $arrayGroupsObj[0]->pages[2]->id,
         //     'fbPageName[2]' => $arrayGroupsObj[0]->pages[2]->fbPageName
         //     ));
-
-
-
 
             if($schedule_date_time !== ''){
                 $schedule_date_time=date("Y-m-d H:i:s", strtotime($schedule_date_time));

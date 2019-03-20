@@ -487,44 +487,44 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     
     public function SendQueueItemToFB($queue_id, $action){
         if($action == "1"){
-                sleep(20);
-                // $res = $this->InsertToFB($queue_id);
-                // if($res['error']){
-                //    return array('status' => "error", 'error'=> $res['message']);
-                // }else{
-                  return array('status' => "success", 'error'=> "");
-                //}
+              //  sleep(20);
+                 $res = $this->InsertToFB($queue_id);
+                 if($res['error']){
+                    return array('status' => "error", 'error'=> $res['message']);
+                 }else{
+                    return array('status' => "success", 'error'=> "");
+                }
         }
         elseif($action == "2"){
-                sleep(10);
-        //        $res = $this->update_posting($queue_id);
-        //        if($res['error']){
-        //         return array('status' => "error", 'error'=> $res['message']);
-        //      }else{
+            //    sleep(10);
+                $res = $this->update_posting($queue_id);
+                if($res['error']){
+                 return array('status' => "error", 'error'=> $res['message']);
+              }else{
                return array('status' => "success", 'error'=> "");
-            //}
+              }
 
         }elseif($action == "3"){
-                sleep(10);
-        //        $res = $this->delete_posting($queue_id);
-        //        if($res['error']){
-        //         return array('status' => "error", 'error'=> $res['message']);
-        //      }else{
+              //  sleep(10);
+               $res = $this->delete_posting($queue_id);
+               if($res['error']){
+                return array('status' => "error", 'error'=> $res['message']);
+             }else{
                return array('status' => "success", 'error'=> "");
-            // }
+             }
         }
        // return "success";
        // return "error";
      }
 
       public function ArchiveJob(){
-        $data = $this->db->query("SELECT P.id  from  posts_archive    WHERE P.is_deleted_from_fb = 0");
+        $data = $this->db->query("SELECT P.id  from  posts_archive  P  WHERE P.is_deleted_from_fb = 0");
         $data = $data->result_array();
         $job_status = 1; //sve je ok, za error stavljamo 2
         $job_error = '';
         //prolazimo kroz queue
         foreach($data as $qid){
-                DeleteArchiveFromDB( $qid['id']);
+                $this->DeleteArchiveFromDB( $qid['id']);
         }
       }
      public function DeleteArchiveFromDB($post_id){
@@ -541,11 +541,11 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                 $fbPageAT = $qid['fbPageAT'];
                 $fb_post_id =  $qid['fbPostId'];
                 $post_id =  $qid['post_id'];
-                $res = delete_archive_posting($fbPageAT,  $fb_post_id);
+                $res = $this->delete_archive_posting($fbPageAT,  $fb_post_id);
                 if($res['error']){ $job_status = 2;}
         }
          if($job_status == 1){
-                $this->db->query("UPDATE posts_archive SET is_deleted_from_fb = 1 WHERE P.id = $post_id");
+                $this->db->query("UPDATE posts_archive  SET is_deleted_from_fb = 1 WHERE id = $post_id");
          }
       }
 } 
