@@ -53,8 +53,8 @@ class FB_model extends CI_Model{
         
         if($post_id>0){
             
-            $this->db->where('post_id', $post_id);
-            $this->db->where('attach_type', $post_type);
+            $this->db->where('post_id=', $post_id);
+            $this->db->where('attach_type=', $post_type);
             $query = $this->db->get('post_attachments');
             return ($query->num_rows() > 0)?$query->result_array():array();
         }
@@ -452,21 +452,21 @@ class FB_model extends CI_Model{
         $post_type, $message, $upload_video, $add_link, $upload_images_list, $is_scheduled, 
         $schedule_date_time, $arrayPagesObj,$arrayGroupsOb) {   
 
-            if($post_status=='1'){
-                    //draft           
-                    $posting_status=null;
-            }
-            if($post_status=='2'){
-                    //queued            
-                    $posting_status=1;
-            }
+            // if($post_status=='1'){
+            //         //draft           
+            //         $posting_status=null;
+            // }
+            // if($post_status=='2'){
+            //         //queued            
+            //         $posting_status=1;
+            // }
             
             //$this->db->set('created_by',$user_id);
             $this->db->where('id=', $post_id);
             $this->db->set('title', $w_title);
             $this->db->set('content', $message);
             //$this->db->set('created_date', date("Y-m-d H:i:s"));
-            $this->db->set('PostStatus', $post_status);
+           // $this->db->set('PostStatus', $post_status);
             //$this->db->set('ActionStatus', null);
             $this->db->set('post_type', $post_type);
             //$this->db->set('IsActive',1);
@@ -545,7 +545,7 @@ class FB_model extends CI_Model{
                     $this->db->set('pageId', $pid);
                     $this->db->set('postId', $post_id);
                                 
-                    $this->db->set('postingStatus', $posting_status); 
+                    $this->db->set('postingStatus', 1); 
                     $this->db->set('job_id',null); 
                     $this->db->set('job_action',1); 
                                 

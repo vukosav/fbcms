@@ -16,7 +16,7 @@ class Post_model extends CI_Model{
         SUM( case when posts_pages.postingStatus=4 then 1 else 0 end ) as error,
         SUM( case when posts_pages.postingStatus=3 then 1 else 0 end ) as sent, 
         SUM( case when posts_pages.postingStatus=2 then 1 else 0 end ) as inProgres, 
-        posts.*, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
+        posts.*, posts_pages.job_errors, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
@@ -81,7 +81,7 @@ class Post_model extends CI_Model{
         }
         //filter data by searched keywords
         if(!empty($params['search']['errors'])){
-            $this->db->where('posts_pages.actionStatus', 4);
+            $this->db->where('posts_pages.postingStatus = 4');
         }
         //filter data by title
         if(!empty($params['search']['wtitle'])){
@@ -114,7 +114,7 @@ class Post_model extends CI_Model{
         SUM( case when posts_pages_archive.postingStatus=4 then 1 else 0 end ) as error,
         SUM( case when posts_pages_archive.postingStatus=3 then 1 else 0 end ) as sent, 
         SUM( case when posts_pages_archive.postingStatus=2 then 1 else 0 end ) as inProgres, 
-        posts_archive.*, PagesForPost(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
+        posts_archive.*, ErrorsForPost_Archive(posts_archive.id) AS job_errors, PagesForPostArchive(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
         $this->db->from('posts_archive');
         $this->db->join('users', 'users.id = posts_archive.created_by');
         //$this->db->select('*');
@@ -145,6 +145,9 @@ class Post_model extends CI_Model{
         if(!empty($params['search']['date_to'])){
             $this->db->where('posts_archive.created_date <=',$params['search']['date_to']);
         }
+        if(!empty($params['search']['archived'])){
+            $a = 1;
+        }
 
         //filter data by searched keywords
         if(isset($pos)){
@@ -174,7 +177,7 @@ class Post_model extends CI_Model{
         }
         //filter data by searched keywords
         if(!empty($params['search']['errors'])){
-            $this->db->where('posts_pages_archive.actionStatus', 4);
+            $this->db->where('posts_pages_archive.postingStatus = 4');
         }
         //filter data by title
         if(!empty($params['search']['wtitle'])){

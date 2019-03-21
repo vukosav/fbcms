@@ -28,14 +28,16 @@
                                             echo "<span id='span_status_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                         }
                                     echo "<br>{$q['sent']}/{$q['ukupno']}";
-                                    echo $q['error']?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' modal-error='{$q['error']}'
-                                        href='' onclick='ShowError('{$q['id']}')' id='error_{$q['id']} '>{$q['error']} errors</a></span>":"";
+                                    echo ($q['error'])?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' post-error=" ."'" . $q['job_errors'] . "'" .
+"href='' onclick='ShowError(&#39;{$q['id']}&#39;)' id='error_{$q['id']}'>{$q['error']} errors</a></span>":"";
+                                       echo "</td>";
                                     echo "</td>";
                                     }elseif($q['PostStatus'] ==4 ){
-                                        echo "<td><span class='fa fa-circle' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span> ";
+                                        //$q['job_errors'] = html_entity_decode($q['job_errors']);
+                                        echo "<td><span class='fa fa-circle' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                        echo "<span style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'><br>{$q['sent']}/{$q['ukupno']}</span><br>";
-                                       echo $q['error']?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' modal-error='{$q['error']}'
-                                        href='' onclick='ShowError('{$q['id']}')' id='error_{$q['id']} '>{$q['error']} errors</a></span>":"";
+                                       echo ($q['error'])?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' post-error=" ."'" . $q['job_errors'] . "'" .
+"href='' onclick='ShowError(&#39;{$q['id']}&#39;)' id='error_{$q['id']}'>{$q['error']} errors</a></span>":"";
                                        echo "</td>";
                                     } ?>
                             <!-- <td>
@@ -61,23 +63,34 @@
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
-                                 <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
-                                 <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
-                                
-                                 <?php 
-                                 if($q['PostStatus']==2){
-                                    echo "<a onclick='SetAsDraft({$q['id']})'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
-                                }if($q['PostStatus']==3){
-                                    if($q['ActionStatus']==1){
-                                    echo "<a  id='halt_{$q['id']}' onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";
-                                    
-                                  }
-                                    if($q['ActionStatus']==2){
-                                        echo "<a  id='halt_{$q['id']}'  onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";                                   }
-                                  }
+                                <?php if(!empty($arh)){  ?> 
+                                    <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit"
+                                            style="font-size: xx-large;margin: 6px; color: #3b6998;"
+                                            data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
+                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy"
+                                            style="font-size: xx-large;margin: 6px; color: #3b6998;"
+                                            data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
+
+                                    <?php 
+                                        if($q['PostStatus']==2){
+                                            echo "<a onclick='SetAsDraft({$q['id']})'><span class='fa fa-calendar-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Draft post'></span></a>";
+                                        }if($q['PostStatus']==3){
+                                            if($q['ActionStatus']==1){
+                                            echo "<a  id='halt_{$q['id']}' onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-pause-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";
+                                            
+                                        }
+                                            if($q['ActionStatus']==2){
+                                                echo "<a  id='halt_{$q['id']}'  onclick='PauseResume(" . $q['id'] . ");'><span id='span_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;color: #3b6998;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Pause posting'></span></a>";                                   }
+                                        }
                                  ?>
-                                <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
-                                
+                                    <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span
+                                            class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'
+                                            data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
+                                <?php }else{  ?> 
+                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy"
+                                    style="font-size: xx-large;margin: 6px; color: #3b6998;"
+                                    data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
+                                <?php }  ?> 
                                 </div>
                             </td>
                         </tr>

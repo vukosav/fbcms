@@ -24,6 +24,9 @@ class Pages_model extends CI_Model{
         // $wtitle = $this->input->post('pagename');
         // $group = $this->input->post('group');
         //filter data by user
+        if($this->session->userdata('user')['role'] == 2){
+            $this->db->where('pages.userId = ',$this->session->userdata('user')['user_id']);
+        }
         if(!empty($params['search']['group'])){
             $this->db->where('groups.id = ',$params['search']['group']);
         }
@@ -144,10 +147,15 @@ class Pages_model extends CI_Model{
         $this->db->set('isActive', false);
         $this->db->where('id', $id);
         $this->db->update('pages');
-        //$this->db->delete('users', $id);
+        $this->deleteFromGroup($id);
         return $this->db->affected_rows();
     }
 
+    public function deleteFromGroup($id){
+        $this->db->where('pageId', $id);
+        $this->db->delete('pages_groups');
+        return $this->db->affected_rows();
+    }
     //-------------END CRUS--------------------
 
 

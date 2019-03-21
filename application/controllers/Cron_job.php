@@ -290,29 +290,51 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     
         $post_data =  $this->FB_model->get_post_data($post_id);
 
-      //  $input_post_type = $post_data[0]["post_type"];
-      //  $input_post_title=$post_data[0]["title"];
+       $input_post_type = $post_data[0]["post_type"];
+       //  $input_post_title=$post_data[0]["title"];
         $input_post_message=$post_data[0]["content"];
         
-        try {
-                // Returns a `Facebook\FacebookResponse` object
-                $response = $fb->post(
-                    '/' . $fbPostId,
-                    array (
-                    'message' => $input_post_message,
-                    ),
-                    $fbPageAT
-                ); 
-                //$graphNode = $response->getGraphNode();
-                $res['message'] = "Your post has been updated to facebook.";
-        } catch(Facebook\Exceptions\FacebookResponseException $e) {
-                $res['error'] = true;
-                $res['message'] = $e->getMessage();
-        } catch(Facebook\Exceptions\FacebookSDKException $e) {
-                $res['error'] = true;
-                $res['message'] = $e->getMessage();
+        if($input_post_type=='video'){
+                try {
+                    // Returns a `Facebook\FacebookResponse` object
+                    $response = $fb->post(
+                        '/' . $fbPostId,
+                        array (
+                       'description' => $input_post_message,                        
+                        ),
+                        $fbPageAT
+                    ); 
+                    //$graphNode = $response->getGraphNode();
+                    $res['message'] = "Your post has been updated to facebook.";
+            } catch(Facebook\Exceptions\FacebookResponseException $e) {
+                    $res['error'] = true;
+                    $res['message'] = $e->getMessage();
+            } catch(Facebook\Exceptions\FacebookSDKException $e) {
+                    $res['error'] = true;
+                    $res['message'] = $e->getMessage();
+            }
         }
-       
+            else 
+        {
+            try {
+                    // Returns a `Facebook\FacebookResponse` object
+                    $response = $fb->post(
+                        '/' . $fbPostId,
+                        array (
+                        'message' => $input_post_message,
+                        ),
+                        $fbPageAT
+                    ); 
+                    //$graphNode = $response->getGraphNode();
+                    $res['message'] = "Your post has been updated to facebook.";
+            } catch(Facebook\Exceptions\FacebookResponseException $e) {
+                    $res['error'] = true;
+                    $res['message'] = $e->getMessage();
+            } catch(Facebook\Exceptions\FacebookSDKException $e) {
+                    $res['error'] = true;
+                    $res['message'] = $e->getMessage();
+            }
+        }
     
         return $res;
       

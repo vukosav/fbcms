@@ -23,8 +23,9 @@ class Other_model extends CI_Model{
         return $query->result_array();
     }
 
-    public function get_group(){
+    public function get_group($userid = null){
         $this->db->order_by('name','asc');
+        isset($userid)?$this->db->where('userId = ', $userid):FALSE;
         $query = $this->db->get('groups');
         return $query->result_array();
     }

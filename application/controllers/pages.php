@@ -78,7 +78,12 @@ class Pages extends MY_controller {
         $data['title'] = 'Pages';
 
         //load users for filter
-        $data['group'] = $this->Other_model->get_group();
+        if($this->session->userdata('user')['role'] == 1){
+            $data['group'] = $this->Other_model->get_group();
+        }else{
+            $data['group'] = $this->Other_model->get_group($this->session->userdata('user')['user_id']);
+        }
+        
 
         //load the view
         //$this->output->enable_profiler();

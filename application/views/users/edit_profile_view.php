@@ -48,7 +48,7 @@ function searchFilter(page_num) {
                 <!-- <figure class="edit-profile-photo">
                     <img src="<?//=base_url()?>theme/img/img1.jpg" class="img-fluid" alt="">
                     <figcaption>
-                        <!-- <a href="" class="btn btn-dark">Edit Photo</a> -->
+                        <a href="" class="btn btn-dark">Edit Photo</a> -->
                     </figcaption>
                 </figure> -->
 

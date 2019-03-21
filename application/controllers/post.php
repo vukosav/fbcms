@@ -105,14 +105,16 @@ class Post extends MY_controller {
         //get posts data
         if($archived != 'true'){
             $data['posts'] = $this->Post_model->getRows($conditions, $post_status);
+            $data['arh'] = 'sadd';
         }else{
             $data['posts'] = $this->Post_model->getRowsArchived($conditions, $post_status);
+            $data['arh'] = '';
         }
         
         $data['pos'] = $post_status;
        // print_r($this->db->last_query());
         //load the view
-        // $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('post/ajax-pagination-data', $data, false);
     }
     function ajaxRefreshData($list_type){
@@ -181,9 +183,7 @@ class Post extends MY_controller {
         if($scheduled == 'true'){
             $conditions['search']['scheduled'] = 'nn';
         } 
-//print_r( $conditions);
-// print_r($this->db->last_query());
-        //total rows count
+
         $totalRec = count($this->Post_model->getRows($conditions, $post_status));
         
         //pagination configuration
@@ -246,6 +246,7 @@ class Post extends MY_controller {
         
 
         $data['pos']= $pos;
+        $data['arh'] = 'sadd';
         //load the view
         //print_r($this->db->last_query());
         //$this->output->enable_profiler();

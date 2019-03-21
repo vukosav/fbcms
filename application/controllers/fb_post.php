@@ -298,6 +298,7 @@ public function create_post(){
                 'input_post_link' => $input_post_link,
                 'input_post_picture' =>$input_post_picture,
                 'input_post_video' => $input_post_video,
+                'hidden_post_video_name' =>'',
                 'input_post_name' => $input_post_name,
                 'input_post_caption' => $input_post_caption,
                 'input_post_description' => $input_post_description,
@@ -358,6 +359,7 @@ private function GetDataFromDB($post_id){
 
         $input_post_picture="";
         $input_post_video="";
+        $hidden_post_video_name="";
         //to do - ubaciti u bazu novu kolonu ???
         $input_post_fb_preset_id=0;
 
@@ -375,6 +377,7 @@ private function GetDataFromDB($post_id){
         if ($input_post_type=='video') {
             $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'video');
             $input_post_video = base_url() . 'uploads/' . $post_attachment_data[0]["attach_location"];
+            $hidden_post_video_name = $post_attachment_data[0]["attach_location"];
 
         }
         if ($input_post_type=='image') { 
@@ -432,6 +435,7 @@ private function GetDataFromDB($post_id){
         'input_post_link' => $input_post_link,
         'input_post_picture' =>$input_post_picture,
         'input_post_video' => $input_post_video,
+        'hidden_post_video_name' =>$hidden_post_video_name,
         'input_post_name' => $input_post_name,
         'input_post_caption' => $input_post_caption,
         'input_post_description' => $input_post_description,

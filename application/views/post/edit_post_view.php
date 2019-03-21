@@ -166,7 +166,7 @@
     <input type="hidden" name="URLFrom"  id="URLFrom" value="" />
     <input type="hidden" name="selected_page_id"  id="selected_page_id" value="0" />
     <input type="hidden" name="selected_group_id"  id="selected_group_id" value="0" />
-    <input type="hidden" name="videoFileName" id="videoFileName"  />
+    <input type="hidden" name="videoFileName" id="videoFileName"  value="<?php echo $hidden_post_video_name; ?>"/>
     <input type="hidden" name="can_edit_groups_pages" id="can_edit_groups_pages" value="<?php echo $can_edit_groups_pages; ?>"  />
     
     <div class="container-edit-post" style="padding:10px;width:100%">
@@ -269,7 +269,7 @@
                                 <i class="fa fa-question-circle" aria-hidden="true"></i></a>
                             </label>
                             <input type='text' name='link' class="form-control" id="link" value="<?php echo $input_post_link ?>" placeholder="Post link here."
-                            <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?> />
+                            <?php  if( $can_edit_groups_pages=="0") { echo ' readonly ' ;}; ?> />
                             <span class="linkError"></span>
                         </div>
                     </div>
@@ -808,13 +808,13 @@ function SaveAsQueued(){
     if(valid){
         formData.append("arrayPages", JSON.stringify(arrayPages));
         formData.append("arrayGroups", JSON.stringify(arrayGroups));
-       // var object = {};
-      //  formData.forEach(function(value, key){
-      //      object[key] = value;
-      //  });
+        var object = {};
+        formData.forEach(function(value, key){
+            object[key] = value;
+        });
       //  console.log('arrayGroups',JSON.stringify(arrayGroups));
       //  console.log('arrayPages',JSON.stringify(arrayPages));
-     //  console.log('formData',JSON.stringify(object));
+       console.log('formData',JSON.stringify(object));
 
      $.ajax({
         url:'<?=base_url()?>FB_post/insert_post',
