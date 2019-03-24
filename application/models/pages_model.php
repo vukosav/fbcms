@@ -80,8 +80,14 @@ class Pages_model extends CI_Model{
     }
 
     public function get_free_pages($gid){
-        $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
-        WHERE pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        if($this->session->userdata('user')['role'] == 2){
+            $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
+            WHERE  pages.userId = ' .$this->session->userdata('user')['user_id'] . ' AND pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        }else{
+            $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
+            WHERE pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        }
+        
         if($query){
             return $query->result_array();
         }
@@ -104,8 +110,13 @@ class Pages_model extends CI_Model{
     }
 
     public function get_free_groups($pid){
-        $query = $this->db->query('SELECT groups.id, groups.name FROM groups
-        WHERE groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        if($this->session->userdata('user')['role'] == 2){
+            $query = $this->db->query('SELECT groups.id, groups.name FROM groups
+            WHERE groups.userId = ' .$this->session->userdata('user')['user_id'] . ' AND groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        }else{
+            $query = $this->db->query('SELECT groups.id, groups.name FROM groups
+            WHERE groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        } 
         if($query){
             return $query->result_array();
         }

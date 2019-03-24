@@ -11,24 +11,25 @@ class Post_model extends CI_Model{
         // $this->db->where('posts.IsActive = ', 1);
         // $where = "(PostStatus = 2 or PostStatus = 3)";
         // $this->db->where($where);  SUM( case when posts_pages.postingStatus=1 then 1 else 0 end ) as draft,
-        $this->db->distinct();
-        $this->db->select('COUNT(posts_pages.postId) ukupno, 
-        SUM( case when posts_pages.postingStatus=4 then 1 else 0 end ) as error,
-        SUM( case when posts_pages.postingStatus=3 then 1 else 0 end ) as sent, 
-        SUM( case when posts_pages.postingStatus=2 then 1 else 0 end ) as inProgres, 
-        posts.*, posts_pages.job_errors, PagesForPost(posts.id) AS pages, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
+        //$this->db->distinct();
+        $this->db->select('CountPages(posts_pages.postId) ukupno, 
+        PostPagesStatCount(posts.id, 4) as error,
+        PostPagesStatCount(posts.id, 3) as sent,
+        PostPagesStatCount(posts.id, 2) as inProgres,
+        posts.*, ErrorsForPost(posts.id) AS job_errors, PagesForPost(posts.id) AS pages, GroupsForPost(posts.id) AS groups, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
         //$this->db->from('');
         $this->db->join('posts_pages', 'posts_pages.postId = posts.id', 'left outer');
+        $this->db->join('groups_in_post', 'groups_in_post.postId = posts.id', 'left outer');
         $this->db->group_by('posts.id');
         
 
         //filter data by searched keywords
-                                                // if(!empty($params['search']['group'])){
-                                                //     $this->db->where('posts_pages.pageId',$params['search']['group']);
-                                                // }
+        if(!empty($params['search']['group'])){
+            $this->db->where('groups_in_post.groupId',$params['search']['group']);
+        }
         //filter data by searched keywords
         if(!empty($params['search']['fbpage'])){
             $this->db->where('posts_pages.pageId',$params['search']['fbpage']);
@@ -57,16 +58,8 @@ class Post_model extends CI_Model{
         if(isset($pos)){
             if($pos==1){
                 if(!empty($params['search']['inProgres'])){ 
-                    if(!empty($params['search']['scheduled'])){
-                        $this->db->where('(PostStatus = 2 or PostStatus = 3)');
-                    }else{
-                        $this->db->where('posts.PostStatus', 3);
-                    }
-                }elseif(!empty($params['search']['scheduled'])){
-                        $this->db->where('posts.PostStatus', 2);
-                         
-                }
-                else{
+                    $this->db->where('posts.PostStatus', 3);
+                }else{
                      $this->db->where('(PostStatus = 2 or PostStatus = 3)');
                 }
             }elseif($pos==2){
@@ -78,6 +71,9 @@ class Post_model extends CI_Model{
         //filter data by searched keywords
         if(!empty($params['search']['paused'])){
             $this->db->where('posts.ActionStatus', 2);
+        }
+        if(!empty($params['search']['scheduled'])){
+            $this->db->where('isScheduled = 1');
         }
         //filter data by searched keywords
         if(!empty($params['search']['errors'])){
@@ -109,24 +105,25 @@ class Post_model extends CI_Model{
     }
     
     function getRowsArchived($params = array(), $pos=null){
-        $this->db->distinct();
-        $this->db->select('COUNT(posts_pages_archive.postId) ukupno, 
-        SUM( case when posts_pages_archive.postingStatus=4 then 1 else 0 end ) as error,
-        SUM( case when posts_pages_archive.postingStatus=3 then 1 else 0 end ) as sent, 
-        SUM( case when posts_pages_archive.postingStatus=2 then 1 else 0 end ) as inProgres, 
-        posts_archive.*, ErrorsForPost_Archive(posts_archive.id) AS job_errors, PagesForPostArchive(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
+        //$this->db->distinct();
+        $this->db->select('CountPagesArchive(posts_pages_archive.postId) ukupno,
+        PostPagesArchStatCount(posts_pages_archive.id, 4) as error,
+        PostPagesArchStatCount(posts_pages_archive.id, 3) as sent,
+        PostPagesArchStatCount(posts_pages_archive.id, 2) as inProgres,
+        posts_archive.*, ErrorsForPost_Archive(posts_archive.id) AS job_errors, GroupsForPost(posts_archive.id) AS groups, PagesForPostArchive(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
         $this->db->from('posts_archive');
         $this->db->join('users', 'users.id = posts_archive.created_by');
         //$this->db->select('*');
         //$this->db->from('');
         $this->db->join('posts_pages_archive', 'posts_pages_archive.postId = posts_archive.id', 'left outer');
+        $this->db->join('groups_in_post', 'groups_in_post.postId = posts_archive.id', 'left outer');
         $this->db->group_by('posts_archive.id');
         
 
         //filter data by searched keywords
-                                                // if(!empty($params['search']['group'])){
-                                                //     $this->db->where('posts_pages_archive.pageId',$params['search']['group']);
-                                                // }
+                                                if(!empty($params['search']['group'])){
+                                                    $this->db->where('groups_in_post.groupId',$params['search']['group']);
+                                                }
         //filter data by searched keywords
         if(!empty($params['search']['fbpage'])){
             $this->db->where('posts_pages_archive.pageId',$params['search']['fbpage']);
@@ -153,16 +150,8 @@ class Post_model extends CI_Model{
         if(isset($pos)){
             if($pos==1){
                 if(!empty($params['search']['inProgres'])){ 
-                    if(!empty($params['search']['scheduled'])){
-                        $this->db->where('(PostStatus = 2 or PostStatus = 3)');
-                    }else{
-                        $this->db->where('posts_archive.PostStatus', 3);
-                    }
-                }elseif(!empty($params['search']['scheduled'])){
-                        $this->db->where('posts_archive.PostStatus', 2);
-                         
-                }
-                else{
+                    $this->db->where('posts_archive.PostStatus', 3);
+                }else{
                      $this->db->where('(PostStatus = 2 or PostStatus = 3)');
                 }
             }elseif($pos==2){
@@ -174,6 +163,9 @@ class Post_model extends CI_Model{
         //filter data by searched keywords
         if(!empty($params['search']['paused'])){
             $this->db->where('posts_archive.ActionStatus', 2);
+        }
+        if(!empty($params['search']['scheduled'])){
+            $this->db->where('isScheduled = 1');
         }
         //filter data by searched keywords
         if(!empty($params['search']['errors'])){

@@ -174,7 +174,7 @@
     
         <div class="col-sm-5">
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div class="panel-heading" <?php  if( $can_edit_groups_pages=="0") { echo ' style="display:none;" ' ;}; ?>>
                     <ul class="postType">
                         <li>
                         <a href="#" onclick="return false;" class="postTypeMessage <?php if ($input_post_type==="message"){echo ' postTypeActive';}?>">
@@ -302,7 +302,7 @@
                                            id="video" 
                                            value="<?php echo $input_post_video ; ?>" 
                                            placeholder="Video link (3gp, avi, mov, mp4, mpeg, mpeg4, vob, wmv...etc)." 
-                                           <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?>
+                                           <?php  if( $can_edit_groups_pages=="0") { echo ' readonly ' ;}; ?>
                                            />
                                    <!-- <div class="input-group-btn">
                                         <button type="button" 
@@ -354,13 +354,22 @@
 
         <div class="col-sm-4">
         <div class="row">        
-                <div class='col-sm-4'>Schedule post</div>
+                <div class='col-sm-2'>
+                <div class="col-sm-2">
+                       
+                            <input type="checkbox" id="scheduledSame" name="scheduledSame"  
+                                    <?php if ($scheduledSame==1) {echo 'checked';} ?>   onchange="" />
+                    </div>  
+                
+                </div>
+                <div class='col-sm-2'>Schedule post</div>
                  
                        <div class='col-sm-8'>
                           
                           <div class="form-group">
                               <div class='input-group date' id='datetimepicker1'>
-                                  <input type='text' class="form-control" id="schedule_date_time" name="schedule_date_time" />
+                                  <input type='text' class="form-control" id="schedule_date_time" name="schedule_date_time" 
+                                  <?php  if( $can_edit_groups_pages=="0") { echo ' readonly ' ;}; ?> />
                                   <span class="input-group-addon">
                                       <span class="glyphicon glyphicon-calendar"></span>
                                   </span>
@@ -685,8 +694,13 @@
             document.getElementById("groups_list").addEventListener("click",listGroups);
         
     function RemovePage(page_id){
-            //document.getElementById("page-" + page_id).style.display = "none";  
-            arrayPages.splice(arrayPages.findIndex(v => v.id === page_id), 1);
+            //document.getElementById("page-" + page_id).style.display = "none";
+           // var index = arrayPages.indexOf(page_id.toString())
+           // console.log('page_id ',page_id);  
+          //  console.log('index ',arrayPages.findIndex(v => v.id === page_id.toString()));  
+          //  console.log('index2 ',index);  
+            arrayPages.splice(arrayPages.findIndex(v => v.id === page_id.toString()), 1);
+          
            // var index = arrayPages.indexOf(page_id.toString());
            GeneratePageList();
             //if (index > -1) {
@@ -705,8 +719,9 @@
              //   arrayGroups.splice(index, 1);
                 
               //console.log('array groups after remove groupid ' + arrayGroups);
-
-              arrayGroups.splice(arrayGroups.findIndex(v => v.id === group_id), 1);
+            //  console.log('arrayGroups before',arrayGroups);
+              arrayGroups.splice(arrayGroups.findIndex(v => v.id === group_id.toString()), 1);
+             // console.log('arrayGroups after',arrayGroups);
               GenerateGroupList();
             } 
        

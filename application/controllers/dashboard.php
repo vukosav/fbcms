@@ -83,8 +83,19 @@ class Dashboard extends MY_controller {
         
         $data['title'] = 'Dashboard';
 
+        if($this->session->userdata('user')['role'] == 1){
         $gstat = $this->Dashboard_model->get_gstatistic();
+        }else{
+            $gstat = $this->Dashboard_model->get_gstatistic($this->session->userdata('user')['user_id']);
+        }
         $data['global'] = $gstat[0];
+
+        //load groups for filter
+        if($this->session->userdata('user')['role'] == 1){
+            $data['group'] = $this->Other_model->get_group();
+        }else{
+            $data['group'] = $this->Other_model->get_group($this->session->userdata('user')['user_id']);
+        }
 
         //load the view
         //$this->output->enable_profiler();

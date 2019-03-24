@@ -31,7 +31,7 @@ class Post extends MY_controller {
         }else{
             $createdBy = $this->input->post('createdBy');
         }
-        // $group = $this->input->post('group');
+        $group = $this->input->post('group');
         $fbpage = $this->input->post('fbpage');
         $date_from = $this->input->post('date_from')?  $this->input->post('date_from') .' 00:00:00':false;
         $date_to = $this->input->post('date_to')? $this->input->post('date_to') .' 23:59:59':false;
@@ -51,9 +51,9 @@ class Post extends MY_controller {
         if(!empty($wtitle)){
             $conditions['search']['wtitle'] = $wtitle;
         }
-        // if(!empty($group)){
-        //     $conditions['search']['group'] = $group;
-        // }
+        if(!empty($group)){
+            $conditions['search']['group'] = $group;
+        }
         if(!empty($fbpage)){
             $conditions['search']['fbpage'] = $fbpage;
         }
@@ -78,7 +78,10 @@ class Post extends MY_controller {
         if($scheduled == 'true'){
             $conditions['search']['scheduled'] = 'nn';
         } 
-
+// var_dump($archived);
+// var_dump($errors);
+// var_dump($inProgres);
+// var_dump($group);
 
 // print_r( $conditions);
 // print_r($this->db->last_query());
@@ -136,7 +139,7 @@ class Post extends MY_controller {
         }else{
             $createdBy = $this->input->post('createdBy');
         }
-        // $group = $this->input->post('group');
+        //$group = $this->input->post('group');
         $fbpage = $this->input->post('fbpage');
         $date_from = $this->input->post('date_from')?  $this->input->post('date_from') .' 00:00:00':false;
         $date_to = $this->input->post('date_to')? $this->input->post('date_to') .' 23:59:59':false;
@@ -203,7 +206,7 @@ class Post extends MY_controller {
         $data['pos'] = $post_status;
        // print_r($this->db->last_query());
         //load the view
-        //$this->output->enable_profiler();
+        $this->output->enable_profiler();
         $this->load->view('post/ajax-pagination-data', $data, false);
     }
 
@@ -243,13 +246,18 @@ class Post extends MY_controller {
         }else{
             $data['fbpg'] = $this->Other_model->get_fbpage($this->session->userdata('user')['user_id']);
         }
-        
+        //load groups for filter
+        if($this->session->userdata('user')['role'] == 1){
+            $data['group'] = $this->Other_model->get_group();
+        }else{
+            $data['group'] = $this->Other_model->get_group($this->session->userdata('user')['user_id']);
+        }
 
         $data['pos']= $pos;
         $data['arh'] = 'sadd';
         //load the view
         //print_r($this->db->last_query());
-        //$this->output->enable_profiler();
+        $this->output->enable_profiler();
         $this->load->view('post/post_view', $data);
         // print_r($data['posts']);
         //$data['IsActive'] = true;

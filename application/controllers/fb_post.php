@@ -274,6 +274,7 @@ public function create_post(){
             }
             $is_scheduled=0;
             $schedule_date_time=null;
+            $scheduledSame=0;
 
             $selected_page_id=0;
             $selected_group_id=0;            
@@ -312,6 +313,7 @@ public function create_post(){
                 'input_post_image_list' => $image_list,
                 'isScheduled' => $is_scheduled,
                 'scheduleDateTime' => $schedule_date_time,
+                'scheduledSame' =>$scheduledSame,
                 'post_status' => $post_status,
                 'selected_page_id' => $selected_page_id,
                 'selected_post_groups' => $selected_post_groups,
@@ -350,8 +352,9 @@ private function GetDataFromDB($post_id){
         }
         else {
             $schedule_date_time=null;
-        }
-        
+        }        
+        $scheduledSame=$post_data[0]["scheduledSame"];
+
         $input_post_link="";
         $input_post_name="";
         $input_post_caption="";
@@ -449,6 +452,7 @@ private function GetDataFromDB($post_id){
         'input_post_image_list' => $image_list,
         'isScheduled' => $is_scheduled,
         'scheduleDateTime' => $schedule_date_time,
+        'scheduledSame'=> $scheduledSame,
         'post_status' => $post_status,
         'selected_page_id' => $selected_page_id,
         'selected_post_groups' => $selected_post_groups,
@@ -624,7 +628,7 @@ public function insert_post(){
             $add_link=$this->input->post('link');
             
            $schedule_date_time = $this->input->post('schedule_date_time');
-
+           $scheduledSame = $this->input->post('scheduledSame');
            
 
            $arrayPages = $this->input->post('arrayPages');
@@ -656,7 +660,7 @@ public function insert_post(){
                 $is_scheduled=1;
             }
             else {
-                $schedule_date_time = NULL; //date_add(date("Y-m-d H:i:s"),date_interval_create_from_date_string("40 days"));
+                $schedule_date_time = NULL; 
                 $is_scheduled=0;
             }
             
@@ -708,7 +712,7 @@ public function insert_post(){
                     if($ins_or_upd =="insert") {
                         $res= $this->FB_model->insert_post($post_status, $user_id, $selected_page_id, $w_title, 
                         $post_type, $message, $upload_video, $add_link, $upload_images_list,
-                        $is_scheduled, $schedule_date_time, $arrayPagesObj,$arrayGroupsObj );
+                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj );
                                     
                        // echo 'Inserted Post id: ' . $res;
                        
@@ -723,7 +727,7 @@ public function insert_post(){
                         try {
                         $res =  $this->FB_model->update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
                         $post_type, $message, $upload_video, $add_link, $upload_images_list,
-                        $is_scheduled, $schedule_date_time, $arrayPagesObj,$arrayGroupsObj);
+                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj);
                        
                         $this->db->query("call PostEdit($post_id, $user);");
                         echo json_encode(array(

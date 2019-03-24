@@ -11,7 +11,7 @@ class Other_model extends CI_Model{
             // $this->db->select('groups.*, users.username as addedby');
             // $this->db->from('groups');
             // $this->db->join('users', 'users.id = groups.userId');
-            // $this->db->where('groups.id = ', $id);
+            isset($id)?$this->db->where('id = ', $id):FALSE;
             $this->db->order_by('username','asc');
             $query = $this->db->get('users');
         return $query->result_array();

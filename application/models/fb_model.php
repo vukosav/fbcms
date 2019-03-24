@@ -140,7 +140,7 @@ class FB_model extends CI_Model{
     }
     public function insert_post($post_status, $user_id, $selected_page_id, $w_title, $post_type, 
         $message, $upload_video, $add_link, $upload_images_list, 
-        $is_scheduled, $schedule_date_time, $arrayPagesObj,$arrayGroupsOb) {    
+        $is_scheduled, $schedule_date_time,  $scheduledSame, $arrayPagesObj,$arrayGroupsOb) {    
             
            if($post_status=='1'){
            //draft
@@ -163,6 +163,7 @@ class FB_model extends CI_Model{
             $this->db->set('post_type', $post_type);
             $this->db->set('IsActive', 1);
             $this->db->set('scheduledTime', $schedule_date_time);
+            $this->db->set('scheduledSame', $scheduledSame);
             $this->db->set('isScheduled', $is_scheduled);
             $q = $this->db->insert('posts');
             
@@ -450,7 +451,7 @@ class FB_model extends CI_Model{
 
     public function update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
         $post_type, $message, $upload_video, $add_link, $upload_images_list, $is_scheduled, 
-        $schedule_date_time, $arrayPagesObj,$arrayGroupsOb) {   
+        $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsOb) {   
 
             // if($post_status=='1'){
             //         //draft           
@@ -460,18 +461,32 @@ class FB_model extends CI_Model{
             //         //queued            
             //         $posting_status=1;
             // }
-            
-            //$this->db->set('created_by',$user_id);
+
+
             $this->db->where('id=', $post_id);
-            $this->db->set('title', $w_title);
-            $this->db->set('content', $message);
-            //$this->db->set('created_date', date("Y-m-d H:i:s"));
-           // $this->db->set('PostStatus', $post_status);
-            //$this->db->set('ActionStatus', null);
-            $this->db->set('post_type', $post_type);
-            //$this->db->set('IsActive',1);
-            $this->db->set('scheduledTime', $schedule_date_time);
-            $this->db->set('isScheduled', $is_scheduled);
+            $query = $this->db->get('posts');
+            $queryarr = $query->result_array();
+            $db_post_status = $queryarr[0]['PostStatus'];
+            if($db_post_status == '1' && $post_status == '2'){
+                $this->db->where('id=', $post_id);
+                $this->db->set('title', $w_title);
+                $this->db->set('content', $message);
+                //$this->db->set('created_date', date("Y-m-d H:i:s"));
+                $this->db->set('PostStatus', $post_status);
+                $this->db->set('ActionStatus', null);   
+                $this->db->set('post_type', $post_type);
+                //$this->db->set('IsActive',1);
+                $this->db->set('scheduledTime', $schedule_date_time);
+                $this->db->set('scheduledSame', $scheduledSame);
+                $this->db->set('isScheduled', $is_scheduled);
+            } else {  
+                $this->db->where('id=', $post_id);
+                $this->db->set('title', $w_title);
+                $this->db->set('content', $message);
+                $this->db->set('post_type', $post_type);
+                $this->db->set('scheduledTime', $schedule_date_time);
+                $this->db->set('isScheduled', $is_scheduled);
+            }
             $q = $this->db->update('posts');
 
             //delete previous post incarnation attachments

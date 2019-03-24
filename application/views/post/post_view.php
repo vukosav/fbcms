@@ -29,12 +29,12 @@ function searchFilter(page_num) {
     var post_status = $('#post_status')
 .val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').is(':checked');
-
+console.log('archived',archived);
     var input_data = 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +
         '&date_to=' + date_to + '&group=' + group + '&fbpage=' + fbpage +
         '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors +
         '&scheduled=' + scheduled + '&inProgres=' + inProgres;
-
+        console.log('input_data',input_data);
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
@@ -44,7 +44,7 @@ function searchFilter(page_num) {
             $('.loading').show();
         },
         success: function(html) {
-            // console.log("html", html);
+           //  console.log("html", html);
             $('#postList').html(html);
             $('.loading').fadeOut("slow");
             /* $('#datatable1').DataTable({
@@ -96,9 +96,9 @@ function searchFilter(page_num) {
                     <div class="col col-sm-2">
                         <select name="group" id="group" class="form-control" onchange="searchFilter()">
                             <option value="">Filter by group</option>
-                            <option value="1">Option #1</option>
-                            <option value="2">Option #2</option>
-                            <option value="3">Option #3</option>
+                            <?php if(!empty($group)): foreach ($group as $grp): ?>
+                            <option value="<?php echo $grp['id']; ?>"><?php echo $grp['name']; ?></option>
+                            <?php endforeach; endif; ?>
                         </select>
                     </div>
                     <div class="col col-sm-2">
@@ -173,6 +173,12 @@ function searchFilter(page_num) {
                     </div>
                     <?php elseif($this->uri->segment(2) == 3): ?>
                     <div class="col col-sm-2">
+                        <label for="scheduled" class="ckbox">
+                            <input type="checkbox" id="scheduled" name="scheduled" onchange="searchFilter()" />
+                            <span class="tx-16"><b>Scheduled posts</b></span>
+                        </label>
+                    </div>
+                    <div class="col col-sm-2">
                         <label for="errors" class="ckbox">
                             <input type="checkbox" id="errors" name="errors" onchange="searchFilter()"><span
                                 class="tx-16"><b>Posts with errors</b></span>
@@ -225,17 +231,15 @@ function searchFilter(page_num) {
                                         }else{
                                             echo "<span id='span_status_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                         }
-                                    echo "<br>{$q['sent']}/{$q['ukupno']}";
-                                    echo ($q['error'])?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' post-error=" ."'" . $q['job_errors'] . "'" .
-                                        "href='' onclick='ShowError(&#39;{$q['id']}&#39;)' id='error_{$q['id']}'>{$q['error']} errors</a></span>":"";
+                                    echo "<br>{$q['sent']}/{$q['ukupno']}<br>";
+                                    echo ($q['error'])?"<a onclick='ShowError(&#39;{$q['id']}&#39;)' data-toggle='modal' data-target='#modalError' post_error='{$q['job_errors']}'" .
+                                        "href='' id='error_{$q['id']}'><span class='badge badge-success'>{$q['error']} errors</span></a>":"";
                                        echo "</td>";
-                                    echo "</td>";
                                     }elseif($q['PostStatus'] ==4 ){
                                         echo "<td><span class='fa fa-circle' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                        echo "<span style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'><br>{$q['sent']}/{$q['ukupno']}</span><br>";
-                                       echo ($q['error'])?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' post-error=" ."'" . $q['job_errors'] . "'" .
-                                            "href='' onclick='ShowError(&#39;{$q['id']}&#39;)' id='error_{$q['id']}'>{$q['error']} errors</a></span>":"";
-                                       echo "</td>";
+                                       echo ($q['error'])?"<a onclick='ShowError(&#39;{$q['id']}&#39;)' data-toggle='modal' data-target='#modalError' post_error='{$q['job_errors']}'" .
+                                        "href='' id='error_{$q['id']}'><span class='badge badge-success'>{$q['error']} errors</span></a>":"";
                                        echo "</td>";
                                     } ?>
                             <!-- <td>
@@ -250,14 +254,13 @@ function searchFilter(page_num) {
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><a data-toggle="modal" data-target="#modalPostText" post-text="<?php echo $q['content']; ?>"
-                                    href="" onclick="ShowPostText('<?php echo $q['id']; ?>')"
-                                    id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 100)? substr($q['content'], 0, 100)."..." : $q['content']; ?></a></td>
+                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo $q['content']; ?>"
+                                    href="" id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
-                            <td>Grupe<?php //echo $q['groups']; ?></td>
+                            <td><?php echo $q['groups']; ?></td>
                             <td><a data-toggle="modal" data-target="#modaldemo3" dejo="<?php echo $q['pages']; ?>"
                                     href="" onclick="ShowPages('<?php echo $q['id']; ?>')"
-                                    id="pages_<?php echo $q['id']; ?>"><?php echo $q['pages']; ?></a></td>
+                                    id="pages_<?php echo $q['id']; ?>"><?php echo (strlen($q['pages']) > 60)? substr($q['pages'], 0, 60)."..." : $q['pages']; ?></a></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
@@ -390,13 +393,14 @@ function searchFilter(page_num) {
             .getAttribute('post-text');
 
     }
-    
-    function ShowErrors(id) {
+
+    function ShowError(id) {
         // console.log("sho pages", document.getElementById("pages_"+id).getAttribute('data-id'));
         document.getElementById("modal_body_error_content").innerHTML = document.getElementById("error_" + id)
-            .getAttribute('post-error');
+            .getAttribute('post_error');
 
     }
+
 
     var refresh_interval = 5 * 1000;
     var go_live = false;
@@ -453,6 +457,8 @@ function searchFilter(page_num) {
             }
         });
     }
+
+  
     $(document).ready(function() {
         console.log("refresh doc ready", refresh_interval);
         setInterval(RefreshData, refresh_interval);

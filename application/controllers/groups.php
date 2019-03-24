@@ -80,7 +80,12 @@ class Groups extends MY_controller {
         $data['title'] = 'Manual Groups';
 
         //load users for filter
-        $data['usr'] = $this->Other_model->get_users();
+        if($this->session->userdata('user')['role'] == 2){
+            $data['usr'] = $this->Other_model->get_users($this->session->userdata('user')['user_id']);
+        }else{
+            $data['usr'] = $this->Other_model->get_users();
+        }
+        
 
         //load the view
         //$this->output->enable_profiler();

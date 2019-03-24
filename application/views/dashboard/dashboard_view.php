@@ -77,28 +77,28 @@ function searchFilter(page_num) {
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Posts in last 72h</label>
-                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['pLast72']; ?></p>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['current_pLast72']; ?></p>
                     <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
-                                style="font-size: 2em;"></i> 6</span></p>
+                                style="font-size: 2em;"></i> <?php echo $global['current_pLast72'] - $global['prev_pLast72']; ?></span></p>
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Reactions in last 72h</label>
-                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['rLast72']; ?></p>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['current_rLast72']; ?></p>
                     <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger"><i class="fa fa-arrow-circle-o-down"
-                                style="font-size: 2em;"></i> -6</span></p>
+                                style="font-size: 2em;"></i> <?php echo $global['current_rLast72'] - $global['prev_rLast72']; ?></span></p>
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'> &nbsp;Comments in last 72h</label>
                     <p class="tx-lato tx-inverse tx-bold tx-24">&nbsp;<span
-                            style="text-size: 24px"><?php echo $global['cLast72']; ?></span></p>
+                            style="text-size: 24px"><?php echo $global['current_cLast72']; ?></span></p>
                     <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
-                                style="font-size: 2em;"></i> 6</span></p>
+                                style="font-size: 2em;"></i> <?php echo $global['current_cLast72'] - $global['prev_cLast72']; ?></span></p>
                 </div>
                 <div class="pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Shares in last 72h</label>
-                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['sLast72']; ?></p>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['current_sLast72']; ?></p>
                     <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
-                                style="font-size: 2em;"></i> 6</span></p>
+                                style="font-size: 2em;"></i> <?php echo $global['current_sLast72'] - $global['prev_sLast72']; ?></span></p>
                 </div>
 
                 <div>
@@ -122,9 +122,9 @@ function searchFilter(page_num) {
                     <div class="col col-sm-2">
                         <select name="group" id="group" class="form-control" onchange="searchFilter()">
                             <option value="">Filter by group</option>
-                            <option value="1">Option #1</option>
-                            <option value="2">Option #2</option>
-                            <option value="3">Option #3</option>
+                            <?php if(!empty($group)): foreach ($group as $grp): ?>
+                            <option value="<?php echo $grp['id']; ?>"><?php echo $grp['name']; ?></option>
+                            <?php endforeach; endif; ?>
                         </select>
                     </div>
 
@@ -171,7 +171,6 @@ function searchFilter(page_num) {
                     </thead>
                     <tbody>
                         <?php if(!empty($p_statistics)):  foreach ($p_statistics as $statistic): ?>
-
                         <tr>
                             <td><?php echo $statistic['pname']; ?></td>
                             <td><?php echo $statistic['pageLikes']; ?>
@@ -182,8 +181,8 @@ function searchFilter(page_num) {
                                 <?php endif; ?>
                             </td>
                             <td>Group</td>
-                            <td><?php echo $statistic['p24']; ?></td>
-                            <td><?php echo $statistic['p72']; ?></td>
+                            <td><?php echo $statistic['current_posts24']; ?></td>
+                            <td><?php echo $statistic['current_posts72']; ?></td>
                         </tr>
                         <?php endforeach; ?>
 

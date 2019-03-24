@@ -8,9 +8,9 @@ class Dashboard_model extends CI_Model{
     // }
     
     function getRows($params = array()){
-        $this->db->select('page_statistic.pageLikes, page_statistic.diffLikes, page_statistic.p24, page_statistic.p72, pages.fbPageName as pname, users.username as addedby');
-        $this->db->from('page_statistic');
-        $this->db->join('pages', 'pages.id = page_statistic.page_id');
+        $this->db->select('page_dashboard_statistic.pageLikes, (page_dashboard_statistic.pageLikes - page_dashboard_statistic.pageLikes72) as diffLikes, page_dashboard_statistic.current_posts24, page_dashboard_statistic.current_posts72, pages.fbPageName as pname, users.username as addedby');
+        $this->db->from('page_dashboard_statistic');
+        $this->db->join('pages', 'pages.id = page_dashboard_statistic.page_id');
         $this->db->join('users', 'users.id = pages.userId');        
         $this->db->where('pages.isActive = 1');
         //filter data by user
@@ -22,11 +22,11 @@ class Dashboard_model extends CI_Model{
         }
         //filter data by user
         if(!empty($params['search']['pwithoutPL24'])){
-            $this->db->where('page_statistic.p24',0);
+            $this->db->where('page_dashboard_statistic.p24',0);
         }
         // //filter data by user
         if(!empty($params['search']['pwithoutPL72'])){
-            $this->db->where('page_statistic.p72',0);
+            $this->db->where('page_dashboard_statistic.p72',0);
         }
         //filter data by searched keywords
         if(!empty($params['search']['pagename'])){
@@ -53,7 +53,7 @@ class Dashboard_model extends CI_Model{
      */
     public function get($id = null){
         if($id === null){
-            $query = $this->db->get('page_statistic');
+            $query = $this->db->get('page__statistic');
         }elseif(is_array($id)){
             $query = $this->db->get_where('page_statistic', ['id' => $id]);
         }else{
@@ -66,7 +66,8 @@ class Dashboard_model extends CI_Model{
      * @usage
      * All: global statistic
      */
-    public function get_gstatistic(){
+    public function get_gstatistic($userid = null){
+        //$userid?$this->db->where('user_id = ', $userid):false;
         $query = $this->db->get('global_statistic');
         if ($query->num_rows() > 0) {
             return $query->result_array();

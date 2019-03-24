@@ -27,17 +27,15 @@
                                         }else{
                                             echo "<span id='span_status_{$q['id']}' class='fa fa-play-circle-o' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                         }
-                                    echo "<br>{$q['sent']}/{$q['ukupno']}";
-                                    echo ($q['error'])?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' post-error=" ."'" . $q['job_errors'] . "'" .
-"href='' onclick='ShowError(&#39;{$q['id']}&#39;)' id='error_{$q['id']}'>{$q['error']} errors</a></span>":"";
+                                    echo "<br>{$q['sent']}/{$q['ukupno']}<br>";
+                                    echo ($q['error'])?"<a onclick='ShowError(&#39;{$q['id']}&#39;)' data-toggle='modal' data-target='#modalError' post_error='{$q['job_errors']}'" .
+                                        "href='' id='error_{$q['id']}'><span class='badge badge-success'>{$q['error']} errors</span></a>":"";
                                        echo "</td>";
-                                    echo "</td>";
                                     }elseif($q['PostStatus'] ==4 ){
-                                        //$q['job_errors'] = html_entity_decode($q['job_errors']);
                                         echo "<td><span class='fa fa-circle' style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'></span>";
                                        echo "<span style='font-size: xx-large;margin: 6px; color: #3b6998;' data-toggle='tooltip' data-placement='top'><br>{$q['sent']}/{$q['ukupno']}</span><br>";
-                                       echo ($q['error'])?"<span class='badge badge-success'><a data-toggle='modal' data-target='#modalError' post-error=" ."'" . $q['job_errors'] . "'" .
-"href='' onclick='ShowError(&#39;{$q['id']}&#39;)' id='error_{$q['id']}'>{$q['error']} errors</a></span>":"";
+                                       echo ($q['error'])?"<a onclick='ShowError(&#39;{$q['id']}&#39;)' data-toggle='modal' data-target='#modalError' post_error='{$q['job_errors']}'" .
+                                        "href='' id='error_{$q['id']}'><span class='badge badge-success'>{$q['error']} errors</span></a>":"";
                                        echo "</td>";
                                     } ?>
                             <!-- <td>
@@ -52,18 +50,17 @@
                                         </a>
                                     </td> -->
                                     <td><?php echo $q['title']; ?></td>
-                                    <td><a data-toggle="modal" data-target="#modalPostText" post-text="<?php echo $q['content']; ?>"
-                                    href="" onclick="ShowPostText('<?php echo $q['id']; ?>')"
-                                    id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
-                                    <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
-                                    <td>Grupe<?php //echo $q['groups']; ?></td>
-                                    <td><a data-toggle="modal" data-target="#modaldemo3" dejo="<?php echo $q['pages']; ?>"
+                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo $q['content']; ?>"
+                                    href="" id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
+                            <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
+                            <td><?php echo $q['groups']; ?></td>
+                            <td><a data-toggle="modal" data-target="#modaldemo3" dejo="<?php echo $q['pages']; ?>"
                                     href="" onclick="ShowPages('<?php echo $q['id']; ?>')"
-                                    id="pages_<?php echo $q['id']; ?>"><?php echo $q['pages']; ?></a></td>
+                                    id="pages_<?php echo $q['id']; ?>"><?php echo (strlen($q['pages']) > 60)? substr($q['pages'], 0, 60)."..." : $q['pages']; ?></a></td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
-                                <?php if(!empty($arh)){  ?> 
+                                <?php if(!empty($arh)){  ?>
                                     <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
