@@ -1237,13 +1237,10 @@ function UploadVideoJ(){
         if(scheduleDTFromDb != null && scheduleDTFromDb != ''){
            var dateDT = moment(scheduleDTFromDb).toDate();
             $('#datetimepicker1').datetimepicker({
-                defaultDate: dateDT,
-                format: 'DD/MM/YYYY HH:mm:ss'
+                defaultDate: dateDT
             });
             } else{
-                $('#datetimepicker1').datetimepicker({
-                    format: 'DD/MM/YYYY HH:mm:ss'
-                });
+                $('#datetimepicker1').datetimepicker();
             }
         $("#postForm #message").emojioneArea({
                 autoHideFilters: false,
