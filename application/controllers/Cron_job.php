@@ -235,6 +235,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
       $fbPageId = $dat_array_db[0]['fbPageId'];
       $fbPageAT= $dat_array_db[0]['fbPageAT'];
       $post_id = $dat_array_db[0]['postId'];
+      $page_timezone = $dat_array_db[0]['timezone'];
 
       $post_data =  $this->FB_model->get_post_data($post_id);
 
@@ -242,10 +243,28 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
       $input_post_title=$post_data[0]["title"];
       $input_post_message=$post_data[0]["content"];
       $is_scheduled = $post_data[0]["isScheduled"];
+      $scheduledSame=$post_data[0]["scheduledSame"];
+
+        $this->db->select('App_time_zone'); 
+        $query = $this->db->get('global_parameters');
+        $app_TZ = $query->result_array()[0]['App_time_zone'];
+
+
+
         if($is_scheduled == 1){
-        $schedule_dt = strtotime($post_data[0]["scheduledTime"]);
+            $timezone = $page_timezone;
+            if($timezone == null || $timezone == ''){
+                $timezone = $app_TZ;
+            }
+            if($scheduledSame == 1){
+                $timezone = $app_TZ;
+            }
+
+            $schedule_date =  new DateTime($post_data[0]["scheduledTime"]);
+            $schedule_date->setTimezone(new DateTimeZone($timezone));
+            $schedule_dt = strtotime( $schedule_date->format('Y-m-d H:i:s')/*$post_data[0]["scheduledTime"]*/);
         }else{
-        $schedule_dt=null;
+           $schedule_dt=null;
         }
       
        if($input_post_type=='message'){

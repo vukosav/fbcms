@@ -50,7 +50,7 @@ function searchFilter(page_num) {
                     <figcaption>
                         <a href="" class="btn btn-dark">Edit Photo</a> -->
                     </figcaption>
-                </figure> -->
+                </figure> 
 
 
                 <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">

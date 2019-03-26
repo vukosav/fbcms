@@ -37,6 +37,14 @@
             <span>Users</span>
           </a>
         </li><!-- nav-item -->
+        <?php endif; ?>
+        <?php if($this->session->userdata('user')['role'] == 1): ?>
+        <li class="nav-item">
+          <a href="<?=base_url()?>admin" class="nav-link <?php if($this->uri->segment(1)=="admin"){echo "active";}?>">
+            <i class="icon ion-ios-cog-outline"></i>
+            <span>Admin</span>
+          </a>
+        </li><!-- nav-item -->
       <?php endif; ?>
         <li class="nav-item">
           <a href="<?=base_url()?>pages" class="nav-link <?php if($this->uri->segment(1)=="pages"){echo "active";}?>">

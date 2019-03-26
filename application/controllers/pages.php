@@ -106,4 +106,39 @@ class Pages extends MY_controller {
         $this->load->view('pages/edit_page', $data);
         //$this->output->enable_profiler();
     }
+    public function SetTimeZone(){
+        if(!isset($this->session->userdata('user')['role'])){
+            return redirect('/');
+        }
+        if($this->session->userdata('user')['role']== 2){
+            return redirect('/');
+        }
+
+        // $this->load->helper(array('form', 'url'));    
+        // $this->load->library('form_validation');
+        
+        // $this->form_validation->set_rules(
+        //     'email', 'E-mail',
+        //     array(
+        //             'required'      => 'You have not provided %s.',
+        //             'is_unique'     => 'This %s already exists.'
+        //     )
+        // );
+        
+        $data = array(
+            'timezone' => $this->input->post('timezone')
+        );
+        $id = $this->input->post('id');
+        // if ($this->form_validation->run() === FALSE){
+        //     $data['title'] = 'Admin';
+        //     //$data['users'] = false;
+        //     // $this->output->enable_profiler();
+        //     // print_r($this->session->userdata);
+        //     $this->load->view('admin/admin_view', $data);
+        // }else{
+            $this->Pages_model->update($data, $id);
+            //$data['title'] = 'Admin';
+            redirect('/pages/index');
+        // }
+    }
 }

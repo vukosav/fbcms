@@ -78,6 +78,8 @@ $route['editpage/(:any)'] = 'Pages/edit/$1';
 $route['editprofile'] = 'Users/editprofile';
 $route['ressetpwd'] = 'Users/ressetpassword';
 $route['fbcheck'] = 'FBCheck';
+$route['config'] = 'Admin/SetConfig';
+$route['admin'] = 'Admin/index';
 // $route['news/(:any)'] = 'news/view/$1';
 // $route['(:any)'] = 'Pages/view/$1';
 // $route['default_controller'] = 'pages/view';
@@ -88,8 +90,8 @@ $route['insert_pages'] = 'Add_pages/insert_pages';
 $route['send_post'] = 'Send_post';
 $route['send_post/index/(:any)'] = 'Send_post/index/$1';
 $route['create_post'] = 'FB_post/create_post';
-$route['edit_post/(:any)'] = 'FB_post/edit_post/$1';
-$route['copy_post/(:any)'] = 'FB_post/copy_post/$1';
+$route['edit_post/(:any)/(:any)'] = 'FB_post/edit_post/$1/$1';
+$route['copy_post/(:any)/(:any)'] = 'FB_post/copy_post/$1/$1';
 $route['fb_post/insert_post/(:any)'] = 'FB_post/insert_post/$1';
 $route['archive_post/(:any)'] = 'FB_post/archive_post/$1';
 //jelena end
@@ -99,3 +101,7 @@ $route['archive_post/(:any)'] = 'FB_post/archive_post/$1';
 //job
 $route['start'] = 'Cron_job/start';
 $route['start/(:any)'] = 'Cron_job/start/$1';
+
+$route['go_live'] = 'GoLiveController/GoLive';
+$route['stop_live'] = 'GoLiveController/StopLive';
+$route['settz'] = 'Pages/SetTimeZone';

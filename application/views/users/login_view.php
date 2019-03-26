@@ -1,7 +1,7 @@
 <?php $this->load->view('includes/header'); ?>
 
     <div class="signpanel-wrapper">
-    <?php echo form_open('login'); ?>
+    <?php echo form_open('login', 'id = "login_form"'); ?>
       <div class="signbox">
         <div class="signbox-header">
           <h4>DATADAT</h4>
@@ -20,10 +20,20 @@
           <div class="form-group">
             <a href="">Forgot password?</a>
           </div><!-- form-group -->
-          <button class="btn btn-dark btn-block">Sign In</button>
+          <button id="btn_login" class="btn btn-dark btn-block"><span id= "span_log" class="fa fa-sign-in" style="font-size:20px"></span>   Sign In</button>
           <!-- <div class="tx-center bd pd-10 mg-t-40">Not yet a member? <a href="page-signup.html">Create an account</a></div> -->
         </div><!-- signbox-body -->
       </div><!-- signbox -->
     </div><!-- signpanel-wrapper -->
-
-    <?php $this->load->view('includes/header'); ?>
+    <?php $this->load->view('includes/footer'); ?>
+    <script>
+     $(document).ready(function() {
+      document.querySelector("#login_form").addEventListener("submit", function(e){ 
+        $('#span_log').removeClass('fa-sign-in');
+        $('#span_log').addClass('fa-refresh');
+        $('#span_log').addClass('fa-spin');
+       });
+     });
+    </script>
+    
+    

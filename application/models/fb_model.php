@@ -20,7 +20,7 @@ class FB_model extends CI_Model{
     public function get_post_page_for_queue_id($queue_id){
 
         $this->db->where('posts_pages.id=', $queue_id);
-        $this->db->select('posts_pages.postId,posts_pages.fbPostId,posts_pages.pageId, pages.fbPageId, pages.fbPageAT ');
+        $this->db->select('posts_pages.postId,posts_pages.fbPostId,posts_pages.pageId, pages.fbPageId, pages.fbPageAT,pages.timezone ');
         $this->db->from('posts_pages');
         $this->db->join('pages', 'posts_pages.pageId = pages.id');
         $query = $this->db->get();
@@ -748,5 +748,24 @@ class FB_model extends CI_Model{
         
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
+    public function get_user_token($user_id){
+        $this->db->where("user_id=",$user_id);
+        $query = $this->db->get('fb_users');
 
+        return ($query->num_rows() > 0)?$query->result_array():array();
+    }
+
+    public function get_pages_tokens($user_id){
+
+        $this->db->where('pages.IsActive = ', 1);
+        $this->db->select('pages.*');
+        $this->db->from('fb_users');
+        $this->db->join('pages', 'fb_users.user_id = pages.userId');
+        $this->db->where('fb_users.user_id=', $user_id);
+        $query = $this->db->get();
+        
+        return ($query->num_rows() > 0)?$query->result_array():array();
+
+
+    }
 }

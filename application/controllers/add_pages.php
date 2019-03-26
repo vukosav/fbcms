@@ -52,11 +52,8 @@ class Add_Pages extends CI_Controller {
                     $fb_name= $user->getName();
                     $fb_user_id=$user->getId();
 
-                    //insert fb user if it's not already registered
-                    
-                
-                    
-                                
+                  
+                                   
                     $this->FB_model->insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken);
 
                             
@@ -104,7 +101,7 @@ class Add_Pages extends CI_Controller {
                 }
                 else {
                     //todo - redirect ...
-                    echo 'no new pages';
+                    redirect ('/');
                 }
 
             };

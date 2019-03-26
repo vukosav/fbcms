@@ -66,6 +66,7 @@ console.log('archived',archived);
     </div><!-- kt-pagetitle -->
     <div class="kt-pagebody">
         <div class="pd-10 bg-gray-800 mg-t">
+             <input type="hidden" id="go_live_param" name="go_live_param" value="<?php echo $go_live; ?>">
             <ul class="nav nav-pills nav-pills-for-dark flex-column flex-md-row" role="tablist">
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="1"){echo "active2";}?>"
                         href="<?=base_url()?>posting/1" role="tab">Queued posts</a></li>
@@ -265,10 +266,10 @@ console.log('archived',archived);
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
                                 <?php if(!empty($arh)){  ?>
-                                    <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit"
+                                    <a href="<?=base_url()?>edit_post/<?php echo $q['id'] . '/' . $this->uri->segment(2); ?>"><span class="fa fa-edit"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
-                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy"
+                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id'] . '/' . $this->uri->segment(2); ?>"><span class="fa fa-copy"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
 
@@ -287,11 +288,11 @@ console.log('archived',archived);
                                     <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span
                                             class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'
                                             data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
-                                <?php }else{  ?> 
-                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy"
+                                <?php }//else{  ?> 
+                                    <!-- <a href="<?//=base_url()?>copy_post/<?php //echo $q['id']; ?>"><span class="fa fa-copy"
                                     style="font-size: xx-large;margin: 6px; color: #3b6998;"
-                                    data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
-                                <?php }  ?> 
+                                    data-toggle="tooltip" data-placement="top" title="Copy post"></span></a> -->
+                                <?php //}  ?> 
                                 </div>
                             </td>
                         </tr>
@@ -403,8 +404,8 @@ console.log('archived',archived);
 
 
     var refresh_interval = 5 * 1000;
-    var go_live = false;
-
+    var go_live = document.getElementById("go_live_param").value;
+    console.log("go_live",go_live);
     function RefreshData(page_num) {
         console.log("refresh");
         if (!go_live) {
@@ -460,8 +461,15 @@ console.log('archived',archived);
 
   
     $(document).ready(function() {
-        console.log("refresh doc ready", refresh_interval);
+       // console.log("refresh doc ready", refresh_interval);
         setInterval(RefreshData, refresh_interval);
+        if(go_live){
+            document.querySelector('#stop_live').style.display = "block";
+            document.querySelector('#live').style.display = "none";
+        }else{
+            document.querySelector('#stop_live').style.display = "none";
+            document.querySelector('#live').style.display = "block";
+        }
     });
 
     function GoLive() {
@@ -471,6 +479,7 @@ console.log('archived',archived);
         go_live = true;
         document.querySelector('#stop_live').style.display = "block";
         document.querySelector('#live').style.display = "none";
+        $.ajax({ url: '<?=base_url()?>go_live', type: 'POST'});
     }
 
     function StopLive() {
@@ -480,6 +489,7 @@ console.log('archived',archived);
         go_live = false;
         document.querySelector('#stop_live').style.display = "none";
         document.querySelector('#live').style.display = "block";
+        $.ajax({ url: '<?=base_url()?>stop_live', type: 'POST'});
     }
 
 

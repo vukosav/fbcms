@@ -8,6 +8,8 @@ class Login extends CI_Controller {
             $this->load->model('Users_model');
             $this->load->helper('url_helper');
             $this->load->helper('cookie');
+            $this->load->library('FacebookPersistentDataInterface');
+            $this->load->model('FB_model');
     }
 
     public function login() {
@@ -40,21 +42,10 @@ class Login extends CI_Controller {
 			$password = $this->input->post('password',TRUE);
                                             //$rememberMe = $this->input->post('remember',TRUE) == "on" ? TRUE : FALSE;
 
-			if ($this->Users_model->checkUserLogin($username, $password)) {
-                                // user login ok
-                                // if($this->session->userdata('next_after_login')){
-                                // 	$uri = $this->session->userdata('next_after_login');
-                                // 	$this->session->unset_userdata('next_after_login');
-                                // 	redirect($uri);
-                                // 	exit();
-                                // }else{
-                                // 	redirect('/');
-                                // 	exit();
-                                // }
-               // print_r($this->session->userdata()); 
-               // echo "<h1>bla bla bla</h1>";
-                redirect('fbcheck');
-                //$this->load->view('dashboard', $data);
+			if ($this->Users_model->checkUserLogin($username, $password)) { 
+               $user_id = $this->session->userdata('user')['user_id'];
+               $this->FB_tokens_check($user_id);
+               redirect('fbcheck');
 			} else {
 				// login failed
                 //echo ($this->Users_model->getErrors(),"danger");
@@ -80,4 +71,75 @@ class Login extends CI_Controller {
     public function hash_password($password,$salt) {
         return hash('sha256', $password . $salt);
     }
+
+
+    public function FB_tokens_check($user_id){ 
+          
+        $ret_uat= $this->FB_model->get_user_token($user_id);
+        $input_token=$ret_uat[0]['fb_access_token']; 
+
+        $graphNode = $this->debug_token($input_token); 
+        $converted_res = ($graphNode['is_valid']) ? 'true' : 'false';
+        $expires_at = ($graphNode['expires_at']);
+        $userFBData = array();
+        
+        $userFBData['user_AT_is_valid'] = $converted_res;
+        $userFBData['user_AT_exp_date'] = $expires_at;
+        
+        $ret_pat= $this->FB_model->get_pages_tokens($user_id);
+        $userPages = array();
+        for ($i = 0; $i < count($ret_pat); $i++) {
+            
+            $page_name=$ret_pat[$i]['fbPageName'];  
+            $input_token=$ret_pat[$i]['fbPageAT'];
+            $graphNode = $this->debug_token($input_token ); 
+            $converted_is_valid = ($graphNode['is_valid']) ? 'true' : 'false';  
+            $expires_at = ($graphNode['expires_at']);  
+            
+            $pageFBData = array();
+            $pageFBData['page_id'] = $ret_pat[$i]['id'];
+            $pageFBData['page_named'] = $page_name;
+            //$pageFBData['page_fb_AT'] = $input_token;
+            $pageFBData['page_AT_is_valid'] = $converted_is_valid;
+            $pageFBData['page_AT_exp_date'] = $expires_at;
+            $userPages[$page_name] = $pageFBData;
+        } 
+        $userFBData['pages'] = $userPages;
+        $this->session->set_userdata('FB_UAT',$userFBData);
+    }
+
+    public function debug_token($input_token){
+        if (!isset($_SESSION)) { session_start(); }   
+        require_once FCPATH . '/vendor/autoload.php'; // change path as needed        
+        $app_id ='503878473471513';
+        $app_secret = '28cbbb9f440b1b016e9ce54376ada17e';
+        $fb = new \Facebook\Facebook([
+        'app_id' => $app_id,
+        'app_secret' => $app_secret,
+        'default_graph_version' => 'v3.2',
+        // 'persistent_data_handler' => new FacebookPersistentDataInterface(),
+        ]);
+        
+        $access_token = $app_id .'|' . $app_secret; 
+              
+       try {
+            // Returns a `Facebook\FacebookResponse` object
+            $response = $fb->get(
+                //olivia olivia token'
+            '/debug_token?input_token='. $input_token, 
+            //app_id|app_secret
+            $access_token
+        );
+           $graphNode = $response->getGraphNode();
+           return $graphNode;
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+        
+    }  
+
 }

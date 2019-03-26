@@ -61,10 +61,10 @@
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
                                 <?php if(!empty($arh)){  ?>
-                                    <a href="<?=base_url()?>edit_post/<?php echo $q['id']; ?>"><span class="fa fa-edit"
+                                    <a href="<?=base_url()?>edit_post/<?php echo $q['id'] . '/' . $this->uri->segment(2); ?>"><span class="fa fa-edit"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
-                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy"
+                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id'] . '/' . $this->uri->segment(2); ?>"><span class="fa fa-copy"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
 
@@ -83,11 +83,11 @@
                                     <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span
                                             class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'
                                             data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
-                                <?php }else{  ?> 
-                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id']; ?>"><span class="fa fa-copy"
+                                <?php }//else{  ?> 
+                                    <!-- <a href="<?//=base_url()?>copy_post/<?php //echo $q['id']; ?>"><span class="fa fa-copy"
                                     style="font-size: xx-large;margin: 6px; color: #3b6998;"
-                                    data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
-                                <?php }  ?> 
+                                    data-toggle="tooltip" data-placement="top" title="Copy post"></span></a> -->
+                                <?php //}  ?> 
                                 </div>
                             </td>
                         </tr>

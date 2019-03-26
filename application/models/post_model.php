@@ -107,9 +107,9 @@ class Post_model extends CI_Model{
     function getRowsArchived($params = array(), $pos=null){
         //$this->db->distinct();
         $this->db->select('CountPagesArchive(posts_pages_archive.postId) ukupno,
-        PostPagesArchStatCount(posts_pages_archive.id, 4) as error,
-        PostPagesArchStatCount(posts_pages_archive.id, 3) as sent,
-        PostPagesArchStatCount(posts_pages_archive.id, 2) as inProgres,
+        PostPagesArchStatCount(posts_archive.id, 4) as error,
+        PostPagesArchStatCount(posts_archive.id, 3) as sent,
+        PostPagesArchStatCount(posts_archive.id, 2) as inProgres,
         posts_archive.*, ErrorsForPost_Archive(posts_archive.id) AS job_errors, GroupsForPost(posts_archive.id) AS groups, PagesForPostArchive(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
         $this->db->from('posts_archive');
         $this->db->join('users', 'users.id = posts_archive.created_by');
@@ -195,6 +195,7 @@ class Post_model extends CI_Model{
 
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
+
     
     //-------------QUEUED-----------------------
     /**

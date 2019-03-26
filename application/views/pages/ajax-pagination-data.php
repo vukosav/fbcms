@@ -12,22 +12,21 @@
      <tbody>
          <?php if(!empty($pages)): foreach($pages as $page): ?>
          <tr>
-             <td><?php echo $page['fbPageName']; ?></td>
-             <td><?php echo $page['fbPageId']; ?></td>
-             <td><?php echo $page['dateAdded']; ?></td>
-             <td><?php echo $page['addedby']; ?></td>
-             <td><?php echo $page['groups']; ?></td>
-             <td>
-                 <a href="<?=base_url()?>editpage/<?php echo $page['id']; ?>">
-                     <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"
-                         data-toggle="tooltip" data-placement="top" title="Edit page"></span>
-                 </a>
-                 <a onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)" href="">
-                     <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'
-                         data-toggle='tooltip' data-placement='top' title='Delete page'></span>
-                 </a>
-             </td>
-         </tr>
+                            <td><?php echo $page['fbPageName']; ?></td>
+                            <td><?php echo $page['fbPageId']; ?></td>
+                            <td><?php echo $page['dateAdded']; ?></td>
+                            <td><?php echo $page['addedby']; ?></td>
+                            <td><?php echo $page['groups']; ?></td>
+                            <td>
+                                <?php if($page['userId'] == $this->session->userdata('user')['user_id']): ?>
+                                <a href="<?=base_url()?>editpage/<?php echo $page['id']; ?>">
+                                    <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit page"></span>
+                                </a>
+                                <a onclick="dellData(<?php echo $page['id'] .',&#39;' . base_url() . 'deletepage/&#39;'; ?>)" href="">
+                                    <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Delete page'></span>
+                                </a>
+                                <?php endif; ?>
+                            </td>
 
          <?php endforeach; ?>
      </tbody>

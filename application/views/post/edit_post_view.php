@@ -163,6 +163,7 @@
     <input type="hidden" name="post_status" id="post_status" value="<?php echo $post_status; ?>" />
     <input type="hidden" name="postId"   id="postId" value="<?php echo $input_post_id; ?>" />
     <input type="hidden" name="ins_or_upd"   id="ins_or_upd" value="<?php echo $input_ins_or_upd; ?>" />
+    <input type="hidden" name="scheduleDateFromDb"   id="scheduleDateFromDb" value="<?php echo $scheduleDateTime; ?>" />
     <input type="hidden" name="URLFrom"  id="URLFrom" value="" />
     <input type="hidden" name="selected_page_id"  id="selected_page_id" value="0" />
     <input type="hidden" name="selected_group_id"  id="selected_group_id" value="0" />
@@ -326,13 +327,13 @@
                     <!--<button onclick="return false;" class='btn btn-primary' id="savepost" name='savepost'>
                         <i class="fas fa-save" aria-hidden="true"></i> Save draft 
                     </button>-->
-                    <button type="button" onclick="SaveAsQueued();" class='btn btn-primary' id="qpost"name='qpost' >
+                    <button type="button" onclick="SaveAsQueued(event);" class='btn btn-primary' id="qpost"name='qpost' >
                         <i class="fa fa-calendar" aria-hidden="true"></i> Save post  
                     </button>
                     <button type="button" onclick="SendPostToFB();" class='btn btn-primary' id="post" name='post' style = "display : none;">
                             <i class="fa fa-paper-plane" aria-hidden="true"></i>Share now
                     </button>
-                    <button type="button" onclick="CancelEdit();" class='btn btn-secondary' id="cancel_edit_post" name='cancel_edit_post'>
+                    <button type="button" onclick="CancelEdit('<?php echo $this->uri->segment(3); ?>');" class='btn btn-secondary' id="cancel_edit_post" name='cancel_edit_post'>
                         <i class="fas fa-save" aria-hidden="true"></i> Cancel
                     </button>              
                 </div>
@@ -359,6 +360,8 @@
                        
                             <input type="checkbox" id="scheduledSame" name="scheduledSame"  
                                     <?php if ($scheduledSame==1) {echo 'checked';} ?>   onchange="" />
+                             
+                        </label>
                     </div>  
                 
                 </div>
@@ -773,7 +776,7 @@ function SendPostToFB(){
 
       });
     }
-function SaveAsQueued(){
+function SaveAsQueued(event){
 
        const form = document.querySelector('#edit_post_form_j');
 
@@ -941,11 +944,11 @@ function SaveAsDraft(){
 }
 
  
-function CancelEdit(){
+function CancelEdit(postingType){
      
     const id = document.querySelector("#postId").value;
     console.log("id", id);
-    
+    console.log("postingType", postingType);
     $.ajax({
         url:'<?=base_url()?>cancel_edit/'+id,
         type: 'POST',
@@ -953,7 +956,7 @@ function CancelEdit(){
         processData: false,
         contentType: false, 
         success: function(data){
-            window.location.replace('<?=base_url()?>posting/1');
+            window.location.replace('<?=base_url()?>posting/' +postingType);
         }
       });
     }
@@ -1201,7 +1204,17 @@ function UploadVideoJ(){
              }); 
             GenerateGroupList();
         }
-        $('#datetimepicker1').datetimepicker();
+        console.log('scheduleDateFromDb',document.querySelector("#scheduleDateFromDb").value);
+        var scheduleDTFromDb =document.querySelector("#scheduleDateFromDb").value;
+
+        if(scheduleDTFromDb != null && scheduleDTFromDb != ''){
+           var dateDT = moment(scheduleDTFromDb).toDate();
+            $('#datetimepicker1').datetimepicker({
+                defaultDate: dateDT
+            });
+            } else{
+                $('#datetimepicker1').datetimepicker();
+            }
         $("#postForm #message").emojioneArea({
                 autoHideFilters: false,
                 pickerPosition: "bottom",
@@ -1310,7 +1323,7 @@ function UploadVideoJ(){
         });
 </script>
 
-
+<script src="<?=base_url()?>theme/js/moment.min.js"></script>
 <script src="<?=base_url()?>theme/lib/popper.js/popper.js"></script>
 <script src="<?=base_url()?>theme/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
 <script src="<?=base_url()?>theme/lib/highlightjs/highlight.pack.js"></script>

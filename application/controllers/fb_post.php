@@ -96,7 +96,7 @@ public function index($post_id){
 
                     $input_post_type = $post_data[0]["post_type"];
                     $input_post_title=$post_data[0]["title"];
-
+                 
                    // echo '$input_post_title ' . $input_post_title;
                     $input_post_message=$post_data[0]["content"];
 
@@ -466,6 +466,7 @@ private function GetDataFromDB($post_id){
 }   
 
 public function edit_post($post_id){
+    echo $post_id;
     if(!$this->Users_model->isLoggedIn()){
         redirect('login'); 
     }
@@ -491,7 +492,7 @@ public function edit_post($post_id){
        $valide = $valide->result_array();
        $can_edit_groups_pages=$valide[0]['validan'];
        $data['can_edit_groups_pages'] = $can_edit_groups_pages;
-
+       
        $this->load->view('post/edit_post_view', $data);
        
 } 
@@ -627,9 +628,13 @@ public function insert_post(){
             $upload_video = $this->input->post('videoFileName');
             $add_link=$this->input->post('link');
             
-           $schedule_date_time = $this->input->post('schedule_date_time');
-           $scheduledSame = $this->input->post('scheduledSame');
-           
+           $schedule_date_timeStr = $this->input->post('schedule_date_time');
+          
+           if($this->input->post('scheduledSame') == 'on'){
+            $scheduledSame = 1;
+           } else{
+            $scheduledSame = 0;
+           }
 
            $arrayPages = $this->input->post('arrayPages');
            $arrayGroups = $this->input->post('arrayGroups');
@@ -655,8 +660,12 @@ public function insert_post(){
         //     'fbPageName[2]' => $arrayGroupsObj[0]->pages[2]->fbPageName
         //     ));
 
-            if($schedule_date_time !== ''){
-                $schedule_date_time=date("Y-m-d H:i:s", strtotime($schedule_date_time));
+       
+       
+
+            if($schedule_date_timeStr !== ''){
+            //   $schedule_date =  new DateTime($schedule_date_timeStr, new DateTimeZone($app_TZ));
+                $schedule_date_time=date("Y-m-d H:i:s",  strtotime($schedule_date_timeStr));
                 $is_scheduled=1;
             }
             else {

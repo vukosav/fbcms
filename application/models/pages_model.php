@@ -18,8 +18,8 @@ class Pages_model extends CI_Model{
         $this->db->select('pages.*, users.username as addedby, GroupsForPages(pages.id) AS groups');
         $this->db->from('pages');
         $this->db->join('users', 'users.id = pages.userId');
-       // $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
-        //$this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
+        $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
+        $this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
 
         // $wtitle = $this->input->post('pagename');
         // $group = $this->input->post('group');
@@ -51,7 +51,6 @@ class Pages_model extends CI_Model{
         //return fetched data
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
-
     public function get_pages($id = null){
         if($id === null){
             $this->db->where('pages.IsActive = ', 1);
@@ -80,13 +79,13 @@ class Pages_model extends CI_Model{
     }
 
     public function get_free_pages($gid){
-        if($this->session->userdata('user')['role'] == 2){
+        //if($this->session->userdata('user')['role'] == 2){
             $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
             WHERE  pages.userId = ' .$this->session->userdata('user')['user_id'] . ' AND pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
-        }else{
-            $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
-            WHERE pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
-        }
+        // }else{
+        //     $query = $this->db->query('SELECT pages.id, pages.fbPageName FROM pages
+        //     WHERE pages.id NOT IN (SELECT pageId FROM pages_groups WHERE groupId = ' .$gid.')');
+        // }
         
         if($query){
             return $query->result_array();
@@ -110,13 +109,13 @@ class Pages_model extends CI_Model{
     }
 
     public function get_free_groups($pid){
-        if($this->session->userdata('user')['role'] == 2){
+        //if($this->session->userdata('user')['role'] == 2){
             $query = $this->db->query('SELECT groups.id, groups.name FROM groups
             WHERE groups.userId = ' .$this->session->userdata('user')['user_id'] . ' AND groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
-        }else{
-            $query = $this->db->query('SELECT groups.id, groups.name FROM groups
-            WHERE groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
-        } 
+        // }else{
+        //     $query = $this->db->query('SELECT groups.id, groups.name FROM groups
+        //     WHERE groups.id NOT IN (SELECT groupId FROM pages_groups WHERE pageId = ' .$pid.')');
+        // } 
         if($query){
             return $query->result_array();
         }
@@ -170,7 +169,7 @@ class Pages_model extends CI_Model{
     //-------------END CRUS--------------------
 
 
-//jelena start
+ 
 public function list_new_pages( $fb_pages, $user_id){
 
       
@@ -279,7 +278,15 @@ public function list_new_pages( $fb_pages, $user_id){
 
      return ($query->num_rows() > 0)?$query->result_array():array();
  }
+ public function update($data, $id){
+    foreach ($data as $key => $value) {
+        $this->db->set($key, $value);
+    }
+    $this->db->where("id", $id);
+    $this->db->update("pages");
 
-//jelena end
+    return $this->db->affected_rows() > 0;
+}
+ 
 
 }

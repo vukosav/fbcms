@@ -255,9 +255,14 @@ class Post extends MY_controller {
 
         $data['pos']= $pos;
         $data['arh'] = 'sadd';
+        if(isset($_SESSION['live_true'])){
+            $data['go_live'] = $_SESSION['live_true'];
+        }else{
+            $data['go_live'] = false;
+        }
         //load the view
         //print_r($this->db->last_query());
-        $this->output->enable_profiler();
+        //$this->output->enable_profiler();
         $this->load->view('post/post_view', $data);
         // print_r($data['posts']);
         //$data['IsActive'] = true;

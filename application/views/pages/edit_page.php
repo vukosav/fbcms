@@ -17,10 +17,10 @@
         <div class="card pd-20 pd-sm-40">
             <div class="table-wrapper">
                 <?php //echo form_open('insertPG/'); ?>
-                <span class="tx-danger"><?php echo validation_errors(); ?></span>
+                <span class="tx-danger"><?php //echo validation_errors(); ?></span>
                 <h4 class="tx-normal"><?php echo "Page name: ". $pages[0]['fbPageName']; ?></h4>
                 <div class="form-group">
-                    <form method='post' action='<?= base_url(); ?>insertPG/'>
+                    <!-- <form method='post' action='<?//= base_url(); ?>insertPG/'>-->
 
                         <div class="row">
                             <div class="col-md-4">
@@ -31,32 +31,58 @@
                                     <div class="card-body bg-gray-200">
                                         <div class="form-group row">
                                             <div class="col-sm-12 col-xl-12 mg-t-12 mg-sm-t-12">
-                                            <label for="">Page name</label>
-                                                <input class="form-control" id="fbPageName" name="fbPageName" type="text"
-                                                    value="<?php echo $pages[0]['fbPageName']; ?>">
+                                                <label for="">Page name</label>
+                                                <input class="form-control" id="fbPageName" name="fbPageName"
+                                                    type="text" value="<?php echo $pages[0]['fbPageName']; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-sm-12 col-xl-12 mg-t-12 mg-sm-t-12">
                                                 <label for="">Page ID</label>
-                                                <input class="form-control" id="fbPageName" name="fbPageName" type="text"
-                                                    value="<?php echo $pages[0]['fbPageId']; ?>">
+                                                <input class="form-control" id="fbPageName" name="fbPageName"
+                                                    type="text" value="<?php echo $pages[0]['fbPageId']; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-sm-12 col-xl-12 mg-t-12 mg-sm-t-12">
-                                            <label for="">Date of added</label>
-                                                <input class="form-control" id="fbPageName" name="fbPageName" type="text"
-                                                    value="<?php echo $pages[0]['dateAdded']; ?>">
+                                                <label for="">Date of added</label>
+                                                <input class="form-control" id="fbPageName" name="fbPageName"
+                                                    type="text" value="<?php echo $pages[0]['dateAdded']; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-sm-12 col-xl-12 mg-t-12 mg-sm-t-12">
                                                 <label for="">Username for onwner</label>
-                                                <input class="form-control" id="fbPageName" name="fbPageName" type="text"
-                                                    value="<?php echo $pages[0]['addedby']; ?>">
+                                                <input class="form-control" id="fbPageName" name="fbPageName"
+                                                    type="text" value="<?php echo $pages[0]['addedby']; ?>">
                                             </div>
                                         </div>
+                                        <?php echo form_open('settz'); ?>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12 col-xl-12 mg-t-12 mg-sm-t-12">
+                                            <label  for="">Time zone for page:</label>
+                                            <input type="hidden" name="id" class="form-control" placeholder="Type email address" required
+                                                value="<?php echo $pages[0]['id']; ?>">
+                                                <select class="form-control" name="timezone" id="timezone" required>
+                                                    <?php if(!empty($pages[0]['timezone'])): ?>
+                                                    <option value="<?php echo $pages[0]['timezone']; ?>">
+                                                        <?php echo $pages[0]['timezone']; ?></option>
+                                                    <?php endif; ?>
+                                                    <?php 
+                                                        $array = DateTimeZone::listIdentifiers ();
+                                                        echo "<option value=''>Chose time zone</option>";
+                                                        foreach($array as $arr){
+                                                            echo  "<option value='$arr'>$arr></option>";
+                                                            //new \DateTimeZone($tz);
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="btn btn-dark" value="Set time zone for page" type="submit">
+                                        </div>
+                                        </form>
                                     </div><!-- card-body -->
                                 </div><!-- card -->
                             </div><!-- col-6 -->
@@ -103,7 +129,7 @@
 
         </div><!-- table-wrapper -->
     </div><!-- card -->
-    </form>
+    <!-- </form> -->
 </div><!-- kt-pagebody -->
 
 <?php $this->load->view('includes/footer'); ?>
