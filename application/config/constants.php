@@ -83,3 +83,6 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+defined('FB_APP_ID')      OR define('FB_APP_ID', '503878473471513'); // Facebook app id
+defined('FB_APP_SECRET')      OR define('FB_APP_SECRET', '28cbbb9f440b1b016e9ce54376ada17e'); // Facebook app secret
+defined('FB_API_VERSION')      OR define('FB_API_VERSION', 'v3.2'); // Facebook API version

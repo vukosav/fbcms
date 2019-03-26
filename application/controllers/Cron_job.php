@@ -1,6 +1,7 @@
 <?php
+require_once FCPATH . '/vendor/autoload.php'; 
 class Cron_job extends CI_Controller {
-
+   
     public function __construct()
     {
             parent::__construct();
@@ -217,16 +218,16 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     
 
 
-    public function InsertToFB($queue_id){
+    public function InsertToFB($fb,$queue_id){
         if (!isset($_SESSION)) { session_start();}  
 
-      require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
+     // require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
 
-      $fb = new \Facebook\Facebook([
-      'app_id' => '503878473471513',
-      'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-      'default_graph_version' => 'v3.2'
-      ]);
+    //   $fb = new \Facebook\Facebook([
+    //   'app_id' => FB_APP_ID,
+    //   'app_secret' => FB_APP_SECRET,
+    //   'default_graph_version' => FB_API_VERSION
+    //   ]);
   
 
       
@@ -266,7 +267,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
         }else{
            $schedule_dt=null;
         }
-      
+        $schedule_dt = null;
        if($input_post_type=='message'){
           $res = $this->send_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt);
       }
@@ -284,16 +285,16 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
 
 
 
-  public function update_posting($queue_id) {
+  public function update_posting($fb,$queue_id) {
         if (!isset($_SESSION)) { session_start();}  
 
-        require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
+       // require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
   
-        $fb = new \Facebook\Facebook([
-        'app_id' => '503878473471513',
-        'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-        'default_graph_version' => 'v3.2'
-        ]);
+        // $fb = new \Facebook\Facebook([
+        // 'app_id' => '503878473471513',
+        // 'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
+        // 'default_graph_version' => 'v3.2'
+        // ]);
         $res =  array(
                 'error' => false,
                 'message' => '',
@@ -360,16 +361,16 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     }
 
     
-    public function delete_posting($queue_id){
+    public function delete_posting($fb,$queue_id){
         if (!isset($_SESSION)) { session_start();}  
 
-        require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
+        //require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
   
-        $fb = new \Facebook\Facebook([
-        'app_id' => '503878473471513',
-        'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-        'default_graph_version' => 'v3.2'
-        ]);
+        // $fb = new \Facebook\Facebook([
+        // 'app_id' => '503878473471513',
+        // 'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
+        // 'default_graph_version' => 'v3.2'
+        // ]);
         $res =  array(
                 'error' => false,
                 'message' => '',
@@ -405,16 +406,16 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     }
 
 
-    public function delete_archive_posting($fbPageAT,  $fb_post_id){
+    public function delete_archive_posting($fb,$fbPageAT,  $fb_post_id){
         if (!isset($_SESSION)) { session_start();}  
 
-        require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
+        //require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
   
-        $fb = new \Facebook\Facebook([
-        'app_id' => '503878473471513',
-        'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-        'default_graph_version' => 'v3.2'
-        ]);
+        // $fb = new \Facebook\Facebook([
+        // 'app_id' => '503878473471513',
+        // 'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
+        // 'default_graph_version' => 'v3.2'
+        // ]);
         $res =  array(
                 'error' => false,
                 'message' => '',
@@ -472,7 +473,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
     }
 
     public function runThreadJob($job_id,$cron_job_owner){
-
+            
             // za svaki job_thread uzimamo element queue-a kojima je taj job setovan
             $data = $this->db->query("SELECT PS.id, PS.job_action 
                                         FROM  posts_pages  PS 
@@ -487,11 +488,13 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
             $job_error = '';
             //prolazimo kroz queue
             foreach($data as $qid){
-                    $queue_id = $qid['id'];
+                    $queue_id = $qid['id']; 
                     $type = $qid['job_action'];
                 // ispitujemo da li je validan, to znaci da li je proslo dovoljno vremena
                 // od prethodnog slanja ka fb-u za ovu stranu ili user-a, zavis sta je postavljeno u parametrima
+                 
                     $valid =   $this->db->query("SELECT StartQueuedItem($queue_id,$cron_job_owner,$job_id) as validan");
+
                     $valid = $valid->result_array();
 
                 if($valid[0]['validan'] == '0'){
@@ -517,28 +520,36 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                                  $job_status = 2;
                                  $error ="'" . $res['error'] . "'";
                                  $job_error =  $job_error . $res['error'] . $queue_id . ",";
-                                $this->db->query("call SetErrorStatuse($queue_id, $error);");
+                                 $job_error = str_replace("'","_", $job_error);
+                                $this->db->query("call SetErrorStatuse($queue_id,'$job_error');");
                          }
                           
                 }
             }
             $this->db->query("call ThreadJobFinish($job_id);"); 
             return  array('status' =>  $job_status, 'error'=> $job_error);
+    
+       
     }
     
     public function SendQueueItemToFB($queue_id, $action){
+              $fb = new \Facebook\Facebook([
+                        'app_id' => FB_APP_ID,
+                        'app_secret' => FB_APP_SECRET,
+                        'default_graph_version' => FB_API_VERSION
+                        ]);
         if($action == "1"){
-              //  sleep(20);
-                 $res = $this->InsertToFB($queue_id);
-                 if($res['error']){
-                    return array('status' => "error", 'error'=> $res['message']);
-                 }else{
+                //sleep(5);
+                $res = $this->InsertToFB($fb,$queue_id);
+                if($res['error']){
+                   return array('status' => "error", 'error'=> $res['message']);
+                }else{
                     return array('status' => "success", 'error'=> "");
-                }
+               }
         }
         elseif($action == "2"){
             //    sleep(10);
-                $res = $this->update_posting($queue_id);
+                $res = $this->update_posting($fb,$queue_id);
                 if($res['error']){
                  return array('status' => "error", 'error'=> $res['message']);
               }else{
@@ -547,7 +558,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
 
         }elseif($action == "3"){
               //  sleep(10);
-               $res = $this->delete_posting($queue_id);
+               $res = $this->delete_posting($fb,$queue_id);
                if($res['error']){
                 return array('status' => "error", 'error'=> $res['message']);
              }else{
@@ -569,6 +580,11 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
         }
       }
      public function DeleteArchiveFromDB($post_id){
+        $fb = new \Facebook\Facebook([
+            'app_id' => FB_APP_ID,
+            'app_secret' => FB_APP_SECRET,
+            'default_graph_version' => FB_API_VERSION
+            ]);
         $data = $this->db->query("SELECT P.id post_id, PS.id, PS.fbPostId, pages.fbPageId, pages.fbPageAT
                                         FROM posts_pages_archive  PS 
                                         JOIN posts_archive P ON PS.postId = P.id 
@@ -582,7 +598,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                 $fbPageAT = $qid['fbPageAT'];
                 $fb_post_id =  $qid['fbPostId'];
                 $post_id =  $qid['post_id'];
-                $res = $this->delete_archive_posting($fbPageAT,  $fb_post_id);
+                $res = $this->delete_archive_posting($fb,$fbPageAT,  $fb_post_id);
                 if($res['error']){ $job_status = 2;}
         }
          if($job_status == 1){

@@ -691,23 +691,44 @@ class FB_model extends CI_Model{
         }   
     }
     public function get_pages_for_user($user_id) {
-
-        $this->db->select('id, fbPageName');
-        $this->db->where('userId',$user_id);
-        $this->db->where('isActive',true);
-        $query = $this->db->get('pages');
-
-        return ($query->num_rows() > 0)?$query->result_array():array();
+            $this->db->from('users');
+            $this->db->where('id', $user_id); 
+            $queryResult = $this->db->get();
+            $role_id =  $queryResult->row('roleId');
+        if($role_id == 1){
+            $this->db->select('id, fbPageName');
+            $this->db->where('isActive',true);
+            $query = $this->db->get('pages');
+            return ($query->num_rows() > 0)?$query->result_array():array();
+        } 
+        else{
+            $this->db->select('id, fbPageName');
+            $this->db->where('userId',$user_id);
+            $this->db->where('isActive',true);
+            $query = $this->db->get('pages');
+            return ($query->num_rows() > 0)?$query->result_array():array();
+        }
     }
     public function get_groups_for_user($user_id) {
-        $this->db->select('id, name');
-        $this->db->where('userId',$user_id);
-        $this->db->where('isActive',true);
-        $query = $this->db->get('groups');
-        
-        return ($query->num_rows() > 0)?$query->result_array():array();
+        $this->db->from('users');
+        $this->db->where('id', $user_id); 
+        $queryResult = $this->db->get();
+        $role_id =  $queryResult->row('roleId');
+        if($role_id == 1){
+            $this->db->select('id, name');
+            $this->db->where('isActive',true);
+            $query = $this->db->get('groups');
+            return ($query->num_rows() > 0)?$query->result_array():array();
+        } 
+        else{
+            $this->db->select('id, name');
+            $this->db->where('userId',$user_id);
+            $this->db->where('isActive',true);
+            $query = $this->db->get('groups');
+            return ($query->num_rows() > 0)?$query->result_array():array();
+        }
     }
-
+    
     public function get_groups_for_post($post_id){
 
         $query = $this->db->query('select distinct groups.id, groups.name from groups join groups_in_post on groups.id=groups_in_post.groupId where groups_in_post.postId = ' . $post_id);

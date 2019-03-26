@@ -1,5 +1,5 @@
 <?php
-
+    require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
 class Add_Pages extends CI_Controller {
 
     public function __construct()  {
@@ -27,9 +27,9 @@ class Add_Pages extends CI_Controller {
 
                 //collect info about fb user
                 $fb = new \Facebook\Facebook([
-                    'app_id' => '503878473471513',
-                    'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-                    'default_graph_version' => 'v3.2',
+                    'app_id' => FB_APP_ID,
+                    'app_secret' => FB_APP_SECRET,
+                    'default_graph_version' => FB_API_VERSION,
                     'persistent_data_handler' => new FacebookPersistentDataInterface(),
                 ]);
 
@@ -57,12 +57,7 @@ class Add_Pages extends CI_Controller {
                     $this->FB_model->insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken);
 
                             
-                $fb = new \Facebook\Facebook([
-                    'app_id' => '503878473471513',
-                    'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-                    'default_graph_version' => 'v3.2',
-                    'persistent_data_handler' => new FacebookPersistentDataInterface(),
-                ]);
+               
 
                 // Get the pages for FB user
                 try {

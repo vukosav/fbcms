@@ -266,10 +266,10 @@ console.log('archived',archived);
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
                                 <?php if(!empty($arh)){  ?>
-                                    <a href="<?=base_url()?>edit_post/<?php echo $q['id'] . '/' . $this->uri->segment(2); ?>"><span class="fa fa-edit"
+                                    <a href="#" onclick="EditRedirection(<?php echo $q['id']?>)"><span class="fa fa-edit"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
-                                    <a href="<?=base_url()?>copy_post/<?php echo $q['id'] . '/' . $this->uri->segment(2); ?>"><span class="fa fa-copy"
+                                    <a href="#" onclick="CopyRedirection(<?php echo $q['id']?>)"><span class="fa fa-copy"
                                             style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
 
@@ -558,85 +558,107 @@ console.log('archived',archived);
         if (typeof event !== 'undefined') {
             event.preventDefault();
         }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, archive it!'
+            }).then((result) => {
+               if (result.value) {
+                     $.ajax({
+                            url: '<?=base_url()?>archive_post/' + id,
+                            type: 'POST',
+                            // postId: id,
+                            processData: false,
+                            contentType: false,
+                            success: function(data) {
+                                var dataJ = jQuery.parseJSON(data);
+                                //  console.log('dataJ',dataJ);
+                                if (!dataJ.error) {
+                                    if (dataJ.warning) {
+                                        Swal.fire(
+                                            "Warning",
+                                            dataJ.message,
+                                            'info'
+                                        );
+                                    } else {
+                                        Swal.fire(
+                                            "Well done!",
+                                            dataJ.message,
+                                            'success'
+                                        ); //.then(() => {location.reload();});
+                                    }
 
-        $.ajax({
-            url: '<?=base_url()?>archive_post/' + id,
-            type: 'POST',
-            // postId: id,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                var dataJ = jQuery.parseJSON(data);
-                //  console.log('dataJ',dataJ);
-                if (!dataJ.error) {
-                    if (dataJ.warning) {
-                        Swal.fire(
-                            "Warning",
-                            dataJ.message,
-                            'info'
-                        );
-                    } else {
-                        Swal.fire(
-                            "Well done!",
-                            dataJ.message,
-                            'success'
-                        ); //.then(() => {location.reload();});
+                                } else {
+                                    Swal.fire(
+                                        "Error!",
+                                        dataJ.message,
+                                        'error'
+                                    );
+                                    console.log('dataJ.error je true', JSON.stringify(dataJ));
+                                }
+
+                            }
+                        }); 
                     }
-
-                } else {
-                    Swal.fire(
-                        "Error!",
-                        dataJ.message,
-                        'error'
-                    );
-                    console.log('dataJ.error je true', JSON.stringify(dataJ));
-                }
-
-            }
-        });
+                });
     }
 
     function SetAsDraft(id) {
         if (typeof event !== 'undefined') {
             event.preventDefault();
         }
+        Swal.fire({
+            title: 'Save as draft?',
+            text: "This will remove post from queue!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, save it as draf!'
+            }).then((result) => {
+               if (result.value) {
+                    $.ajax({
+                        url: '<?=base_url()?>set_draft/' + id,
+                        type: 'POST',
+                        // postId: id,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            var dataJ = jQuery.parseJSON(data);
+                            //  console.log('dataJ',dataJ);
+                            if (!dataJ.error) {
+                                if (dataJ.warning) {
+                                    Swal.fire(
+                                        "Warning",
+                                        dataJ.message,
+                                        'info'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        "Well done!",
+                                        dataJ.message,
+                                        'success'
+                                    ); //.then(() => {location.reload();});
+                                }
 
-        $.ajax({
-            url: '<?=base_url()?>set_draft/' + id,
-            type: 'POST',
-            // postId: id,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                var dataJ = jQuery.parseJSON(data);
-                //  console.log('dataJ',dataJ);
-                if (!dataJ.error) {
-                    if (dataJ.warning) {
-                        Swal.fire(
-                            "Warning",
-                            dataJ.message,
-                            'info'
-                        );
-                    } else {
-                        Swal.fire(
-                            "Well done!",
-                            dataJ.message,
-                            'success'
-                        ); //.then(() => {location.reload();});
-                    }
+                            } else {
+                                Swal.fire(
+                                    "Error!",
+                                    dataJ.message,
+                                    'error'
+                                );
+                                console.log('dataJ.error je true', JSON.stringify(dataJ));
+                            }
 
-                } else {
-                    Swal.fire(
-                        "Error!",
-                        dataJ.message,
-                        'error'
-                    );
-                    console.log('dataJ.error je true', JSON.stringify(dataJ));
-                }
-
-            }
-        });
-    }
+                        }
+                    });
+                   }
+                });
+      }
 
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
@@ -688,5 +710,15 @@ console.log('archived',archived);
         // document.getElementById("date_from").value = '';
         // document.getElementById("date_to").value = '';
         location.reload();
+    }
+
+
+    function EditRedirection(posting_id){
+        var ps = $('#post_status').val();
+        window.location.replace('<?=base_url()?>edit_post/'+ posting_id + '/' + ps);
+    }
+    function CopyRedirection(posting_id){
+        var ps = $('#post_status').val();
+        window.location.replace('<?=base_url()?>copy_post/' + posting_id + '/' + ps);
     }
     </script>

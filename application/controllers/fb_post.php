@@ -484,7 +484,7 @@ public function edit_post($post_id){
 
        $validd =  $this->db->query("SELECT CanSetAsDraft($post_id) as validan");
        $validd = $validd->result_array();
-       $can_save_as_draft = $validd[0]['validan'];
+       $can_save_as_draft = 0;// $validd[0]['validan'];
       
        $data['can_save_as_draft'] = $can_save_as_draft;
        

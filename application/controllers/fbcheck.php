@@ -1,5 +1,5 @@
 <?php
-
+    require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
 class FBCheck extends CI_Controller {
 
 
@@ -17,20 +17,17 @@ class FBCheck extends CI_Controller {
         {
             session_start();
         }   
-        require_once FCPATH . '/vendor/autoload.php'; // change path as needed  
+    
         
         if($this->Users_model->isLoggedIn()){
 
             $user_id = $this->session->userdata('user')['user_id'];
 
-           
-        
+             
             $fb = new \Facebook\Facebook([
-            'app_id' => '503878473471513',
-                        
-            'app_secret' => '28cbbb9f440b1b016e9ce54376ada17e',
-                            
-            'default_graph_version' => 'v3.2',
+                'app_id' => FB_APP_ID,
+                'app_secret' => FB_APP_SECRET,
+                'default_graph_version' => FB_API_VERSION,
             'persistent_data_handler' => new FacebookPersistentDataInterface(),
             
             ]);

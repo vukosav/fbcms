@@ -320,21 +320,21 @@
             
                
                <div class="formField">
-                    <button type="button" onclick="SaveAsDraft();" class='btn btn-secondary' id="savepost" name='savepost' 
+                    <button type="button" onclick="SaveAsDraft(event);" class='btn btn-secondary' id="savepost" name='savepost' 
                         <?php  if( $can_save_as_draft=="0") { echo ' style="display: none;" ' ;}; ?>>
-                        <i class="fas fa-save" aria-hidden="true"></i> Save as draft 
+                        <span id="spanSaveAsDraft" class="fas fa-save" aria-hidden="true"></span> Save as draft 
                     </button>
                     <!--<button onclick="return false;" class='btn btn-primary' id="savepost" name='savepost'>
                         <i class="fas fa-save" aria-hidden="true"></i> Save draft 
                     </button>-->
                     <button type="button" onclick="SaveAsQueued(event);" class='btn btn-primary' id="qpost"name='qpost' >
-                        <i class="fa fa-calendar" aria-hidden="true"></i> Save post  
+                        <span id="spanSaveAsQueued"class="fa fa-calendar" aria-hidden="true"></span> Save post  
                     </button>
-                    <button type="button" onclick="SendPostToFB();" class='btn btn-primary' id="post" name='post' style = "display : none;">
+                    <button type="button" onclick="SendPostToFB(event);" class='btn btn-primary' id="post" name='post' style = "display : none;">
                             <i class="fa fa-paper-plane" aria-hidden="true"></i>Share now
                     </button>
                     <button type="button" onclick="CancelEdit('<?php echo $this->uri->segment(3); ?>');" class='btn btn-secondary' id="cancel_edit_post" name='cancel_edit_post'>
-                        <i class="fas fa-save" aria-hidden="true"></i> Cancel
+                        <span id="spanCancelEdit" class="fas fa-save" aria-hidden="true"></span> Cancel
                     </button>              
                 </div>
                 <div class="preloader"></div>
@@ -781,6 +781,16 @@ function SaveAsQueued(event){
        const form = document.querySelector('#edit_post_form_j');
 
        event.preventDefault();
+
+       if($('#spanSaveAsQueued').hasClass('fa-calendar')){
+            $('#spanSaveAsQueued').removeClass('fa-calendar');
+            $('#spanSaveAsQueued').addClass('fa-refresh');
+            $('#spanSaveAsQueued').addClass('fa-spin');
+        } else {
+            return;
+        }
+
+
        document.querySelector('#post_status').value=2; //queued
        
        document.querySelector('#selected_group_id').value=arrayGroups;
@@ -832,7 +842,7 @@ function SaveAsQueued(event){
         });
       //  console.log('arrayGroups',JSON.stringify(arrayGroups));
       //  console.log('arrayPages',JSON.stringify(arrayPages));
-       console.log('formData',JSON.stringify(object));
+      // console.log('formData',JSON.stringify(object));
 
      $.ajax({
         url:'<?=base_url()?>FB_post/insert_post',
@@ -841,9 +851,9 @@ function SaveAsQueued(event){
         processData: false,
         contentType: false,
         success: function(data){
-            console.log('data',data);
+          //  console.log('data',data);
             var dataJ = jQuery.parseJSON (data);
-            console.log('dataJ',dataJ);
+          //  console.log('dataJ',dataJ);
             if(!dataJ.error){
                // document.querySelector("#post").style.display = "block";
                // document.querySelector("#savepost").style.display = "none";
@@ -867,10 +877,16 @@ function SaveAsQueued(event){
     }
 
 
-function SaveAsDraft(){
+function SaveAsDraft(event){
    
     event.preventDefault();
-
+    if($('#spanSaveAsDraft').hasClass('fa-save')){
+        $('#spanSaveAsDraft').removeClass('fa-save');
+        $('#spanSaveAsDraft').addClass('fa-refresh');
+        $('#spanSaveAsDraft').addClass('fa-spin');
+    } else {
+        return;
+    }
     document.querySelector('#post_status').value=1;//draft
    
     const form = document.querySelector('#edit_post_form_j');
@@ -947,8 +963,19 @@ function SaveAsDraft(){
 function CancelEdit(postingType){
      
     const id = document.querySelector("#postId").value;
-    console.log("id", id);
+    //console.log("id", id);
     console.log("postingType", postingType);
+
+    if($('#spanCancelEdit').hasClass('fa-save')){
+        $('#spanCancelEdit').removeClass('fa-save');
+        $('#spanCancelEdit').addClass('fa-refresh');
+        $('#spanCancelEdit').addClass('fa-spin');
+    } else {
+        return;
+    }
+    if(postingType == null || postingType === ''){
+        postingType = 1;
+    }
     $.ajax({
         url:'<?=base_url()?>cancel_edit/'+id,
         type: 'POST',
@@ -1210,10 +1237,13 @@ function UploadVideoJ(){
         if(scheduleDTFromDb != null && scheduleDTFromDb != ''){
            var dateDT = moment(scheduleDTFromDb).toDate();
             $('#datetimepicker1').datetimepicker({
-                defaultDate: dateDT
+                defaultDate: dateDT,
+                format: 'DD/MM/YYYY HH:mm:ss'
             });
             } else{
-                $('#datetimepicker1').datetimepicker();
+                $('#datetimepicker1').datetimepicker({
+                    format: 'DD/MM/YYYY HH:mm:ss'
+                });
             }
         $("#postForm #message").emojioneArea({
                 autoHideFilters: false,
