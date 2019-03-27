@@ -176,6 +176,15 @@ class Users_model extends CI_Model{
 		return $this->db->affected_rows() > 0;
 	}
     
+    public function get_tz(){
+        $this->db->where("id", $this->session->userdata('user')['user_id']);
+        $query = $this->db->get('users');
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
+    }
     
     // public function update($data, $post_id){
     //     $this->db->where(['post_id', $post_id]);

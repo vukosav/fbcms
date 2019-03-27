@@ -122,6 +122,28 @@ function searchFilter(page_num) {
                                     value="<?php echo set_value('username') ? set_value('username'):$this->session->userdata('user')['username']; ?>">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">Time zone: <span
+                                    class="tx-danger"></span></label>
+                            <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
+                            <input type="hidden" name="id" class="form-control" required value="<?php echo $this->session->userdata('user')['user_id']; ?>">
+                                <select class="form-control" name="timezone" id="timezone" required>
+                                    <?php if(!empty($tz['timezone'])): ?>
+                                    <option value="<?php echo set_value('timezone') ? set_value('timezone'):$tz['timezone']; ?>">
+                                    <?php echo set_value('timezone') ? set_value('timezone'):$tz['timezone']; ?></option>
+                                    <?php endif; ?>
+                                    <?php 
+                                        $array = DateTimeZone::listIdentifiers ();
+                                        echo "<option value=''>Chose time zone</option>";
+                                        foreach($array as $arr){
+                                            echo  "<option value='$arr'>$arr></option>";
+                                            //new \DateTimeZone($tz);
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
                         
                         <div class="form-group row">
                             <label class="col-sm-3 form-control-label">Picture: <span

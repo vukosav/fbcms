@@ -88,8 +88,8 @@ function searchFilter(page_num) {
                 </div>
                 <!------------------------------>
                 <div class="row form-group">
-                <div class="col col-sm-2">
-                    <a href="" class="btn btn-default" data-toggle="modal" data-target="#modaldemo3">Add new group</a>
+                    <div class="col col-sm-2">
+                        <a href="" class="btn btn-default" data-toggle="modal" data-target="#modaldemo3">Add new group</a>
                     </div>
                 </div>
                 <div class="row form-group">

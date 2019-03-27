@@ -267,7 +267,8 @@ class Users extends MY_controller {
         $this->load->view('users/edit_users_view', $data);
     }
 
-    public function editprofile (){
+    public function editprofile (){      
+        
         $this->load->helper(array('form', 'url'));    
         
         if($this->session->userdata('user')['username']!=$this->input->post('username')){
@@ -303,13 +304,18 @@ class Users extends MY_controller {
         $data = array(
             'username' => $this->input->post('username'),
             'email' => $this->input->post('email'),
-            'name' => $this->input->post('fullname')
+            'name' => $this->input->post('fullname'),
+            'timezone' => $this->input->post('timezone')
             //'user_image' => isset($file_name)? $file_name:FALSE
         );
-      
+        
+        $tz['tz'] = $this->Users_model->get_tz();
+        $tz['tz'] = array_shift($tz['tz']);
+
         if ($this->form_validation->run() === FALSE){
             $data['title'] = 'Edit profile';
             $data['users'] = false;
+            $data['tz'] = $tz['tz'];
             // $this->output->enable_profiler();
             // print_r($this->session->userdata);
             $this->load->view('users/edit_profile_view', $data);
@@ -326,6 +332,7 @@ class Users extends MY_controller {
             $data['title'] = 'Edit profile';
             $this->session->set_userdata('user', $newSessionData);
             redirect('/');
+            //print_r($data);
         }
     }
     public function no_Admin_permition(){

@@ -255,7 +255,7 @@ console.log('archived',archived);
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo $q['content']; ?>"
+                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo htmlentities($q['content']); ?>"
                                     href="" id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td><?php echo $q['groups']; ?></td>
@@ -310,7 +310,7 @@ console.log('archived',archived);
 
     <!-- Modal for pages -->
     <div id="modaldemo3" class="modal fade" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="width:1250px;">
             <div class="modal-content bd-0">
                 <div class="modal-header pd-y-20 pd-x-2">
                     <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">More data</h6>
@@ -333,7 +333,7 @@ console.log('archived',archived);
 
     <!-- Modal for post text -->
     <div id="modalPostText" class="modal fade" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="width:1250px;">
             <div class="modal-content bd-0">
                 <div class="modal-header pd-y-20 pd-x-2">
                     <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">More data</h6>
@@ -356,7 +356,7 @@ console.log('archived',archived);
 
       <!-- Modal for errors -->
       <div id="modalError" class="modal fade" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="width:1250px;">
             <div class="modal-content bd-0">
                 <div class="modal-header pd-y-20 pd-x-2">
                     <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">More data</h6>

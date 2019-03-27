@@ -46,6 +46,9 @@ class Pages_model extends CI_Model{
         }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
             $this->db->limit($params['limit']);
         }
+
+        $this->db->group_by('pages.id');
+        $this->db->order_by('pages.fbPageName asc');
         //get records
         $query = $this->db->get();
         //return fetched data

@@ -11,9 +11,9 @@
                         </tr>
                     </thead>
                     <tbody>
-<?php if(!empty($posts)): foreach ($posts as $q): ?> 
-<tr>
-<?php if($q['PostStatus'] ==1 ){
+                    <?php if(!empty($posts)): foreach ($posts as $q): ?>
+                        <tr>
+                            <?php if($q['PostStatus'] ==1 ){
                                  echo "<td>Draft</td>";
                             }
                             elseif($q['PostStatus'] ==2 ){
@@ -49,8 +49,8 @@
                                             <span class="badge badge-success">1 errors</span>
                                         </a>
                                     </td> -->
-                                    <td><?php echo $q['title']; ?></td>
-                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo $q['content']; ?>"
+                            <td><?php echo $q['title']; ?></td>
+                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo htmlentities($q['content']); ?>"
                                     href="" id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
                             <td><?php echo $q['groups']; ?></td>
