@@ -9,23 +9,43 @@ class Add_Pages extends CI_Controller {
          $this->load->model('FB_model');
          $this->load->model('Users_model');
     }
+    public function debug_token($input_token){
+        if (!isset($_SESSION)) { session_start(); }   
+             
+        $fb = new \Facebook\Facebook([
+                'app_id' => FB_APP_ID,
+                'app_secret' => FB_APP_SECRET,
+                'default_graph_version' => FB_API_VERSION
+        ]);
 
+        $access_token = FB_APP_ID .'|' . FB_APP_SECRET; 
+              
+        try {
+            // Returns a `Facebook\FacebookResponse` object
+            $response = $fb->get(
+                //olivia olivia token'
+            '/debug_token?input_token='. $input_token, 
+            //app_id|app_secret
+            $access_token
+        );
+           $graphNode = $response->getGraphNode();
+           return $graphNode;
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+        
+    }  
     public function index(){
 
         if($this->Users_model->isLoggedIn()){
 
             $user_id = $this->session->userdata('user')['user_id'];
-
-          
-            if (isset($_SESSION['facebook_access_token'])){
-
-                $accessToken=$_SESSION['facebook_access_token'];
-               // $expdate= $_SESSION['expdate_access_token']; 
-
-               // echo 'accessToken ' . $accessToken;
-               // echo '<br>expdate ' . $expdate;
-
-                //collect info about fb user
+            if (isset($_SESSION['facebook_access_token'])){ 
+                $accessToken=$_SESSION['facebook_access_token']; 
                 $fb = new \Facebook\Facebook([
                     'app_id' => FB_APP_ID,
                     'app_secret' => FB_APP_SECRET,
@@ -33,10 +53,68 @@ class Add_Pages extends CI_Controller {
                     'persistent_data_handler' => new FacebookPersistentDataInterface(),
                 ]);
 
-                try {
-                        // Get the \Facebook\GraphNodes\GraphUser object for the current user.
-                        // If you provided a 'default_access_token', the '{access-token}' is optional.
+                try { 
                         $response = $fb->get('/me?fields=id,name', $accessToken);
+                        $user = $response->getGraphUser();
+                        $fb_name= $user->getName();
+                        $fb_user_id=$user->getId();
+                        $graphNode = $this->debug_token($input_token); 
+                        $is_valid_at = ($graphNode['is_valid']) ? 'true' : 'false';
+                        $expires_at = ($graphNode['expires_at']); 
+                        $ret=$this->FB_model->insert_fb_user($user_id
+                                                            ,$fb_user_id
+                                                            , $fb_name
+                                                            , $accessToken
+                                                            , $expires_at
+                                                            , $is_valid_at); 
+               
+                    if($ret==0){
+                        echo '<br>You are trying to add pages for fb user different than one you have registered with';
+                        echo '<br>Please try to log in with registered fb user!';
+                        redirect('/fbcheck');
+                    }
+                    elseif($ret==1){ 
+                            try { 
+                                 $params = array('fields'=> 'id,name,likes,access_token,picture,cover', );
+                                 $response = $fb->sendRequest('GET','/me/accounts', $params, $accessToken);
+                                 $pages = $response->getDecodedBody();
+                                 for ($i = 0; $i < count( $pages); $i++) {
+                                     $fbPage_at=$pages['data'][$i]['access_token'];
+                                     $fbpage_id=$pages['data'][$i]['id'];
+                                     $graphNode = $this->debug_token($fbPage_at); 
+                                     $is_valid_at = ($graphNode['is_valid']) ? 'true' : 'false';
+                                     $expires_at = ($graphNode['expires_at']); 
+
+                                     $this->db->where("userId",$user_id);
+                                     $this->db->where("fbPageId",$fbpage_id);
+                                     $this->db->set("fbPageAT",$fbPage_at);
+                                     $this->db->set("fbat_valid",$is_valid_at);
+                                     $this->db->set("fbat_expires",$expires_at);
+                                     $this->db->set("last_fbupdate",date("Y-m-d H:i:s"));
+                                     $this->db->update('pages');
+                                } 
+
+                                $new_pages = $this->FB_model->list_new_pages($pages,$user_id);
+                                if ($new_pages!=null){ 
+                                     $data = array('fbpages' => $new_pages
+                                                        , 'title' => 'Add New Facebook Pages'
+                                                        , 'user_id'  => $user_id
+                                                        , 'fb_user_id'  => $fb_user_id
+                                                        , 'fb_name' => $fb_name);
+                                    $this->load->view('users/fbpages', $data);
+                                }
+                            } catch(\Facebook\Exceptions\FacebookResponseException $e) {
+                                echo 'Graph returned an error: ' . $e->getMessage();
+                                                exit;
+                            } catch(\Facebook\Exceptions\FacebookSDKException $e) {
+                                 echo 'Facebook SDK returned an error: ' . $e->getMessage();
+                                 exit;
+                        }
+                                            
+                  }  else {
+                    //todo - redirect ...
+                    redirect ('/');
+                   }
                     } catch(\Facebook\Exceptions\FacebookResponseException $e) {
                         // When Graph returns an error
                         echo 'Graph returned an error: ' . $e->getMessage();
@@ -46,67 +124,11 @@ class Add_Pages extends CI_Controller {
                         echo 'Facebook SDK returned an error: ' . $e->getMessage();
                         exit;
                     }
+                };
 
-                    $user = $response->getGraphUser();
-                    
-                    $fb_name= $user->getName();
-                    $fb_user_id=$user->getId();
+        } else {  redirect ('/login'); }
 
-                  
-                                   
-                    $this->FB_model->insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken);
-
-                            
-               
-
-                // Get the pages for FB user
-                try {
-                    
-                    // If you provided a 'default_access_token', the '{access-token}' is optional.
-                    $params = array(
-                        'fields'=> 'id,name,likes,access_token,picture,cover',
-                    );
-                    $response = $fb->sendRequest('GET','/me/accounts', $params, $accessToken);
-                } catch(\Facebook\Exceptions\FacebookResponseException $e) {
-                    // When Graph returns an error
-                    echo 'Graph returned an error: ' . $e->getMessage();
-                    exit;
-                } catch(\Facebook\Exceptions\FacebookSDKException $e) {
-                    // When validation fails or other local issues
-                    echo 'Facebook SDK returned an error: ' . $e->getMessage();
-                    exit;
-                }
-                
-            
-                $pages = $response->getDecodedBody();
-                //echo '<br> 1. niz pages: ';
-                //var_dump($pages);
-            
-                $new_pages = $this->FB_model->list_new_pages($pages,$user_id);
-                // $new_pages=$fb_pages['data'];
-                //   echo '<br><br> 2. niz new pages: ';
-                // var_dump($new_pages);
-
-                if ($new_pages!=null){
-
-                    $data = array('fbpages' => $new_pages, 'title' => 'Add New Facebook Pages', 'user_id'  => $user_id, 'fb_user_id'  => $fb_user_id, 'fb_name' => $fb_name); 
-                
-                // var_dump($data);
-                $this->load->view('users/fbpages', $data);
-                }
-                else {
-                    //todo - redirect ...
-                    redirect ('/');
-                }
-
-            };
-
-        } else {
-            
-            redirect ('/login');
-        }
-
-        } 
+    } 
 
 
     public function insert_pages(){
@@ -127,9 +149,8 @@ class Add_Pages extends CI_Controller {
                 for ($i = 1; $i <= $numofpages; $i++) {
 
                     if($this->input->post('chk'. $i)) {
-                           
                             $strval= $this->input->post('fbp'. $i);
-
+                            
                             $posN = strpos( $strval, 'fbpn=');
                            // echo '<br>posN:' . $posN;
                             
@@ -148,7 +169,16 @@ class Add_Pages extends CI_Controller {
                                 //echo '<br>Page name:' . $fbPage_name; 
                                 
                                 $res=3;
-                                $res= $res + $this->FB_model->insert_page($fbpage_id, $fbPage_name, $fbPageAccessToken, $user_id);
+                                 //debug page token
+                                 $graphNode = $this->debug_token($fbPageAccessToken); 
+                                 $is_valid_at = ($graphNode['is_valid']) ? 'true' : 'false';
+                                 $expires_at = ($graphNode['expires_at']);
+                                $res= $res + $this->FB_model->insert_page($fbpage_id
+                                                                        , $fbPage_name
+                                                                        , $fbPageAccessToken
+                                                                        , $user_id
+                                                                        ,  $is_valid_at
+                                                                        , $expires_at);
                                 
                             }
 
@@ -157,18 +187,12 @@ class Add_Pages extends CI_Controller {
                 }  
                 
                 if($res>0){
-
-                  redirect('pages');
+                  redirect('/pages');
                  }
                 else 
-                echo 'no new pages';
+                { redirect('/'); }
             }
         }
     }
-
-
-
-
-
 }
 ?>

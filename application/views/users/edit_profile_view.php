@@ -45,11 +45,11 @@ function searchFilter(page_num) {
         <div class="row">
             <div class="col-md-4 col-lg-3">
                 <!-- <label class="content-left-label">Your Profile Photo</label> -->
-                <!-- <figure class="edit-profile-photo">
-                    <img src="<?//=base_url()?>theme/img/img1.jpg" class="img-fluid" alt="">
-                    <figcaption>
-                        <a href="" class="btn btn-dark">Edit Photo</a> -->
-                    </figcaption>
+                <figure class="edit-profile-photo">
+                    <!-- <img src="<?//=base_url()?>uploads/sl5.jpg" class="img-fluid" alt=""> -->
+                    <!-- <figcaption>
+                        <a href="" class="btn btn-dark">Edit Photo</a>
+                    </figcaption> -->
                 </figure> 
 
 
@@ -149,7 +149,7 @@ function searchFilter(page_num) {
                             <label class="col-sm-3 form-control-label">Picture: <span
                                     class="tx-danger">*</span></label>
                             <div class="col-sm-8 col-xl-6 mg-t-10 mg-sm-t-0">
-                                <input type="file" class="form-control" name="picture" id="">
+                                <input type="file" class="form-control" name="userPhoto" id="userPhoto">
                             </div>
                         </div>
                         <div class="form-group row">

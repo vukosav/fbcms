@@ -74,16 +74,16 @@ function searchFilter(page_num) {
                                 <?php 
                                 if(!empty($admin[0]['user_or_page'])){
                                     if($admin[0]['user_or_page'] == 1){
-                                        echo "<option value='1'>User</option>";
-                                        echo "<option value='2'>Page</option>";
+                                        echo "<option value='2'>User</option>";
+                                        echo "<option value='1'>Page</option>";
                                     }else{
-                                        echo "<option value='2'>Page</option>";
-                                        echo "<option value='1'>User</option>";
+                                        echo "<option value='1'>Page</option>";
+                                        echo "<option value='2'>User</option>";
                                     }
                                 }else{
                                     echo "<option value=''>Chose one options</option>";
-                                    echo "<option value='1'>User</option>";
-                                    echo "<option value='2'>Page</option>";
+                                    echo "<option value='2'>User</option>";
+                                    echo "<option value='1'>Page</option>";
                                 } ?>
                                 </select>
                             </div>

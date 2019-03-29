@@ -77,28 +77,52 @@ function searchFilter(page_num) {
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Posts in last 72h</label>
-                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['current_pLast72']; ?></p>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
-                                style="font-size: 2em;"></i> <?php echo $global['current_pLast72'] - $global['prev_pLast72']; ?></span></p>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['p72']; ?></p>
+                    <?php if($global['postDiff']>0): ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                    <?php else: ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                    <?php endif; ?>
+                    <?php echo $global['postDiff']; ?></span></p>
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Reactions in last 72h</label>
-                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['current_rLast72']; ?></p>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger"><i class="fa fa-arrow-circle-o-down"
-                                style="font-size: 2em;"></i> <?php echo $global['current_rLast72'] - $global['prev_rLast72']; ?></span></p>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['r72']; ?></p>
+                    <?php if($global['reactDiff']>0): ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                    <?php else: ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                    <?php endif; ?>
+                    <?php echo $global['reactDiff']; ?></span></p>
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'> &nbsp;Comments in last 72h</label>
                     <p class="tx-lato tx-inverse tx-bold tx-24">&nbsp;<span
-                            style="text-size: 24px"><?php echo $global['current_cLast72']; ?></span></p>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
-                                style="font-size: 2em;"></i> <?php echo $global['current_cLast72'] - $global['prev_cLast72']; ?></span></p>
+                            style="text-size: 24px"><?php echo $global['c72']; ?></span></p>
+                        <?php if($global['commentDiff']>0): ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                    <?php else: ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                    <?php endif; ?>
+                    <?php echo $global['commentDiff']; ?></span></p>
                 </div>
                 <div class="pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Shares in last 72h</label>
-                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['current_sLast72']; ?></p>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success"><i class="fa fa-arrow-circle-o-up"
-                                style="font-size: 2em;"></i> <?php echo $global['current_sLast72'] - $global['prev_sLast72']; ?></span></p>
+                    <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['s72']; ?></p>
+                    <?php if($global['sharesDiff']>0): ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                    <?php else: ?>
+                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                    <?php endif; ?>
+                        <?php echo $global['sharesDiff']; ?></span></p>
                 </div>
 
                 <div>
@@ -180,7 +204,7 @@ function searchFilter(page_num) {
                                 <span class="tx-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-circle-o-down">&nbsp;</i><?php echo $statistic['diffLikes']; ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td>Group</td>
+                            <td><?php echo $statistic['groups']; ?></td>
                             <td><?php echo $statistic['current_posts24']; ?></td>
                             <td><?php echo $statistic['current_posts72']; ?></td>
                         </tr>

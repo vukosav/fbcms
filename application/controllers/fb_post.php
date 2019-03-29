@@ -512,7 +512,7 @@ public function copy_post($post_id){
         
        $data = $this->GetDataFromDB($post_id);
        $data['input_ins_or_upd'] = "insert";
-
+       $data['scheduleDateTime'] = '';
        
        $this->load->view('post/edit_post_view', $data);
   

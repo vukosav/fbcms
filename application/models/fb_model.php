@@ -634,18 +634,21 @@ class FB_model extends CI_Model{
             } 
         return $ins_num;    
     } 
-    public function insert_page($fbpage_id, $fbPage_name, $fbPageAccessToken, $user_id){
+    public function insert_page($fbpage_id, $fbPage_name, $fbPageAccessToken, $user_id,  $is_valid_at, $expires_at){
         //check if page is already inserted for user
         $this->db->where('userId',$user_id);
         $this->db->where('fbPageId',$fbpage_id);
         $q = $this->db->get('pages');
-    
+
         if ( $q->num_rows() == 0 ) 
         {
             $this->db->set("userId",$user_id);
             $this->db->set("fbPageId",$fbpage_id);
             $this->db->set("fbPageName",$fbPage_name);
             $this->db->set("fbPageAT",$fbPageAccessToken);
+            $this->db->set("fbat_valid",$is_valid_at);
+            $this->db->set("fbat_expires",$expires_at);
+            $this->db->set("last_fbupdate",date("Y-m-d H:i:s"));
             $this->db->set("dateAdded",date("Y-m-d H:i:s")); 
             $this->db->insert('pages');
         
@@ -659,6 +662,9 @@ class FB_model extends CI_Model{
                 $this->db->where("fbPageId",$fbpage_id);
                 $this->db->set("fbPageName",$fbPage_name);
                 $this->db->set("fbPageAT",$fbPageAccessToken);
+                $this->db->set("fbat_valid",$is_valid_at);
+                $this->db->set("fbat_expires",$expires_at);
+                $this->db->set("last_fbupdate",date("Y-m-d H:i:s"));
                 $this->db->set("isActive",true); 
                 $this->db->update('pages');
 
@@ -672,23 +678,48 @@ class FB_model extends CI_Model{
             return 0;
         }
     }
-    public function insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken){
 
-        //check if fbuser is already inserted for user
+    public function insert_fb_user($user_id,$fb_user_id, $fb_name, $accessToken,$expires_at, $is_valid_at){
+
         $this->db->where('user_id=',$user_id);
-        $this->db->where('fb_user_id=',$fb_user_id);
         $q = $this->db->get('fb_users');
-    
-        if ( $q->num_rows() == 0 ) 
-        {
+        $fbuser= $q->result_array();
+     
+        if($q->num_rows()==1 && ($fbuser[0]["fb_user_id"]!== $fb_user_id)){
+            //$message = '<br>You are trying to log in with facebook account: ' . $fb_name . '<br>Please log in with fb account you are registered with: ' . $fbuser[0]["fb_name"] ;
+            //echo $message;
+            return 0;
+        }
+        elseif($q->num_rows()==1 && ($fbuser[0]['fb_user_id']=== $fb_user_id)){
+            //update data for existing fbuser
+            $this->db->set("fb_name",$fb_name);
+            $this->db->set("fb_access_token",$accessToken); 
+             
+            $this->db->set("fbat_valid",$is_valid_at);
+            $this->db->set("fbat_expires",$expires_at);
+            $this->db->set("last_fbupdate",date("Y-m-d H:i:s"));
+
+            $this->db->where("user_id=",$user_id);
+            $this->db->where("fb_user_id=",$fb_user_id);
+            $this->db->update('fb_users');
+
+            return $this->db->affected_rows() ;
+
+        } elseif($q->num_rows() == 0){
+            //insert data for new fbuser
             $this->db->set("user_id",$user_id);
             $this->db->set("fb_user_id",$fb_user_id);
             $this->db->set("fb_name",$fb_name);
             $this->db->set("fb_access_token",$accessToken); 
+
+            $this->db->set("fbat_valid",$is_valid_at);
+            $this->db->set("fbat_expires",$expires_at);
+            $this->db->set("last_fbupdate",date("Y-m-d H:i:s"));
+
             $this->db->insert('fb_users');
         
             return $this->db->affected_rows() ;
-        }   
+        }  
     }
     public function get_pages_for_user($user_id) {
             $this->db->from('users');

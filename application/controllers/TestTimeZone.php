@@ -11,7 +11,7 @@ class TestTimeZone extends CI_Controller {
     }
 
 
-private function send_message(){
+public function send_message(){
     // Olivia Hobbit
     // 541140996398061
     // EAAHKRllr1hkBAGxw7dFZCvTXzeYpkDud1p0wHWw4XqjOerSMijmu7DpTjkpqdhhwgrbImVRR2XEcR3bZAbq4ds67uRG9reffFXLEK8muEEbVK1RBDHFfnpRBHhu7Tj2DPnVW3nQDToTT0zXJR238fqqUo5PKwXzHjlz0hVN3fW35XKWQgCrBlInJDFgScZD
@@ -35,8 +35,8 @@ private function send_message(){
 
     $fbPageId = '541140996398061';
     $fbPageAT= 'EAAHKRllr1hkBAGxw7dFZCvTXzeYpkDud1p0wHWw4XqjOerSMijmu7DpTjkpqdhhwgrbImVRR2XEcR3bZAbq4ds67uRG9reffFXLEK8muEEbVK1RBDHFfnpRBHhu7Tj2DPnVW3nQDToTT0zXJR238fqqUo5PKwXzHjlz0hVN3fW35XKWQgCrBlInJDFgScZD'; 
-    $page_timezone = 'Europe/London'; 
-    $input_post_message= '';
+    $timezone = 'Europe/London'; 
+    
      
 
       //$this->db->select('App_time_zone'); 
@@ -54,9 +54,11 @@ private function send_message(){
     //           $timezone = $app_TZ;
     //       }
 
-     $schedule_date =  new DateTime($post_data[0]["scheduledTime"]);
-     $schedule_date->setTimezone(new DateTimeZone($timezone));
-     $schedule_dt = strtotime( $schedule_date->format('Y-m-d H:i:s')/*$post_data[0]["scheduledTime"]*/);
+   // $schedule_date =  date("Y-m-d H:i:s");//new DateTime($post_data[0]["scheduledTime"]);
+     //$schedule_date = time();
+    // $schedule_date = new DateTime(null, new DateTimeZone('America/New_York'));
+    // $schedule_date->setTimezone(new DateTimeZone($timezone));
+    // $schedule_dt = strtotime( $schedule_date->format('Y-m-d H:i:s')/*$post_data[0]["scheduledTime"]*/);
     //   }else{
     //      $schedule_dt=null;
     //   }
@@ -69,31 +71,47 @@ private function send_message(){
             'f_post_id' => ''
         );
     try {
-         
-
-
-
-                $posting_array=array( 
-                        'message' => $input_post_message,
-                        'scheduled_publish_time'  => $schedule_dt, 
-                        'published' => 'false'
-                );
-            
-            
-        $response = $fb->post('/' . $fbPageId . '/feed',$posting_array/*array ( 'message' => $input_post_message,)*/, $fbPageAT);
-        $res['message'] = "Your post has been sent to facebook.";
-        $graphNode = $response->getGraphNode();
-        $fb_post_id = $graphNode['id'];
-        $res['f_post_id'] = $fb_post_id;
        
+        $fb = new \Facebook\Facebook([  'app_id' => FB_APP_ID,  'app_secret' => FB_APP_SECRET,  'default_graph_version' => FB_API_VERSION ]);
+
+
+        //date_default_timezone_set('Europe/London');
+
+        $test_date_string = '2019-03-29 21:42:34';
+
+
+
+        $NYtime= new DateTime($test_date_string, new DateTimeZone('America/New_York')); 
+        echo $test_date_string . ' strtime : ' . strtotime($NYtime->format("Y-m-d H:i:s")) . ' New York  | ' . $NYtime->getTimestamp() ;
+        $posting_arrayNY=array( 'message' => 'NY u 21 po NY vremenu', 'scheduled_publish_time'  => $NYtime->getTimestamp(),  'published' => 'false' );
+        $response = $fb->post('/' . $fbPageId . '/feed',$posting_arrayNY, $fbPageAT);
+        echo '</br>';
+        echo '</br>';
+        echo '</br>';
+
+        
+        $PGdt =  new DateTime($test_date_string, new DateTimeZone('Europe/Podgorica')); 
+
+       echo '</br>';
+       echo '</br>';
+       echo '</br>';
+        echo $PGdt->format("Y-m-d H:i:s") . ' strtime : ' . strtotime( $PGdt->format("Y-m-d H:i:s")) . ' Podgorica ' .  $PGdt->getTimestamp() ;
+        $posting_arrayPG=array( 'message' => 'PG u 21 po PG vremenu', 'scheduled_publish_time'  => $PGdt->getTimestamp(),  'published' => 'false' );
+        $response = $fb->post('/' . $fbPageId . '/feed',$posting_arrayPG, $fbPageAT);
+        echo '</br>';
+        echo '</br>';
+        echo '</br>';
+        echo '</br>'; 
          
    
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
         $res['error'] = true;
         $res['message'] = $e->getMessage();
+        echo $e->getMessage();
     } catch(Facebook\Exceptions\FacebookSDKException $e) {
             $res['error'] = true;
             $res['message'] = $e->getMessage();
+            echo $e->getMessage();
     }
     
     return $res;

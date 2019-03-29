@@ -21,11 +21,11 @@ class Cron_stats72 extends CI_Controller {
         //pripremljeni su job_thread-ovi i njima je owner_job upravo obvaj novokreirani cron_job
         
         // uzimamo ih iz db
-        $data = $this->db->query("SELECT PS.id, PS.fbPostId, P.fbPageAT
-                FROM  posts_pages  PS 
-                JOIN  pages P ON PS.pageId = P.id 
-                WHERE  PS.fbPostId is not null and PS.postingStatus='3' 
-                ORDER BY PS.id DESC");  
+        $data = $this->db->query("SELECT PO.post_type, PS.id, PS.fbPostId, P.fbPageId, P.fbPageAT 
+                                    FROM posts PO JOIN posts_pages PS ON PO.id=PS.postId 
+                                    JOIN pages P ON PS.pageId = P.id 
+                                    WHERE PS.fbPostId is not null and PS.postingStatus='3' and P.isActive='1' 
+                                    ORDER BY PS.id DESC");  
         $data = $data->result_array();
 
         //for every posting on FB
@@ -33,9 +33,8 @@ class Cron_stats72 extends CI_Controller {
 
             $post_id = $fb_posting['fbPostId'];
             $page_at = $fb_posting['fbPageAT'];
-           // echo '<br>$post_id: ' . $post_id;
-           // echo '<br>$page_at: ' . $page_at;
-
+            $post_type = $fb_posting['post_type'];
+            $page_id = $fb_posting['fbPageId'];
             
             //chesk if there exists tabel segment T0-72 for fbPostID in table statistics72h
             $this->db->select('stats_id');
@@ -92,6 +91,9 @@ class Cron_stats72 extends CI_Controller {
             
             //post shares
             $num_of_post_shares = 0; 
+            if($post_type='video'){
+                $post_id=$page_id . '_' . $post_id;
+            }
             try {
                 // Returns a `Facebook\FacebookResponse` object
                 $response = $fb->get(

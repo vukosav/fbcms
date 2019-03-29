@@ -31,9 +31,9 @@ class Dashboard extends MY_controller {
         if(!empty($pagename)){
             $conditions['search']['pagename'] = $pagename;
         }
-        // if(!empty($group)){
-        //     $conditions['search']['group'] = $group;
-        // }
+        if(!empty($group)){
+            $conditions['search']['group'] = $group;
+        }
         if($pwithoutPL24 == 'true'){
             $conditions['search']['pwithoutPL24'] = 'nn';
         }

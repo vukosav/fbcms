@@ -66,6 +66,7 @@ class Groups_model extends CI_Model{
         }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
             $this->db->limit($params['limit']);
         }
+        $this->db->where('groups.groupType = ', 1);
         //get records
         $query = $this->db->get();
         //return fetched data
@@ -94,11 +95,14 @@ class Groups_model extends CI_Model{
     /**
     * @usage
     */
-    // public function update($data, $post_id){
-    //     $this->db->where(['post_id', $post_id]);
-    //     $this->db->update('post', $data);
-    //     return $this->db->affected_rows();
-    // }
+    public function update($data, $id){
+        foreach ($data as $key => $value){
+            $this->db->set($key, $value);
+        }
+        $this->db->where("id", $id);
+        $this->db->update("groups");
+        return $this->db->affected_rows() > 0;
+    }
 
     /**
     * @usage

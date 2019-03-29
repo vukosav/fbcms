@@ -49,27 +49,27 @@ class Dropzone extends CI_Controller {
         }else{
         switch($fileError){
             case UPLOAD_ERR_INI_SIZE:   
-                $message = 'Error al intentar subir un archivo que excede el tamaño permitido.';
+                $message = 'Error trying to upload a file that exceeds the allowed size.';
                 break;
             case UPLOAD_ERR_FORM_SIZE:  
-                $message = 'Error al intentar subir un archivo que excede el tamaño permitido.';
+                $message = 'Error trying to upload a file that exceeds the allowed size.';
                 break;
             case UPLOAD_ERR_PARTIAL:    
                 $message = 'Error: no terminó la acción de subir el archivo.';
                 break;
             case UPLOAD_ERR_NO_FILE:    
-                $message = 'Error: ningún archivo fue subido.';
+                $message = 'Error: the file upload action was not completed.';
                 break;
             case UPLOAD_ERR_NO_TMP_DIR: 
-                $message = 'Error: servidor no configurado para carga de archivos.';
+                $message = 'Error: server not configured to upload files.';
                 break;
             case UPLOAD_ERR_CANT_WRITE: 
-                $message= 'Error: posible falla al grabar el archivo.';
+                $message= 'Error: possible failure when recording the file.';
                 break;
             case  UPLOAD_ERR_EXTENSION: 
-                $message = 'Error: carga de archivo no completada.';
+                $message = 'Error: file upload not completed.';
                 break;
-            default: $message = 'Error: carga de archivo no completada.';
+            default: $message = 'Error: file upload not completed.';
                     break;
             }
             echo json_encode(array(

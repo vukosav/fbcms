@@ -134,7 +134,7 @@
 <body>
 <!-- ##### SIDEBAR LOGO ##### -->
     <div class="kt-sideleft-header">
-        <div class="kt-logo"><a href="<?=base_url()?>">Create post</a></div>
+        <div class="kt-logo"><a href="#">Datadata</a></div>
         <div id="ktDate" class="kt-date-today"></div>
         <!--<div class="input-group kt-input-search">
             <input type="text" class="form-control" placeholder="Search...">
@@ -833,6 +833,83 @@ function SaveAsQueued(event){
            valid = true;
          }
          formData.append('ins_or_upd', document.querySelector('#ins_or_upd').value);
+          
+            var postType;
+            var videoFileName;
+            var video;
+            var file_list;
+            formData.forEach(function(value, key){
+            if(key === "postType"){
+                postType = value;
+            }
+            else if(key === "videoFileName"){
+                    videoFileName = value;
+                }
+           else if(key === "video"){  
+                    video = value;
+             }
+             else if(key === "file_list"){  
+                file_list = value;
+             }
+           });
+          // console.log('videoFileName',videoFileName);
+          // console.log('video',video);
+           if(postType === "video"){
+               if(videoFileName === null || videoFileName === ""){
+                   valid = false;
+                    Swal.fire({
+                            title: "Error", 
+                            text:"Please, wait video file upload!",  
+                            confirmButtonText: "OK", 
+                        });
+                         
+               }
+               else if(video === null || video === ""){
+                    valid = false;
+                    Swal.fire({
+                                title: "Error", 
+                                text:"Please, wait video file upload!",  
+                                confirmButtonText: "OK", 
+                            });
+                   
+               }
+           }
+           if(postType === "image"){
+               if(file_list === null || file_list === ""){
+                   valid = false;
+                    Swal.fire({
+                            title: "Error", 
+                            text:"Please, add at least one image!",  
+                            confirmButtonText: "OK", 
+                        });
+                         
+               }
+           }
+
+           if(document.querySelector('#schedule_date_time').value){
+               const scheduleD = moment(document.querySelector('#schedule_date_time').value);
+               if(scheduleD.diff(Date.now(),'month',true)>=6){
+                   valid = false;
+                   Swal.fire({
+                            title: "Validation", 
+                            text:"Please, select other schedule time! It must be less than 6 months from now.",  
+                            confirmButtonText: "OK", 
+                        });
+               }
+               else if(scheduleD.diff(Date.now(),'minutes',true)<=20){
+                   valid = false;
+                   Swal.fire({
+                            title: "Validation", 
+                            text:"Please, select other schedule time! It must be greater than 10 minutes from now.",  
+                            confirmButtonText: "OK", 
+                        });
+               }
+           }
+           if(!valid){
+                    $('#spanSaveAsQueued').removeClass('fa-refresh');
+                    $('#spanSaveAsQueued').removeClass('fa-spin'); 
+                    $('#spanSaveAsQueued').addClass('fa-calendar');
+            }
     if(valid){
         formData.append("arrayPages", JSON.stringify(arrayPages));
         formData.append("arrayGroups", JSON.stringify(arrayGroups));
@@ -842,7 +919,7 @@ function SaveAsQueued(event){
         });
       //  console.log('arrayGroups',JSON.stringify(arrayGroups));
       //  console.log('arrayPages',JSON.stringify(arrayPages));
-      // console.log('formData',JSON.stringify(object));
+       console.log('formData',JSON.stringify(object));
 
      $.ajax({
         url:'<?=base_url()?>FB_post/insert_post',
@@ -863,12 +940,28 @@ function SaveAsQueued(event){
             }
             else{
                // alert('alert dataJ ' +dataJ.message);
-                console.log('dataJ.error je true', JSON.stringify(dataJ));
+               // console.log('dataJ.error je true', JSON.stringify(dataJ));
+                Swal.fire({
+                    title: "Error", 
+                    html: dataJ.message,  
+                    confirmButtonText: "Confirm", 
+                    });
+                $('#spanSaveAsQueued').removeClass('fa-refresh');
+                $('#spanSaveAsQueued').removeClass('fa-spin'); 
+                $('#spanSaveAsQueued').addClass('fa-calendar');
             }
         },
         error:function(e){
            
-           console.log('error kod insert_post', JSON.stringify(e));
+          // console.log('error kod insert_post', JSON.stringify(e).responseText);
+           Swal.fire({
+                    title: "Error", 
+                    html: e.responseText,  
+                    confirmButtonText: "Confirm", 
+                    });
+                    $('#spanSaveAsQueued').removeClass('fa-refresh');
+                    $('#spanSaveAsQueued').removeClass('fa-spin'); 
+                    $('#spanSaveAsQueued').addClass('fa-calendar');
         }
 
       });
@@ -926,6 +1019,84 @@ function SaveAsDraft(event){
 //var json = JSON.stringify(object);
 
 //console.log('formData', json);
+
+            var postType;
+            var videoFileName;
+            var video;
+            var file_list;
+            formData.forEach(function(value, key){
+            if(key === "postType"){
+                postType = value;
+            }
+            else if(key === "videoFileName"){
+                    videoFileName = value;
+                }
+           else if(key === "video"){  
+                    video = value;
+             }
+             else if(key === "file_list"){  
+                file_list = value;
+             }
+           });
+          // console.log('videoFileName',videoFileName);
+         ///  console.log('video',video);
+           if(postType === "video"){
+               if(videoFileName === null || videoFileName === ""){
+                   valid = false;
+                    Swal.fire({
+                            title: "Error", 
+                            text:"Please, wait video file upload!",  
+                            confirmButtonText: "OK", 
+                        });
+                         
+               }
+               else if(video === null || video === ""){
+                    valid = false;
+                    Swal.fire({
+                                title: "Error", 
+                                text:"Please, wait video file upload!",  
+                                confirmButtonText: "OK", 
+                            });
+                   
+               }
+           }
+           if(postType === "image"){
+               if(file_list === null || file_list === ""){
+                   valid = false;
+                    Swal.fire({
+                            title: "Error", 
+                            text:"Please, add at least one image!",  
+                            confirmButtonText: "OK", 
+                        });
+                         
+               }
+           }
+
+           if(document.querySelector('#schedule_date_time').value){
+               const scheduleD = moment(document.querySelector('#schedule_date_time').value);
+               if(scheduleD.diff(Date.now(),'month',true)>=6){
+                   valid = false;
+                   Swal.fire({
+                            title: "Validation", 
+                            text:"Please, select other schedule time! It must be less than 6 months from now.",  
+                            confirmButtonText: "OK", 
+                        });
+               }
+               else if(scheduleD.diff(Date.now(),'minutes',true)<=20){
+                   valid = false;
+                   Swal.fire({
+                            title: "Validation", 
+                            text:"Please, select other schedule time! It must be greater than 10 minutes from now.",  
+                            confirmButtonText: "OK", 
+                        });
+               }
+           }
+     if(!valid){
+       
+        $('#spanSaveAsDraft').removeClass('fa-refresh');
+        $('#spanSaveAsDraft').removeClass('fa-spin'); 
+        $('#spanSaveAsDraft').addClass('fa-save');
+     }
     if(valid){
 
     $.ajax({
@@ -947,12 +1118,28 @@ function SaveAsDraft(event){
             }
             else{
                // alert('alert dataJ 2 ' + dataJ.message);
-                console.log('dataJ.error je true', JSON.stringify(dataJ));
+               // console.log('dataJ.error je true', JSON.stringify(dataJ));
+               Swal.fire({
+                    title: "Error", 
+                    html: dataJ.message,  
+                    confirmButtonText: "Confirm", 
+                    });
+                $('#spanSaveAsDraft').removeClass('fa-refresh');
+                $('#spanSaveAsDraft').removeClass('fa-spin'); 
+                $('#spanSaveAsDraft').addClass('fa-save');
             }
         },
         error:function(e){
             //alert('alert dataJ 2 eeeee' + e);
-            console.log('error', JSON.stringify(e));
+            //console.log('error', JSON.stringify(e));
+            Swal.fire({
+                    title: "Error", 
+                    html: e.responseText,  
+                    confirmButtonText: "Confirm", 
+                    });
+                    $('#spanSaveAsDraft').removeClass('fa-refresh');
+                    $('#spanSaveAsDraft').removeClass('fa-spin'); 
+                    $('#spanSaveAsDraft').addClass('fa-save');
         }
 
       });
@@ -984,6 +1171,13 @@ function CancelEdit(postingType){
         contentType: false, 
         success: function(data){
             window.location.replace('<?=base_url()?>posting/' +postingType);
+        },
+        error:function(e){ 
+            Swal.fire({
+                    title: "Error", 
+                    html: e.responseText,  
+                    confirmButtonText: "Confirm", 
+                    }); 
         }
       });
     }

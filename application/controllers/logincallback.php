@@ -42,8 +42,8 @@ class LoginCallback extends CI_Controller {
      
       $_SESSION['facebook_access_token'] = (string) $accessToken;
 
-      $expdate=$accessToken->getExpiresAt();
-      $_SESSION['expdate_access_token'] = (string) $expdate;
+     // $expdate=$accessToken->getExpiresAt();
+     //$_SESSION['expdate_access_token'] = (string) $expdate;
       
       // Now you can redirect to another page and use the
       // access token from $_SESSION['facebook_access_token']

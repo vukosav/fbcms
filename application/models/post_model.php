@@ -188,7 +188,7 @@ class Post_model extends CI_Model{
             $this->db->limit($params['limit']);
         }
         //get records
-        $this->db->order_by('posts_archive.id desc');
+        $this->db->order_by('posts_archive.dateArchive desc');
         $query = $this->db->get();
         //return fetched data
         // $debug_array = []

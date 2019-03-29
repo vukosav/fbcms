@@ -142,7 +142,6 @@ class Users extends MY_controller {
         // $this->db->set('password', $password);
         // $this->db->set('salt', $salt);
 
-
         $data = array(
             'username' => $this->input->post('username'),
             'email' => $this->input->post('email'),
@@ -268,7 +267,7 @@ class Users extends MY_controller {
     }
 
     public function editprofile (){      
-        
+
         $this->load->helper(array('form', 'url'));    
         
         if($this->session->userdata('user')['username']!=$this->input->post('username')){
@@ -299,15 +298,28 @@ class Users extends MY_controller {
                     'is_unique'     => 'This %s already exists.'
             )
         );
-        //$file_name = $_FILES['test']['picture'];
+        // //$file_name = $_FILES['test']['picture'];
+        if(isset($_FILES['userPhoto'])){
+            $user_image = $_FILES['userPhoto']['name'];
+            $user_image_temp = $_FILES['userPhoto']['tmp_name'];
+    
+            move_uploaded_file($user_image_temp, "uploads/profilepictures/$user_image");
+        }
+
         
+        // var_dump($user_image_temp);
         $data = array(
             'username' => $this->input->post('username'),
             'email' => $this->input->post('email'),
             'name' => $this->input->post('fullname'),
-            'timezone' => $this->input->post('timezone')
+            'timezone' => $this->input->post('timezone'),
+
             //'user_image' => isset($file_name)? $file_name:FALSE
         );
+
+        if (!empty($user_image)){
+            $data['user_image'] = "uploads/profilepictures/" . $user_image;
+        }
         
         $tz['tz'] = $this->Users_model->get_tz();
         $tz['tz'] = array_shift($tz['tz']);
@@ -320,19 +332,35 @@ class Users extends MY_controller {
             // print_r($this->session->userdata);
             $this->load->view('users/edit_profile_view', $data);
         }else{
-            $newSessionData = array(
-                'user_id'   => $this->session->userdata('user')['user_id'],
-                'username'  => $this->input->post('username'),
-                'name'      => $this->input->post('fullname'),
-                'email'     => $this->input->post('email'),
-                'logged_in' => TRUE,
-                'role'      => $this->session->userdata('user')['role']
-            );
+            if ($user_image != ""){
+                $newSessionData = array(
+                    'user_id'   => $this->session->userdata('user')['user_id'],
+                    'username'  => $this->input->post('username'),
+                    'name'      => $this->input->post('fullname'),
+                    'email'     => $this->input->post('email'),
+                    'logged_in' => TRUE,
+                    'role'      => $this->session->userdata('user')['role'],
+                    'user_image' => "uploads/profilepictures/" . $user_image
+                );
+            }else{
+                $newSessionData = array(
+                    'user_id'   => $this->session->userdata('user')['user_id'],
+                    'username'  => $this->input->post('username'),
+                    'name'      => $this->input->post('fullname'),
+                    'email'     => $this->input->post('email'),
+                    'logged_in' => TRUE,
+                    'role'      => $this->session->userdata('user')['role'],
+                    'user_image' => $this->session->userdata('user')['user_image']
+                );
+            }
+            
             $this->Users_model->update($data, $this->session->userdata('user')['user_id']);
             $data['title'] = 'Edit profile';
             $this->session->set_userdata('user', $newSessionData);
             redirect('/');
             //print_r($data);
+            // var_dump($user_image);
+            // echo $user_image;
         }
     }
     public function no_Admin_permition(){

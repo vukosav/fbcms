@@ -75,6 +75,7 @@ class Users_model extends CI_Model{
         $userData['email'] = (string)$user->row('email');
         $userData['logged_in'] = TRUE;
         $userData['role'] = $user->row('roleId');
+        $userData['user_image'] = $user->row('user_image')?$user->row('user_image'):false;
 
         $this->setUserSession($userData);
 
@@ -161,6 +162,20 @@ class Users_model extends CI_Model{
     public function insert($data){
         $this->db->insert('users', $data);
         return $this->db->insert_id();
+        // if($id > 0){
+        //     $name = array('1.000 > Page like', '10.000 > Page like > 1000', '100.000 > Page like > 10.000', 'Page like >100.000');
+        //     for($i=0; $i<4; $i++){
+        //         $data = array(
+        //             'name' => $name[$i],
+        //             'createDate' => date('Y-m-d h:i:s', time()),
+        //             'IsActive' => true,
+        //             'userId' => $id,
+        //             'groupType' => 2
+        //         );
+        //         $this->db->insert('groups', $data);
+        //     }
+        // }
+        // return $id;
     }
 
     /**
