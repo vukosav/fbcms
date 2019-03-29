@@ -153,9 +153,9 @@
 
 <!-- ##### MAIN PANEL ##### -->
 <div class="kt-mainpanel">
-    <!--  <div class="kt-pagetitle">
+    <!-- <div class="kt-pagetitle">
        <h5>Edit Post</h5>
-     </div> --><!-- kt-pagetitle -->
+     </div>   -->
 <?php //echo form_open('fb_post/insert_post2','id="edit_post_form_j"'); ?>
 <form id="edit_post_form_j" action="">
     <input type="hidden" id = "file_list" name = "file_list" value="<?php echo $input_post_image_list; ?>">
@@ -171,6 +171,15 @@
     <input type="hidden" name="can_edit_groups_pages" id="can_edit_groups_pages" value="<?php echo $can_edit_groups_pages; ?>"  />
     
     <div class="container-edit-post" style="padding:10px;width:100%">
+    <div class="row container">
+         
+            <div class="col-sm-9"><h2 class='pull-left'><?php echo $edit_post_title; ?></h2></div>
+            <div class="col-sm-3"><h2><?php echo $posting_nums; ?></h2></div>
+       
+    </div>
+    <div class="row container"><h4><?php echo $edit_post_subtitle; ?></h4></div>
+    <hr>
+
     <div class="row">
     
         <div class="col-sm-5">
@@ -354,18 +363,8 @@
         </div>
 
         <div class="col-sm-4">
-        <div class="row">        
-                <div class='col-sm-2'>
-                <div class="col-sm-2">
-                       
-                            <input type="checkbox" id="scheduledSame" name="scheduledSame"  
-                                    <?php if ($scheduledSame==1) {echo 'checked';} ?>   onchange="" />
-                             
-                        </label>
-                    </div>  
-                
-                </div>
-                <div class='col-sm-2'>Schedule post</div>
+        <div class="row">    
+                <div class='col-sm-4'>Schedule post</div>
                  
                        <div class='col-sm-8'>
                           
@@ -378,10 +377,10 @@
                                   </span>
                               </div>
                           </div>
-                     
-                    
+                       </div>
+                       <div class='col-sm-12'>User timezone: <?php echo $timezone; ?></div>
                 </div>
-              </div>
+                
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">POST PREVIEW</h3>
@@ -928,9 +927,9 @@ function SaveAsQueued(event){
         processData: false,
         contentType: false,
         success: function(data){
-          //  console.log('data',data);
+            console.log('data',data);
             var dataJ = jQuery.parseJSON (data);
-          //  console.log('dataJ',dataJ);
+            console.log('dataJ',dataJ);
             if(!dataJ.error){
                // document.querySelector("#post").style.display = "block";
                // document.querySelector("#savepost").style.display = "none";
@@ -940,7 +939,7 @@ function SaveAsQueued(event){
             }
             else{
                // alert('alert dataJ ' +dataJ.message);
-               // console.log('dataJ.error je true', JSON.stringify(dataJ));
+                console.log('dataJ.error je true', JSON.stringify(dataJ));
                 Swal.fire({
                     title: "Error", 
                     html: dataJ.message,  

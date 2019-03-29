@@ -77,13 +77,13 @@ public function send_message(){
 
         //date_default_timezone_set('Europe/London');
 
-        $test_date_string = '2019-03-29 21:42:34';
+        $test_date_string = '2019-03-29 09:42:34';
 
 
 
-        $NYtime= new DateTime($test_date_string, new DateTimeZone('America/New_York')); 
-        echo $test_date_string . ' strtime : ' . strtotime($NYtime->format("Y-m-d H:i:s")) . ' New York  | ' . $NYtime->getTimestamp() ;
-        $posting_arrayNY=array( 'message' => 'NY u 21 po NY vremenu', 'scheduled_publish_time'  => $NYtime->getTimestamp(),  'published' => 'false' );
+        $NYtime= new DateTime($test_date_string, new DateTimeZone('Africa/Addis_Ababa')); 
+        echo $test_date_string . ' strtime : ' . strtotime($NYtime->format("Y-m-d H:i:s")) . ' Addis_Ababa  | ' . $NYtime->getTimestamp() ;
+        $posting_arrayNY=array( 'message' => 'Addis_Ababa 2019-03-29 06:42:34', 'scheduled_publish_time'  => $NYtime->getTimestamp(),  'published' => 'false' );
         $response = $fb->post('/' . $fbPageId . '/feed',$posting_arrayNY, $fbPageAT);
         echo '</br>';
         echo '</br>';
@@ -95,9 +95,9 @@ public function send_message(){
        echo '</br>';
        echo '</br>';
        echo '</br>';
-        echo $PGdt->format("Y-m-d H:i:s") . ' strtime : ' . strtotime( $PGdt->format("Y-m-d H:i:s")) . ' Podgorica ' .  $PGdt->getTimestamp() ;
-        $posting_arrayPG=array( 'message' => 'PG u 21 po PG vremenu', 'scheduled_publish_time'  => $PGdt->getTimestamp(),  'published' => 'false' );
-        $response = $fb->post('/' . $fbPageId . '/feed',$posting_arrayPG, $fbPageAT);
+        // echo $PGdt->format("Y-m-d H:i:s") . ' strtime : ' . strtotime( $PGdt->format("Y-m-d H:i:s")) . ' Podgorica ' .  $PGdt->getTimestamp() ;
+        // $posting_arrayPG=array( 'message' => 'PG u 21 po PG vremenu', 'scheduled_publish_time'  => $PGdt->getTimestamp(),  'published' => 'false' );
+        // $response = $fb->post('/' . $fbPageId . '/feed',$posting_arrayPG, $fbPageAT);
         echo '</br>';
         echo '</br>';
         echo '</br>';

@@ -38,9 +38,8 @@
       </div><!-- kt-headpanel-right -->
     </div><!-- kt-headpanel -->
     <div class="kt-breadcrumb">
-      <nav class="breadcrumb">
-      <a data-toggle="modal" data-target="#modaldemo3" href="#">aaaaa</a>
-        <a class="breadcrumb-item" href="<?=base_url()?>"><?php
+      <nav class="breadcrumb2">
+       <?php
             $fb_uat = $this->session->userdata('FB_UAT');
             //var_dump($fb_uat);
              $count_page_invalid = $fb_uat['count_page_invalid'];
@@ -49,23 +48,24 @@
              $user_AT_expires_in7d = $fb_uat['user_AT_exp_date'];
              
             $message="";
-            //if(!$user_AT_is_valid || $count_page_invalid>0 ){
-              $message=$message . "FB token(s) <a data-toggle='modal' data-target='#modaldemo3' href='#'>INVALID.</a>";
-            //}
-           // if( $user_AT_expires_in7d || $count_page_expires>0){
-              $message=$message . "FB token(s) <a data-toggle='modal' data-target='#modaldemo3' href='#'>EXPIRED or EXPIRE</a> in < 7days.";
-           // }
-            if($message!="") {
-              echo $message . 'Please <a href="' . base_url() . 'fbcheck"> UPDATE</a> on FB';
+            if(!$user_AT_is_valid || $count_page_invalid>0 ){
+              $message=$message . "Your Facebook page tokens are  <a  href='#' data-toggle='modal' data-target='#modaldemo333' style='color: red;text-decoration: underline;'>INVALID</a>.";
             }
+           if( $user_AT_expires_in7d){
+              $message=$message . "Your Facebook tokens are EXPIRED or will EXPIRE</a> in < 7days.";
+            }
+            if($message!="") {
+              echo '<p style="color:red; margin: 15px;">' . $message 
+              . " Please go to <a  href='" . base_url() . "fbcheck' style='color: red;text-decoration: underline;'>FB CHECK</a> to update your Facebook access tokens.</p>";
+           }
            
-        ?></a>
+        ?>
         <!-- <span class="breadcrumb-item active">Dashboard</span> -->
       </nav> 
      
      </div>
 
-      <div id="modaldemo3" class="modal fade" style="display: none;" aria-hidden="true">
+      <div id="modaldemo333" class="modal fade" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
           <div class="modal-header pd-y-20 pd-x-25">
@@ -77,86 +77,23 @@
           <div class="modal-body pd-20">
               <div class="table-responsive">
                 <table class="table table-white mg-b-0 tx-12">
-                  <tbody>
-                    <tr>
-                      <td class="pd-l-20 tx-center">
-                        <img src="../img/img1.jpg" class="wd-36 rounded-circle" alt="Image">
-                      </td>
-                      <td>
-                        <a href="" class="tx-inverse tx-14 tx-medium d-block">Mark K. Peters</a>
-                        <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                      </td>
-                      <td class="tx-12">
-                        <span class="square-8 bg-success mg-r-5 rounded-circle"></span> Email verified
-                      </td>
-                      <td>Just Now</td>
-                    </tr>
-                    <tr>
-                      <td class="pd-l-20 tx-center">
-                        <img src="../img/img2.jpg" class="wd-36 rounded-circle" alt="Image">
-                      </td>
-                      <td>
-                        <a href="" class="tx-inverse tx-14 tx-medium d-block">Karmen F. Brown</a>
-                        <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                      </td>
-                      <td class="tx-12">
-                        <span class="square-8 bg-warning mg-r-5 rounded-circle"></span> Pending verification
-                      </td>
-                      <td>Apr 21, 2017 8:34am</td>
-                    </tr>
-                    <tr>
-                      <td class="pd-l-20 tx-center">
-                        <img src="../img/img3.jpg" class="wd-36 rounded-circle" alt="Image">
-                      </td>
-                      <td>
-                        <a href="" class="tx-inverse tx-14 tx-medium d-block">Gorgonio Magalpok</a>
-                        <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                      </td>
-                      <td class="tx-12">
-                        <span class="square-8 bg-success mg-r-5 rounded-circle"></span> Purchased success
-                      </td>
-                      <td>Apr 10, 2017 4:40pm</td>
-                    </tr>
-                    <tr>
-                      <td class="pd-l-20 tx-center">
-                        <img src="../img/img5.jpg" class="wd-36 rounded-circle" alt="Image">
-                      </td>
-                      <td>
-                        <a href="" class="tx-inverse tx-14 tx-medium d-block">Ariel T. Hall</a>
-                        <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                      </td>
-                      <td class="tx-12">
-                        <span class="square-8 bg-warning mg-r-5 rounded-circle"></span> Payment on hold
-                      </td>
-                      <td>Apr 02, 2017 6:45pm</td>
-                    </tr>
-                    <tr>
-                      <td class="pd-l-20 tx-center">
-                        <img src="../img/img4.jpg" class="wd-36 rounded-circle" alt="Image">
-                      </td>
-                      <td>
-                        <a href="" class="tx-inverse tx-14 tx-medium d-block">John L. Goulette</a>
-                        <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                      </td>
-                      <td class="tx-12">
-                        <span class="square-8 bg-pink mg-r-5 rounded-circle"></span> Account deactivated
-                      </td>
-                      <td>Mar 30, 2017 10:30am</td>
-                    </tr>
-                    <tr>
-                      <td class="pd-l-20 tx-center">
-                        <img src="../img/img5.jpg" class="wd-36 rounded-circle" alt="Image">
-                      </td>
-                      <td>
-                        <a href="" class="tx-inverse tx-14 tx-medium d-block">John L. Goulette</a>
-                        <span class="tx-11 d-block">TRANSID: 1234567890</span>
-                      </td>
-                      <td class="tx-12">
-                        <span class="square-8 bg-pink mg-r-5 rounded-circle"></span> Account deactivated
-                      </td>
-                      <td>Mar 30, 2017 10:30am</td>
-                    </tr>
-                  </tbody>
+               <?php
+                $fb_uat = $this->session->userdata('FB_UAT');
+                if(  $fb_uat != null &&  $fb_uat['pages'] != null && is_array($fb_uat['pages'])){ 
+                  echo '<tbody>'  ;
+                  foreach($fb_uat['pages'] as $pageObj ){
+                    echo " <tr><td>
+                           <a href='' class='tx-inverse tx-14 tx-medium d-block'>{$pageObj['page_id']}</a>
+                           <span class='tx-11 d-block'>{$pageObj['page_AT_is_valid']}</span>
+                         </td>";
+                    echo " <td class='tx-12'>
+                           <span class='square-8 bg-pink mg-r-5 rounded-circle'></span>
+                          </td>
+                          <td>{$pageObj['page_AT_exp_date']}</td> </tr>" ;    
+                  } 
+                  echo '</tbody>';
+                }
+               ?>
                 </table>
               </div>
               </div><!-- modal-body -->

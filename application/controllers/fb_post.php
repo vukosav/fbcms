@@ -289,6 +289,18 @@ public function create_post(){
 
             $post_id=0;
 
+            $this->db->where('users.id=', $user_id);
+            $this->db->select('timezone');
+            $this->db->from('users');
+            $query = $this->db->get();        
+            $user_timezone=$query->result_array()[0]['timezone'];
+            $this->db->select('App_time_zone'); 
+            $query = $this->db->get('global_parameters');
+            $app_TZ = $query->result_array()[0]['App_time_zone'];
+
+            if($user_timezone == null){
+                $user_timezone = $app_TZ;
+            }
             $data=array(
                 'user_id' => $user_id,
                 'queued_post' => $queued_post,
@@ -318,8 +330,13 @@ public function create_post(){
                 'selected_page_id' => $selected_page_id,
                 'selected_post_groups' => $selected_post_groups,
                 'input_ins_or_upd' => $input_ins_or_upd,
-                "can_save_as_draft" => $can_save_as_draft,
-                "can_edit_groups_pages" => $can_edit_groups_pages
+                'can_save_as_draft' => $can_save_as_draft,
+                'can_edit_groups_pages' => $can_edit_groups_pages,
+                'timezone'=> $user_timezone,                
+                'posting_nums' => "",
+                'edit_post_title'  => "Create post",
+                'edit_post_subtitle' => 'Create your creative content in the form of Text, image or link to be shared to your multiple connected Facebook pages'
+               
             );
            
         $this->load->view('post/edit_post_view', $data);
@@ -340,6 +357,7 @@ private function GetDataFromDB($post_id){
         $image_list="";
         $post_status=$post_data[0]["PostStatus"];
 
+       
         $input_post_type = $post_data[0]["post_type"];
         $input_post_title=$post_data[0]["title"];
 
@@ -427,7 +445,32 @@ private function GetDataFromDB($post_id){
 
         $queued_post=false; // hiding PAUSE,RESUME
 
+        $inprogress_data = $this->db->query("select CountPages(" . $post_id . ") ukupno, 
+        PostPagesStatCount(" . $post_id . ", 4) as error,
+        PostPagesStatCount(" . $post_id . ", 3) as sent,
+        PostPagesStatCount(" . $post_id . ", 2) as inProgres");  
+        $inprogress_data = $inprogress_data->result_array();   
+        
+        
+        $inp_ukupno = $inprogress_data[0]['ukupno'];
+        $inp_sent = $inprogress_data[0]['sent'];
+        $posting_nums="Posted: " . $inprogress_data[0]['sent'] . '/' . $inprogress_data[0]['ukupno'];
 
+
+                
+        $this->db->where('users.id=', $user_id);
+        $this->db->select('timezone');
+        $this->db->from('users');
+        $query = $this->db->get();        
+        $user_timezone=$query->result_array()[0]['timezone'];
+
+        $this->db->select('App_time_zone'); 
+        $query = $this->db->get('global_parameters');
+        $app_TZ = $query->result_array()[0]['App_time_zone'];
+       
+        if($user_timezone == null){
+            $user_timezone = $app_TZ;
+        }
     $data=array(
         'user_id' => $user_id,
         'queued_post' => $queued_post,
@@ -458,7 +501,10 @@ private function GetDataFromDB($post_id){
         'selected_post_groups' => $selected_post_groups,
         "input_ins_or_upd"=>"",
         "can_save_as_draft" => $can_save_as_draft,
-        "can_edit_groups_pages" => $can_edit_groups_pages
+        "can_edit_groups_pages" => $can_edit_groups_pages,
+        'timezone'=> $user_timezone,
+        'posting_nums' => $posting_nums      
+
         
     );
     return $data;
@@ -466,27 +512,42 @@ private function GetDataFromDB($post_id){
 }   
 
 public function edit_post($post_id){
-    echo $post_id;
+    //echo $post_id;
     if(!$this->Users_model->isLoggedIn()){
         redirect('login'); 
     }
     $user_id = $this->session->userdata('user')['user_id'];
 
         //get data from database for post_id = $post_id
-        $image_list="";
+        $image_list="";$this->db->query("call PreEdit($post_id, $user_id);");
                     
                         
        $this->load->helper('form');
        //$this->load->helper('url');
-       $this->db->query("call PreEdit($post_id, $user_id);");
+       
        $data = $this->GetDataFromDB($post_id);
        $data['input_ins_or_upd'] = "update";
+
+        if($data['post_status'] == 1){
+            $data['edit_post_title'] = "Draft post";   
+            $data['posting_nums'] = "";
+        }
+
+        else if($data['post_status'] == 4){
+            $data['edit_post_title'] = "Sent post";    
+        }
+        else{
+            $data['edit_post_title'] = "Post in progress/sent"; 
+            $data['edit_post_subtitle'] = "Create your creative content in the form of Text, image or link to be shared to your multiple connected Facebook pages";
+        }   
+       
 
        $validd =  $this->db->query("SELECT CanSetAsDraft($post_id) as validan");
        $validd = $validd->result_array();
        $can_save_as_draft = 0;// $validd[0]['validan'];
       
        $data['can_save_as_draft'] = $can_save_as_draft;
+
        
        $valide= $this->db->query("SELECT CanEditPageAndGroups($post_id) as validan");
        $valide = $valide->result_array();
@@ -514,9 +575,12 @@ public function copy_post($post_id){
        $data['input_ins_or_upd'] = "insert";
        $data['scheduleDateTime'] = '';
        
+      
+       $data['edit_post_title'] = "Copy post";   
+       $data['posting_nums'] = "";
+       $data['edit_post_subtitle'] = "Create your creative content in the form of Text, image or link to be shared to your multiple connected Facebook pages";
+
        $this->load->view('post/edit_post_view', $data);
-  
-     
 } 
 
 public function cancel_edit_post($post_id){
@@ -597,6 +661,20 @@ public function insert_post(){
         
         if($this->Users_model->isLoggedIn()){
             $user = $this->session->userdata('user')['user_id'];
+
+            $this->db->where('users.id=', $user);
+            $this->db->select('timezone');
+            $this->db->from('users');
+            $query = $this->db->get();        
+            $user_timezone=$query->result_array()[0]['timezone'];
+            $this->db->select('App_time_zone'); 
+            $query = $this->db->get('global_parameters');
+            $app_TZ = $query->result_array()[0]['App_time_zone'];
+
+
+            if($user_timezone == null){
+                $user_timezone = $app_TZ;
+            }
             $this->form_validation->set_rules(
                 'postTitle', 'Post title',
                 'trim|required',
@@ -667,10 +745,13 @@ public function insert_post(){
             //   $schedule_date =  new DateTime($schedule_date_timeStr, new DateTimeZone($app_TZ));
                 $schedule_date_time=date("Y-m-d H:i:s",  strtotime($schedule_date_timeStr));
                 $is_scheduled=1;
+                $tempSchedule = new DateTime($schedule_date_timeStr, new DateTimeZone($user_timezone));
+                $scheduleTimeUTC =  $tempSchedule->getTimestamp();
             }
             else {
                 $schedule_date_time = NULL; 
                 $is_scheduled=0;
+                $scheduleTimeUTC = null;
             }
             
             //page(s) to publish post on
@@ -721,7 +802,7 @@ public function insert_post(){
                     if($ins_or_upd =="insert") {
                         $res= $this->FB_model->insert_post($post_status, $user_id, $selected_page_id, $w_title, 
                         $post_type, $message, $upload_video, $add_link, $upload_images_list,
-                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj );
+                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj,$scheduleTimeUTC );
                                     
                        // echo 'Inserted Post id: ' . $res;
                        
@@ -736,7 +817,7 @@ public function insert_post(){
                         try {
                         $res =  $this->FB_model->update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
                         $post_type, $message, $upload_video, $add_link, $upload_images_list,
-                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj);
+                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj, $scheduleTimeUTC);
                        
                         $this->db->query("call PostEdit($post_id, $user);");
                         echo json_encode(array(

@@ -41,7 +41,7 @@ private function send_message($queue_id, $fb,$post_id,$input_post_title,$input_p
             $res['error'] = true;
             $res['message'] = $e->getMessage();
     }
-    
+    var_dump($res);
     return $res;
     }
 private function send_link_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId, $fbPageAT, $is_scheduled,$schedule_dt){
@@ -245,40 +245,46 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
       $input_post_message=$post_data[0]["content"];
       $is_scheduled = $post_data[0]["isScheduled"];
       $scheduledSame=$post_data[0]["scheduledSame"];
+      $scheduleTimeUTC=$post_data[0]["scheduleTimeUTC"];
+      $user_id = $post_data[0]["created_by"];
 
         $this->db->select('App_time_zone'); 
         $query = $this->db->get('global_parameters');
         $app_TZ = $query->result_array()[0]['App_time_zone'];
 
+        $this->db->where('users.id=', $user_id);
+        $this->db->select('timezone');
+        $this->db->from('users');
+        $query = $this->db->get();        
+        $user_timezone=$query->result_array()[0]['timezone'];
 
+        // if($is_scheduled == 1){
+        //     $timezone = $page_timezone;
+        //     if($timezone == null || $timezone == ''){
+        //         $timezone = $app_TZ;
+        //     }
+        //     if($scheduledSame == 1){
+        //         $timezone = $app_TZ;
+        //     }
 
-        if($is_scheduled == 1){
-            $timezone = $page_timezone;
-            if($timezone == null || $timezone == ''){
-                $timezone = $app_TZ;
-            }
-            if($scheduledSame == 1){
-                $timezone = $app_TZ;
-            }
-
-            $schedule_date =  new DateTime($post_data[0]["scheduledTime"]);
-            $schedule_date->setTimezone(new DateTimeZone($timezone));
-            $schedule_dt = strtotime( $schedule_date->format('Y-m-d H:i:s')/*$post_data[0]["scheduledTime"]*/);
-        }else{
-           $schedule_dt=null;
-        }
-        $schedule_dt = null;
+        //     $schedule_date =  new DateTime($post_data[0]["scheduledTime"]);
+        //     $schedule_date->setTimezone(new DateTimeZone($timezone));
+        //     $schedule_dt = strtotime( $schedule_date->format('Y-m-d H:i:s')/*$post_data[0]["scheduledTime"]*/);
+        // }else{
+        //    $schedule_dt=null;
+        // }
+        // $schedule_dt = null;
        if($input_post_type=='message'){
-          $res = $this->send_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt);
+          $res = $this->send_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
       }
       elseif($input_post_type=='link') {
-          $res = $this->send_link_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt);
+          $res = $this->send_link_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
       }    
       elseif ($input_post_type=='image') { 
-          $res = $this->send_image_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt);
+          $res = $this->send_image_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
       }     
       elseif ($input_post_type=='video') { 
-          $res = $this->send_video_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt);
+          $res = $this->send_video_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
       }
       return $res;  
   }
@@ -540,7 +546,11 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                         ]);
         if($action == "1"){
                 //sleep(5);
+                try{
                 $res = $this->InsertToFB($fb,$queue_id);
+                }catch(Exception $e){
+                       var_dump($e);
+                }
                 if($res['error']){
                    return array('status' => "error", 'error'=> $res['message']);
                 }else{

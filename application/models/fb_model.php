@@ -20,7 +20,7 @@ class FB_model extends CI_Model{
     public function get_post_page_for_queue_id($queue_id){
 
         $this->db->where('posts_pages.id=', $queue_id);
-        $this->db->select('posts_pages.postId,posts_pages.fbPostId,posts_pages.pageId, pages.fbPageId, pages.fbPageAT,pages.timezone ');
+        $this->db->select('posts_pages.postId,posts_pages.fbPostId,posts_pages.pageId, pages.fbPageId, pages.fbPageAT,pages.timezone  ');
         $this->db->from('posts_pages');
         $this->db->join('pages', 'posts_pages.pageId = pages.id');
         $query = $this->db->get();
@@ -140,7 +140,7 @@ class FB_model extends CI_Model{
     }
     public function insert_post($post_status, $user_id, $selected_page_id, $w_title, $post_type, 
         $message, $upload_video, $add_link, $upload_images_list, 
-        $is_scheduled, $schedule_date_time,  $scheduledSame, $arrayPagesObj,$arrayGroupsOb) {    
+        $is_scheduled, $schedule_date_time,  $scheduledSame, $arrayPagesObj,$arrayGroupsOb, $scheduleTimeUTC) {    
             
            if($post_status=='1'){
            //draft
@@ -165,6 +165,7 @@ class FB_model extends CI_Model{
             $this->db->set('scheduledTime', $schedule_date_time);
             $this->db->set('scheduledSame', $scheduledSame);
             $this->db->set('isScheduled', $is_scheduled);
+            $this->db->set('scheduleTimeUTC',$scheduleTimeUTC);
             $q = $this->db->insert('posts');
             
             $inserted_post_id=$this->db->insert_id();
@@ -451,7 +452,7 @@ class FB_model extends CI_Model{
 
     public function update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
         $post_type, $message, $upload_video, $add_link, $upload_images_list, $is_scheduled, 
-        $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsOb) {   
+        $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsOb,  $scheduleTimeUTC) {   
 
             // if($post_status=='1'){
             //         //draft           
@@ -479,6 +480,7 @@ class FB_model extends CI_Model{
                 $this->db->set('scheduledTime', $schedule_date_time);
                 $this->db->set('scheduledSame', $scheduledSame);
                 $this->db->set('isScheduled', $is_scheduled);
+                $this->db->set('scheduleTimeUTC',$scheduleTimeUTC);
             } else {  
                 $this->db->where('id=', $post_id);
                 $this->db->set('title', $w_title);
@@ -486,6 +488,7 @@ class FB_model extends CI_Model{
                 $this->db->set('post_type', $post_type);
                 $this->db->set('scheduledTime', $schedule_date_time);
                 $this->db->set('isScheduled', $is_scheduled);
+                $this->db->set('scheduleTimeUTC',$scheduleTimeUTC);
             }
             $q = $this->db->update('posts');
 

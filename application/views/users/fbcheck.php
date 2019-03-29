@@ -23,7 +23,8 @@
               </div>
               <h6 class="tx-md-20 tx-inverse mg-b-20">Facebook Page Check</h6>
               <a href="<?php echo $loginUrl;?>" class="btn btn-default btn-block">FB  Check</a>
-              <p class="tx-13">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. Even the all-powerful Pointing has no control about the blind texts.</p>
+              <p class="tx-13">Add new Facebook pages to be managed here or update your Facebook user and page access tokens. </p>
+              <p class="tx-13">If your Facebook access tokens are not valid, expired or near expiration you won't be able to upload posts on Facebook trough this application and your statistics will not be updated.   </p>
               <a href="" class="btn btn-default btn-block">Not now</a>
             </div><!-- card -->
             <div class="col-lg-4">   

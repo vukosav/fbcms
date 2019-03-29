@@ -81,11 +81,21 @@ class Login extends CI_Controller {
         $graphNode = $this->debug_token($input_token); 
         $converted_res = ($graphNode['is_valid']) ? 'true' : 'false';
         $expires_at = ($graphNode['expires_at']);
+
+
         $userFBData = array();
         
         $userFBData['user_AT_is_valid'] = $converted_res;
-        $userFBData['user_AT_exp_date'] = $expires_at->format("Y-m-d H:i:s");
-        
+       
+        $userFBData['user_AT_exp_date'] = false;
+        if(strtotime($expires_at->format("Y-m-d H:i:s")) != 0){
+            $diff =  strtotime($expires_at->format("Y-m-d H:i:s")) - time();
+            if(($diff/(3600*24)) < 7){
+                $userFBData['user_AT_exp_date'] = true;//$expires_at->format("Y-m-d H:i:s");
+            }
+        }
+
+
         $ret_pat= $this->FB_model->get_pages_tokens($user_id);
         $userPages = array();
         $count_page_invalid = 0;
@@ -107,8 +117,8 @@ class Login extends CI_Controller {
                 }
             }
             $pageFBData = array();
-            $pageFBData['page_id'] = $ret_pat[$i]['id'];
-            $pageFBData['page_named'] = $page_name;
+            $pageFBData['xcr'] = $ret_pat[$i]['id'];//$page_name;
+            $pageFBData['page_id'] = $page_name;
             //$pageFBData['page_fb_AT'] = $input_token;
             $pageFBData['page_AT_is_valid'] = $converted_is_valid;
             $pageFBData['page_AT_exp_date'] = $expires_at->format("Y-m-d H:i:s");
