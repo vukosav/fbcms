@@ -168,7 +168,7 @@
                                         <span class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;' data-toggle='tooltip' data-placement='top' title='Delete group'></span>
                                     </a>
                                     <a onclick="ShowEditModal('<?php echo $group['id']; ?>')" data-toggle="modal" data-target="#modaldemo4" group-text="<input type='hidden' name='grId' value='<?php echo $group['id']; ?>'>" href="" id="group_<?php echo $group['id']; ?>">
-                                        <span class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Edit group"></span></a>
+                                        <span class="fa fa-pencil" style="font-size: xx-large;margin: 6px; color: #3b6998;" data-toggle="tooltip" data-placement="top" title="Rename group"></span></a>
                                     <?php endif; ?>
                                 </td>
                             </tr>

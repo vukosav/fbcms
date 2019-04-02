@@ -41,14 +41,14 @@
       <nav class="breadcrumb2">
        <?php
             $fb_uat = $this->session->userdata('FB_UAT');
-            //var_dump($fb_uat);
+            
              $count_page_invalid = $fb_uat['count_page_invalid'];
              $count_page_expires = $fb_uat['count_page_expires'];
              $user_AT_is_valid = $fb_uat['user_AT_is_valid'];
              $user_AT_expires_in7d = $fb_uat['user_AT_exp_date'];
              
             $message="";
-            if(!$user_AT_is_valid || $count_page_invalid>0 ){
+            if($user_AT_is_valid != null && (!$user_AT_is_valid || $count_page_invalid>0 )){
               $message=$message . "Your Facebook page tokens are  <a  href='#' data-toggle='modal' data-target='#modaldemo333' style='color: red;text-decoration: underline;'>INVALID</a>.";
             }
            if( $user_AT_expires_in7d){
@@ -69,7 +69,7 @@
       <div class="modal-dialog modal-dialog-vertical-center" role="document">
         <div class="modal-content bd-0 tx-14">
           <div class="modal-header pd-y-20 pd-x-25">
-            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Message Preview</h6>
+            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Facebook pages status</h6>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
@@ -98,7 +98,6 @@
               </div>
               </div><!-- modal-body -->
           <div class="modal-footer">
-            <button type="button" class="btn btn-default pd-x-20">Save changes</button>
             <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
           </div>
         </div>

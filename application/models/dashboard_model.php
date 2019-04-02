@@ -42,6 +42,7 @@ class Dashboard_model extends CI_Model{
         }
         //get records
         $this->db->group_by('pages.id');
+        $this->db->order_by('pages.fbPageName asc');
         $query = $this->db->get();
         //return fetched data
         return ($query->num_rows() > 0)?$query->result_array():array();

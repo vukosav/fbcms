@@ -26,11 +26,15 @@ class Pages extends MY_controller {
         //set conditions for search
         $pagename = $this->input->post('pagename');
         $group = $this->input->post('group');
+        $automaticgroup = $this->input->post('automaticgroup');
         if(!empty($pagename)){
             $conditions['search']['pagename'] = $pagename;
         }
         if(!empty($group)){
             $conditions['search']['group'] = $group;
+        }
+        if(!empty($automaticgroup)){
+            $conditions['search']['automaticgroup'] = $automaticgroup;
         }
 
         //total rows count
@@ -53,7 +57,7 @@ class Pages extends MY_controller {
         
         //print_r($this->db->last_query());
         //load the view
-        //$this->output->enable_profiler();
+        // $this->output->enable_profiler();
         $this->load->view('pages/ajax-pagination-data', $data, false);
     }
 

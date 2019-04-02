@@ -13,10 +13,11 @@ function searchFilter(page_num) {
     page_num = page_num ? page_num : 0;
     var pagename = $('#pagename').val();
     var group = $('#group').val();
+    var automaticgroup = $('#automaticgroup').val();
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>pages/ajaxPaginationData/' + page_num,
-        data: 'page=' + page_num + '&pagename=' + pagename + '&group=' + group,
+        data: 'page=' + page_num + '&pagename=' + pagename + '&group=' + group + '&automaticgroup=' + automaticgroup,
         beforeSend: function() {
             $('.loading').show();
         },
@@ -57,12 +58,21 @@ function searchFilter(page_num) {
                     <input type="text" class="form-control" id="pagename" placeholder="Filter by page name"
                         onkeyup="searchFilter()" />
                 </div>
-                <div class="col col-sm-2">
+                <div class="col col-sm-3">
                     <select id="group" class="form-control" onchange="searchFilter()">
-                        <option value="">Filter By group name</option>
+                        <option value="">Filter By manual group</option>
                         <?php if(!empty($group)): foreach ($group as $gr): ?>
                             <option value="<?php echo $gr['id']; ?>"><?php echo $gr['name']; ?></option>
                             <?php endforeach; endif; ?>
+                    </select>
+                </div>
+               <div class="col col-sm-3">
+                    <select id="automaticgroup" class="form-control" onchange="searchFilter()">
+                        <option value="">Filter By automatic group</option>
+                        <option value="1">1.000 > Page likes</option>
+                        <option value="2">10.000 > Page likes > 1000</option>
+                        <option value="3">100.000 > Page likes > 10.000</option>
+                        <option value="4">Page likes >100.000</option>
                     </select>
                 </div>
                 <div class="col col-sm-1">

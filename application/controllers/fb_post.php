@@ -10,7 +10,7 @@ public function __construct()
   }
 
 
-public function index($post_id){ 
+/*public function index($post_id){ 
     //echo $post_id;
     //$post_id =0 or >0
    
@@ -56,8 +56,7 @@ public function index($post_id){
             $image_list="";
             $post_status="";
 
-            /*$res = $this->fb_model->get_groups_for_user($user_id);
-            $user_groups = (is_array($res)) ? array_values($res) : null;*/
+        
 
             $res = $this->FB_model->get_pages_for_user($user_id);
             $user_pages = (is_array($res)) ? array_values($res) : null;
@@ -217,7 +216,8 @@ public function index($post_id){
     else {      
       redirect('login'); 
     }
-} 
+    
+} */
 
 public function create_post(){ 
   
@@ -265,13 +265,14 @@ public function create_post(){
             $user_pages = (is_array($res)) ? array_values($res) : null;
 
             $res2 = $this->FB_model->get_groups_for_user($user_id);
-            $user_groups = (is_array($res)) ? array_values($res2) : null;
+            $user_groups = (is_array($res2)) ? array_values($res2) : null;
             $ug_num=count($user_groups);
 
             for($j=0;$j <$ug_num; $j++){
                 $res_pageforgroup = $this->FB_model->get_pages_for_group($user_groups[$j]['id']);
                 $user_groups[$j]['pages'] = $res_pageforgroup ;
             }
+
             $is_scheduled=0;
             $schedule_date_time=null;
             $scheduledSame=0;
@@ -301,6 +302,20 @@ public function create_post(){
             if($user_timezone == null){
                 $user_timezone = $app_TZ;
             }
+            $user_upload_file_location = base_url() . 'uploads/' ; //date('Y') . '/' . date('M') . '/' . strval($user_id) . '/';
+
+               
+            if(!file_exists('./uploads/' . date('Y') . '/' .  date('M'). '/' . $user_id)){
+                        // echo '3';
+                         mkdir('./uploads/' . date('Y') . '/' . date('M') . '/' . $user_id, 0777, true); 
+            }
+            
+            $user_upload_file_location = base_url() . 'uploads/' . date('Y') . '/' . date('M') . '/' . $user_id; // . '/';
+                    
+               
+            
+
+
             $data=array(
                 'user_id' => $user_id,
                 'queued_post' => $queued_post,
@@ -317,7 +332,7 @@ public function create_post(){
                 'input_post_description' => $input_post_description,
                 'input_post_fb_preset_id' => $input_post_fb_preset_id,
                 'fbaccountDetails' =>  $fbaccountDetails,
-                'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
+                'fbaccountDetails_fb_id' => $fbaccountDetails_fb_id,
                 'fbaccountDetails_firstname' => $fbaccountDetails_firstname,
                 'fbaccountDetails_lastname' => $fbaccountDetails_lastname,
                 'user_groups' => $user_groups,
@@ -332,6 +347,7 @@ public function create_post(){
                 'input_ins_or_upd' => $input_ins_or_upd,
                 'can_save_as_draft' => $can_save_as_draft,
                 'can_edit_groups_pages' => $can_edit_groups_pages,
+                'user_upload_file_location' => $user_upload_file_location,
                 'timezone'=> $user_timezone,                
                 'posting_nums' => "",
                 'edit_post_title'  => "Create post",
@@ -352,12 +368,11 @@ private function GetDataFromDB($post_id){
     // var_dump($post_data);
     if(count($post_data)==0){
         return array();
-    } else {
+    } else 
+    {
     
         $image_list="";
         $post_status=$post_data[0]["PostStatus"];
-
-       
         $input_post_type = $post_data[0]["post_type"];
         $input_post_title=$post_data[0]["title"];
 
@@ -372,6 +387,8 @@ private function GetDataFromDB($post_id){
             $schedule_date_time=null;
         }        
         $scheduledSame=$post_data[0]["scheduledSame"];
+        $user_upload_file_location=$post_data[0]["user_upload_file_location"];
+
 
         $input_post_link="";
         $input_post_name="";
@@ -397,7 +414,7 @@ private function GetDataFromDB($post_id){
         }
         if ($input_post_type=='video') {
             $post_attachment_data = $this->FB_model->get_post_attachments($post_id,'video');
-            $input_post_video = base_url() . 'uploads/' . $post_attachment_data[0]["attach_location"];
+            $input_post_video = $user_upload_file_location . $post_attachment_data[0]["attach_location"];
             $hidden_post_video_name = $post_attachment_data[0]["attach_location"];
 
         }
@@ -434,11 +451,11 @@ private function GetDataFromDB($post_id){
             $selected_post_groups[$k]['pages'] = $res_pageforgroup_in_post ;
         }
 
-         $resp = $this->FB_model->get_pages_for_user($user_id);
+        $resp = $this->FB_model->get_pages_for_user($user_id);
         $user_pages = (is_array($resp)) ? array_values($resp) : null;
 
         //pages set for post
-        $selected_page_id=$this->FB_model->get_selected_pages_for_post($post_id);
+        $selected_page_id = $this->FB_model->get_selected_pages_for_post($post_id);
     
         $can_edit_groups_pages="1";
         $can_save_as_draft="1";
@@ -487,7 +504,7 @@ private function GetDataFromDB($post_id){
         'input_post_description' => $input_post_description,
         'input_post_fb_preset_id' => $input_post_fb_preset_id,
         'fbaccountDetails' =>  $fbaccountDetails,
-        'fbaccountDetails_fb_id' => '104189817385560', //$fbaccountDetails_fb_id,
+        'fbaccountDetails_fb_id' => '', //$fbaccountDetails_fb_id,
         'fbaccountDetails_firstname' => $fbaccountDetails_firstname,
         'fbaccountDetails_lastname' => $fbaccountDetails_lastname,
         'user_groups' => $user_groups,
@@ -502,6 +519,7 @@ private function GetDataFromDB($post_id){
         "input_ins_or_upd"=>"",
         "can_save_as_draft" => $can_save_as_draft,
         "can_edit_groups_pages" => $can_edit_groups_pages,
+        'user_upload_file_location' => $user_upload_file_location,
         'timezone'=> $user_timezone,
         'posting_nums' => $posting_nums      
 
@@ -512,14 +530,14 @@ private function GetDataFromDB($post_id){
 }   
 
 public function edit_post($post_id){
-    //echo $post_id;
     if(!$this->Users_model->isLoggedIn()){
         redirect('login'); 
     }
     $user_id = $this->session->userdata('user')['user_id'];
 
         //get data from database for post_id = $post_id
-        $image_list="";$this->db->query("call PreEdit($post_id, $user_id);");
+        $image_list="";
+        $this->db->query("call PreEdit($post_id, $user_id);");
                     
                         
        $this->load->helper('form');
@@ -531,10 +549,14 @@ public function edit_post($post_id){
         if($data['post_status'] == 1){
             $data['edit_post_title'] = "Draft post";   
             $data['posting_nums'] = "";
+            $data['edit_post_subtitle'] = "Create your creative content in the form of Text, image or link to be shared to your multiple connected Facebook pages";
+
         }
 
         else if($data['post_status'] == 4){
-            $data['edit_post_title'] = "Sent post";    
+            $data['edit_post_title'] = "Sent post"; 
+            $data['edit_post_subtitle'] = "";
+   
         }
         else{
             $data['edit_post_title'] = "Post in progress/sent"; 
@@ -564,12 +586,6 @@ public function copy_post($post_id){
     }
      
 
-        //get data from database for post_id = $post_id
-        //$image_list="";
-                    
-                        
-        //$this->load->helper('form');
-        //$this->load->helper('url');
         
        $data = $this->GetDataFromDB($post_id);
        $data['input_ins_or_upd'] = "insert";
@@ -705,12 +721,14 @@ public function insert_post(){
 
             $upload_video = $this->input->post('videoFileName');
             $add_link=$this->input->post('link');
-            
+            $user_upload_file_location=$this->input->post('user_upload_file_location');
+           
            $schedule_date_timeStr = $this->input->post('schedule_date_time');
           
            if($this->input->post('scheduledSame') == 'on'){
             $scheduledSame = 1;
-           } else{
+           } 
+           else{
             $scheduledSame = 0;
            }
 
@@ -802,7 +820,7 @@ public function insert_post(){
                     if($ins_or_upd =="insert") {
                         $res= $this->FB_model->insert_post($post_status, $user_id, $selected_page_id, $w_title, 
                         $post_type, $message, $upload_video, $add_link, $upload_images_list,
-                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj,$scheduleTimeUTC );
+                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj,$user_upload_file_location,$scheduleTimeUTC );
                                     
                        // echo 'Inserted Post id: ' . $res;
                        
@@ -817,7 +835,7 @@ public function insert_post(){
                         try {
                         $res =  $this->FB_model->update_post($post_id, $post_status, $user_id, $selected_page_id, $w_title, 
                         $post_type, $message, $upload_video, $add_link, $upload_images_list,
-                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj, $scheduleTimeUTC);
+                        $is_scheduled, $schedule_date_time, $scheduledSame, $arrayPagesObj,$arrayGroupsObj, $user_upload_file_location, $scheduleTimeUTC);
                        
                         $this->db->query("call PostEdit($post_id, $user);");
                         echo json_encode(array(

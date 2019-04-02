@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://192.168.1.68:90/fbcms';
+$config['base_url'] = 'http://localhost:90/fbcms';
 
 /*
 |--------------------------------------------------------------------------

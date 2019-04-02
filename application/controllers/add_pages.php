@@ -58,7 +58,8 @@ class Add_Pages extends CI_Controller {
                         $user = $response->getGraphUser();
                         $fb_name= $user->getName();
                         $fb_user_id=$user->getId();
-                        $graphNode = $this->debug_token($input_token); 
+
+                        $graphNode = $this->debug_token($accessToken); 
                         $is_valid_at = ($graphNode['is_valid']) ? 'true' : 'false';
                         $expires_at = ($graphNode['expires_at']); 
                         $ret=$this->FB_model->insert_fb_user($user_id
@@ -68,13 +69,13 @@ class Add_Pages extends CI_Controller {
                                                             , $expires_at
                                                             , $is_valid_at); 
                
-                    if($ret==0){
-                        echo '<br>You are trying to add pages for fb user different than one you have registered with';
-                        echo '<br>Please try to log in with registered fb user!';
-                        redirect('/fbcheck');
-                    }
+                        if($ret==0){
+                            echo '<br>You are trying to add pages for fb user different than one you have registered with';
+                            echo '<br>Please try to log in with registered fb user!';
+                            redirect('/fbcheck');
+                        }
                     elseif($ret==1){ 
-                            try { 
+                            
                                  $params = array('fields'=> 'id,name,likes,access_token,picture,cover', );
                                  $response = $fb->sendRequest('GET','/me/accounts', $params, $accessToken);
                                  $pages = $response->getDecodedBody();
@@ -89,7 +90,7 @@ class Add_Pages extends CI_Controller {
                                      $this->db->where("fbPageId",$fbpage_id);
                                      $this->db->set("fbPageAT",$fbPage_at);
                                      $this->db->set("fbat_valid",$is_valid_at);
-                                     $this->db->set("fbat_expires",$expires_at);
+                                     $this->db->set("fbat_expires",$expires_at->format("Y-m-d H:i:s"));
                                      $this->db->set("last_fbupdate",date("Y-m-d H:i:s"));
                                      $this->db->update('pages');
                                 } 
@@ -103,13 +104,10 @@ class Add_Pages extends CI_Controller {
                                                         , 'fb_name' => $fb_name);
                                     $this->load->view('users/fbpages', $data);
                                 }
-                            } catch(\Facebook\Exceptions\FacebookResponseException $e) {
-                                echo 'Graph returned an error: ' . $e->getMessage();
-                                                exit;
-                            } catch(\Facebook\Exceptions\FacebookSDKException $e) {
-                                 echo 'Facebook SDK returned an error: ' . $e->getMessage();
-                                 exit;
-                        }
+                                else{
+                                   redirect('/pages');
+                                }
+                            
                                             
                   }  else {
                     //todo - redirect ...

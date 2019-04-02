@@ -91,7 +91,7 @@ private function send_link_message($queue_id,$fb,$post_id,$input_post_title,$inp
         return $res;
         
         }
-private function send_image_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt){
+private function send_image_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt,$file_prefix){
     $res =  array(
         'error' => false,
         'message' => '',
@@ -117,7 +117,7 @@ private function send_image_message($queue_id,$fb,$post_id,$input_post_title,$in
                         array (
                             'message' => $input_post_message,
                             'published' => 'false',
-                            'source'  => $fb->fileToUpload('./uploads/' . $post_attachment_data[$i]["attach_location"]),
+                            'source'  => $fb->fileToUpload( './' . $file_prefix .'/' . $post_attachment_data[$i]["attach_location"]),
                         ),
                         $fbPageAT
                     );
@@ -166,7 +166,7 @@ private function send_image_message($queue_id,$fb,$post_id,$input_post_title,$in
 
 
 
-private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt){
+private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$schedule_dt,$file_prefix){
     $res =  array(
         'error' => false,
         'message' => '',
@@ -178,7 +178,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                 $posting_array=array( 
                         'title'  => $input_post_title,
                         'description' => $input_post_message,
-                        'source'  => $fb->videoToUpload('./uploads/' . $post_attachment_data[0]["attach_location"]),
+                        'source'  => $fb->videoToUpload('./' .$file_prefix . '/' . $post_attachment_data[0]["attach_location"]),
                         'scheduled_publish_time'  => $schedule_dt, 
                         'published' => 'false'
                 );
@@ -187,7 +187,7 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
                 $posting_array=array(  
                         'title'  => $input_post_title,
                         'description' => $input_post_message,
-                        'source'  => $fb->videoToUpload('./uploads/' . $post_attachment_data[0]["attach_location"])
+                        'source'  => $fb->videoToUpload('./' .$file_prefix . '/' . $post_attachment_data[0]["attach_location"])
                         );
                 }
                 $response = $fb->post('/' . $fbPageId . '/videos',
@@ -237,9 +237,11 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
       $fbPageAT= $dat_array_db[0]['fbPageAT'];
       $post_id = $dat_array_db[0]['postId'];
       $page_timezone = $dat_array_db[0]['timezone'];
-
+      
       $post_data =  $this->FB_model->get_post_data($post_id);
-
+      $file_prefix = $post_data[0]['user_upload_file_location'];
+      $file_prefix = rtrim($file_prefix, "/");
+      $file_prefix = ltrim($file_prefix, base_url());
       $input_post_type = $post_data[0]["post_type"];
       $input_post_title=$post_data[0]["title"];
       $input_post_message=$post_data[0]["content"];
@@ -281,10 +283,10 @@ private function send_video_message($queue_id,$fb,$post_id,$input_post_title,$in
           $res = $this->send_link_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
       }    
       elseif ($input_post_type=='image') { 
-          $res = $this->send_image_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
+          $res = $this->send_image_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC,$file_prefix);
       }     
       elseif ($input_post_type=='video') { 
-          $res = $this->send_video_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC);
+          $res = $this->send_video_message($queue_id,$fb,$post_id,$input_post_title,$input_post_message,$fbPageId,$fbPageAT, $is_scheduled,$scheduleTimeUTC,$file_prefix);
       }
       return $res;  
   }

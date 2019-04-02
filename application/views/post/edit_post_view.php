@@ -167,6 +167,7 @@
     <input type="hidden" name="URLFrom"  id="URLFrom" value="" />
     <input type="hidden" name="selected_page_id"  id="selected_page_id" value="0" />
     <input type="hidden" name="selected_group_id"  id="selected_group_id" value="0" />
+    <input type="hidden" name="user_upload_file_location"  id="user_upload_file_location" value=<?php echo $user_upload_file_location ?>/>
     <input type="hidden" name="videoFileName" id="videoFileName"  value="<?php echo $hidden_post_video_name; ?>"/>
     <input type="hidden" name="can_edit_groups_pages" id="can_edit_groups_pages" value="<?php echo $can_edit_groups_pages; ?>"  />
     
@@ -305,6 +306,9 @@
                                 <div class="input-group">
                                 <input type="file" name="videoFile" id="videoFile" class="inputfile" 
                                 <?php  if( $can_edit_groups_pages=="0") { echo ' disabled ' ;}; ?>/>
+                                <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+                                <h3 id="status"></h3>
+                                <p id="loaded_n_total"></p>
                                 <!--<label for="file">Choose a video</label>-->
                                     <input type='text' 
                                            name='video' 
@@ -390,9 +394,9 @@
                         <div class="post">
                             <div class="PreviewPoster">
                                 <?php if($fbaccountDetails_fb_id !== "") { ?> 
-                                <img src='https://graph.facebook.com/<?php echo $fbaccountDetails_fb_id ?>/picture?redirect=1&height=40&width=40&type=normal' style='vertical-align:top;'  onerror="this.src = './theme/default/images/facebookUser.jpg'" />
+                                <img src='https://graph.facebook.com/<?php echo $fbaccountDetails_fb_id ?>/picture?redirect=1&height=40&width=40&type=normal' style='vertical-align:top;'  onerror="<?=base_url()?>theme/default/images/facebookUser.jpg" />
                                 <?php } else { ?>
-                                <img src='./theme/default/images/facebookUser.jpg' width='32' height='32' style='vertical-align:middle;' />
+                                <img src='<?=base_url()?>theme/default/images/facebookUser.jpg' width='32' height='32' style='vertical-align:middle;' />
                                 <?php } ?>
                                 <span class="userFullName">
                                     <?php if ($fbaccountDetails !==null) {
@@ -802,6 +806,11 @@ function SaveAsQueued(event){
         
         var formData = new FormData(form);
         var valid = true;
+        
+        var page_count = arrayPages.length;
+        var page_in_group_count = 0; 
+
+
         if(postTitle.value === '' || postTitle.value === null){
             document.querySelector('#validation_title_message').style.display = "block";
             valid = false;
@@ -815,8 +824,6 @@ function SaveAsQueued(event){
             }else{
             document.querySelector('#validation_content_message').style.display = "none";
         }
-        var page_count = arrayPages.length;
-        var page_in_group_count = 0; 
         arrayGroups.forEach(group => { 
             if(group.pages != null){
                 page_in_group_count = page_in_group_count+ group.pages.length;
@@ -829,7 +836,7 @@ function SaveAsQueued(event){
          }
          else{
             document.querySelector('#validation_selected_page_message').style.display = "none";
-           valid = true;
+           //valid = true;
          }
          formData.append('ins_or_upd', document.querySelector('#ins_or_upd').value);
           
@@ -909,6 +916,9 @@ function SaveAsQueued(event){
                     $('#spanSaveAsQueued').removeClass('fa-spin'); 
                     $('#spanSaveAsQueued').addClass('fa-calendar');
             }
+
+
+        
     if(valid){
         formData.append("arrayPages", JSON.stringify(arrayPages));
         formData.append("arrayGroups", JSON.stringify(arrayGroups));
@@ -927,9 +937,9 @@ function SaveAsQueued(event){
         processData: false,
         contentType: false,
         success: function(data){
-            console.log('data',data);
+          //  console.log('data',data);
             var dataJ = jQuery.parseJSON (data);
-            console.log('dataJ',dataJ);
+          //  console.log('dataJ',dataJ);
             if(!dataJ.error){
                // document.querySelector("#post").style.display = "block";
                // document.querySelector("#savepost").style.display = "none";
@@ -1185,7 +1195,17 @@ function CancelEdit(postingType){
 
 
 <script type="text/javascript">
+ function GifPreview(filepath){ 
+        resetPostPreview(); 
+        var imgblock = "<div class='previewImageType pit_1'>"; 
+            imgblock += "<div class='image_1'>"; 
+            imgblock += "<img src=" + filepath; 
+            imgblock += " />"; 
+            imgblock += "</div>";
+        $('.postPreview').append(imgblock); 
+    }
     function imagePostPreview2(){
+        var uploadPath= document.querySelector('#user_upload_file_location').value;
         resetPostPreview();
         //console.log('usli smo u imagePostPreview2');
         var ic = global_file_list.length;
@@ -1199,7 +1219,7 @@ function CancelEdit(postingType){
             if(ic > 4 && i == 4){
                     imgblock += "<div class='moreImages'>+"+(ic-4)+"</div>";
             }
-            imgblock += "<img src='<?=base_url()?>uploads/"+global_file_list[i-1]+"'"; 
+            imgblock += "<img src=" + uploadPath + global_file_list[i-1]; 
             imgblock += " />";
                 
             imgblock += "</div>";
@@ -1362,11 +1382,13 @@ function CancelEdit(postingType){
 <script>
 function UploadVideoJ(){
     var files = document.querySelector("#videoFile").files;
-    console.log("file", files);
+    var uploadPath = document.querySelector('#user_upload_file_location').value;
+    //console.log("file", files);
 
     var formData = new FormData();
     formData.append('file',files[0]);
-    console.log("formData", formData);
+    formData.append('uploadPath',uploadPath);
+    //console.log("formData", formData);
     $.ajax({
         url: '<?=base_url()?>dropzone/uploadVideo',
         type: 'POST',
@@ -1376,21 +1398,75 @@ function UploadVideoJ(){
         success: function(data){
             console.log('data',data);
             var dataJ = jQuery.parseJSON (data);
-            console.log('dataJ',dataJ);
+         //  console.log('dataJ',dataJ);
             if(!dataJ.error){
-                document.querySelector("#video").value = '<?=base_url()?>uploads/'+dataJ.fileName;
-                document.querySelector("#videoFileName").value = dataJ.fileName;
+                //document.querySelector("#video").value = '<?=base_url()?>uploads/'+dataJ.fileName;
+                document.querySelector("#video").value = uploadPath + files[0].name;//dataJ.fileName;
+                
+                document.querySelector("#videoFileName").value = files[0].name;//dataJ.fileName;
             }
             else{
                 alert('alert 1 ' + dataJ.message);
-            }
+             }
             videoPostPreview();
         }
 
     });
 }
 
-  
+function uploadFile(){
+    document.querySelector('#progressBar').style.display = "block";
+    document.querySelector('#loaded_n_total').style.display = "block";
+    document.querySelector('#status').style.display = "block";
+    var file = document.querySelector("#videoFile").files[0];
+    var uploadPath = document.querySelector('#user_upload_file_location').value;
+	// alert(file.name+" | "+file.size+" | "+file.type);
+	var formdata = new FormData();
+    formdata.append("file", file);
+    formdata.append('uploadPath',uploadPath);
+	var ajax = new XMLHttpRequest();
+	ajax.upload.addEventListener("progress", progressHandler, false);
+	ajax.addEventListener("load", completeHandler, false);
+	ajax.addEventListener("error", errorHandler, false);
+	ajax.addEventListener("abort", abortHandler, false);
+	ajax.open("POST", '<?=base_url()?>dropzone/uploadVideo');
+	ajax.send(formdata);
+}
+function progressHandler(event){
+	document.getElementById("loaded_n_total").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
+	var percent = (event.loaded / event.total) * 100;
+	document.getElementById("progressBar").value = Math.round(percent);
+	document.getElementById("status").innerHTML = Math.round(percent)+"% uploaded... please wait";
+}
+function completeHandler(event){
+    var uploadPath = document.querySelector('#user_upload_file_location').value; 
+    document.getElementById("progressBar").value = 0;
+    var dataJ = jQuery.parseJSON (event.target.responseText);
+    if(!dataJ.error){
+        document.querySelector("#video").value = uploadPath  + dataJ.fileName;
+        document.querySelector("#videoFileName").value =dataJ.fileName;
+       // document.getElementById("status").innerHTML =  uploadPath  + dataJ.fileName;
+       document.querySelector('#loaded_n_total').style.display = "none";
+       document.querySelector('#status').style.display = "none";
+       document.querySelector('#progressBar').style.display = "none";
+       console.log('extension',dataJ.fileName.split('.').pop());
+
+        if(dataJ.fileName.split('.').pop() == 'gif')
+        {
+            console.log('gif');
+
+            GifPreview(uploadPath  + dataJ.fileName);
+        }else{
+           videoPostPreview();
+        }
+    }
+}
+function errorHandler(event){
+	document.getElementById("status").innerHTML = "Upload Failed";
+}
+function abortHandler(event){
+	document.getElementById("status").innerHTML = "Upload Aborted";
+}
 
 
     var xhrGetSiteDetails = null;
@@ -1490,13 +1566,16 @@ function UploadVideoJ(){
 
              var myDropzone = new Dropzone("div#myAwesomeDropzone",dropZoneParams);
              var dropzoneElement =document.getElementById('myAwesomeDropzone');
+             var uploadPath = document.querySelector('#user_upload_file_location').value;
+             
              if(dropzoneElement.getAttribute('data-value').length>0 && dropzoneElement.getAttribute('data-value') !== " "){
                  var tmp = dropzoneElement.getAttribute('data-value').split(',');
                  if(tmp.length>0){ 
                     console.log('tmp length .', tmp.length + '.');
                     tmp.forEach(function(element) {
                               global_file_list.push(element);
-                              var el =  '<?=base_url()?>uploads/'+ element;
+                              //var el =  '<?=base_url()?>uploads/'+ element;
+                              var el = uploadPath + element;
                               console.log('element', el);
                                if (element != 'undefined') {
                                                 var mock = {
@@ -1536,7 +1615,8 @@ function UploadVideoJ(){
           $("#videoFile").change(function(){
               if(document.querySelector("#postType").value === "video")
             {
-               UploadVideoJ();
+              // UploadVideoJ();
+              uploadFile();
             }
         });
         

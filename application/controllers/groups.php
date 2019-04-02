@@ -178,6 +178,36 @@ class Groups extends MY_controller {
         // print_r($data);
     }
 
+    public function updategroup(){
+    
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules(
+            'groupname', 'Group name',
+            'trim|required|min_length[2]',
+            array(
+                    'required'      => 'You have not provided %s.'
+            )
+        );
+
+        $id = $this->input->post('grId');
+        $data = array(
+            'name' => $this->input->post('groupname')
+        );
+
+        if ($this->form_validation->run() === FALSE){
+            $data['title'] = 'Edit group name';
+            $data['groups'] = false;
+            $this->load->view('groups/index', $data);
+        }else{
+            $this->Groups_model->update($data, $id);
+            // $data['title'] = 'Groups';
+            //$this->output->enable_profiler();
+            redirect('/Groups/index');
+        }
+    }
+    
     public function deletePagesGroups() {
         $this->load->helper(array('form', 'url'));
         $id =  $this->uri->segment(2);

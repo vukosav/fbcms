@@ -27,14 +27,14 @@ function searchFilter(page_num) {
     var inProgres = $('#inProgres').is(':checked');
     var scheduled = $('#scheduled').is(':checked');
     var post_status = $('#post_status')
-.val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
+        .val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
     var archived = $('#archived').is(':checked');
-console.log('archived',archived);
+    console.log('archived', archived);
     var input_data = 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' + date_from +
         '&date_to=' + date_to + '&group=' + group + '&fbpage=' + fbpage +
         '&post_status=' + post_status + '&archived=' + archived + '&paused=' + paused + '&errors=' + errors +
         '&scheduled=' + scheduled + '&inProgres=' + inProgres;
-        console.log('input_data',input_data);
+    console.log('input_data', input_data);
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url(); ?>post/ajaxPaginationData/' + page_num,
@@ -44,7 +44,7 @@ console.log('archived',archived);
             $('.loading').show();
         },
         success: function(html) {
-           //  console.log("html", html);
+            //  console.log("html", html);
             $('#postList').html(html);
             $('.loading').fadeOut("slow");
             /* $('#datatable1').DataTable({
@@ -66,7 +66,7 @@ console.log('archived',archived);
     </div><!-- kt-pagetitle -->
     <div class="kt-pagebody">
         <div class="pd-10 bg-gray-800 mg-t">
-             <input type="hidden" id="go_live_param" name="go_live_param" value="<?php echo $go_live; ?>">
+            <input type="hidden" id="go_live_param" name="go_live_param" value="<?php echo $go_live; ?>">
             <ul class="nav nav-pills nav-pills-for-dark flex-column flex-md-row" role="tablist">
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(2)=="1"){echo "active2";}?>"
                         href="<?=base_url()?>posting/1" role="tab">Queued posts</a></li>
@@ -255,22 +255,30 @@ console.log('archived',archived);
                                         </a>
                                     </td> -->
                             <td><?php echo $q['title']; ?></td>
-                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo htmlentities($q['content']); ?>"
-                                    href="" id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
+                            <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal"
+                                    data-target="#modalPostText" post-text="<?php echo htmlentities($q['content']); ?>"
+                                    href=""
+                                    id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a>
+                            </td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
-                            <td><?php echo $q['groups']; ?></td>
+                            <td>
+                            <a data-toggle="modal" data-target="#modaldemo_groups" group-text="<?php echo $q['modal_groups']; ?>"
+                                    href="" onclick="ShowModalGroups('<?php echo $q['id']; ?>')"
+                                    id="modalGroups_<?php echo $q['id']; ?>"><?php echo $q['groups']; ?></a>
+                            </td>
                             <td><a data-toggle="modal" data-target="#modaldemo3" dejo="<?php echo $q['pages']; ?>"
                                     href="" onclick="ShowPages('<?php echo $q['id']; ?>')"
-                                    id="pages_<?php echo $q['id']; ?>"><?php echo (strlen($q['pages']) > 60)? substr($q['pages'], 0, 60)."..." : $q['pages']; ?></a></td>
+                                    id="pages_<?php echo $q['id']; ?>"><?php echo (strlen($q['pages']) > 60)? substr($q['pages'], 0, 60)."..." : $q['pages']; ?></a>
+                            </td>
                             <!-- <td>Facebook page 1<br>Facebook page 2<br>Facebook page 3<br>Facebook page 4</td> -->
                             <td>
                                 <div class="btn-group1" role="group" aria-label="Basic example">
-                                <?php if(!empty($arh)){  ?>
-                                    <a href="#" onclick="EditRedirection(<?php echo $q['id']?>)"><span class="fa fa-edit"
-                                            style="font-size: xx-large;margin: 6px; color: #3b6998;"
+                                    <?php if(!empty($arh)){  ?>
+                                    <a href="#" onclick="EditRedirection(<?php echo $q['id']?>)"><span
+                                            class="fa fa-edit" style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Edit post"></span></a>
-                                    <a href="#" onclick="CopyRedirection(<?php echo $q['id']?>)"><span class="fa fa-copy"
-                                            style="font-size: xx-large;margin: 6px; color: #3b6998;"
+                                    <a href="#" onclick="CopyRedirection(<?php echo $q['id']?>)"><span
+                                            class="fa fa-copy" style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                             data-toggle="tooltip" data-placement="top" title="Copy post"></span></a>
 
                                     <?php 
@@ -288,11 +296,11 @@ console.log('archived',archived);
                                     <a href="" onclick=<?php echo "ArchivePost(" .$q['id']. ");"?>><span
                                             class="fa fa-trash" style='font-size: xx-large;color: #dc3545;margin: 6px;'
                                             data-toggle='tooltip' data-placement='top' title='Archive post'></span></a>
-                                <?php }//else{  ?> 
+                                    <?php }//else{  ?>
                                     <!-- <a href="<?//=base_url()?>copy_post/<?php //echo $q['id']; ?>"><span class="fa fa-copy"
                                     style="font-size: xx-large;margin: 6px; color: #3b6998;"
                                     data-toggle="tooltip" data-placement="top" title="Copy post"></span></a> -->
-                                <?php //}  ?> 
+                                    <?php //}  ?>
                                 </div>
                             </td>
                         </tr>
@@ -354,8 +362,8 @@ console.log('archived',archived);
     </div>
     <!------------------------------>
 
-      <!-- Modal for errors -->
-      <div id="modalError" class="modal fade" aria-hidden="true" style="display: none;">
+    <!-- Modal for errors -->
+    <div id="modalError" class="modal fade" aria-hidden="true" style="display: none;">
         <div class="modal-dialog" role="document" style="width:1250px;">
             <div class="modal-content bd-0">
                 <div class="modal-header pd-y-20 pd-x-2">
@@ -367,6 +375,29 @@ console.log('archived',archived);
 
                 <div id="modal_body_pages" class="modal-body pd-25">
                     <div id="modal_body_error_content"></div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div><!-- modal-dialog -->
+    </div>
+    <!------------------------------>
+
+    <!-- Modal for pages in groups -->
+    <div id="modaldemo_groups" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document" style="width:1250px;">
+            <div class="modal-content bd-0">
+                <div class="modal-header pd-y-20 pd-x-2">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">More data</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                <div id="modal_body_pages" class="modal-body pd-25">
+                    <div id="modal_body_pages_in_groups_content"></div>
                 </div><!-- modal-body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
@@ -402,10 +433,17 @@ console.log('archived',archived);
 
     }
 
+    function ShowModalGroups(id) {
+        // console.log("sho pages", document.getElementById("pages_"+id).getAttribute('data-id'));
+        document.getElementById("modal_body_pages_in_groups_content").innerHTML = document.getElementById("modalGroups_" + id)
+            .getAttribute('group-text');
+
+    }
 
     var refresh_interval = 5 * 1000;
     var go_live = document.getElementById("go_live_param").value;
-    console.log("go_live",go_live);
+    console.log("go_live", go_live);
+
     function RefreshData(page_num) {
         console.log("refresh");
         if (!go_live) {
@@ -427,7 +465,7 @@ console.log('archived',archived);
         var inProgres = $('#inProgres').is(':checked');
         var scheduled = $('#scheduled').is(':checked');
         var post_status = $('#post_status')
-    .val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
+            .val(); //uvijek se prosledjuje status kako bi se znalo jesu li qpos, sent ili draft
         var archived = $('#archived').is(':checked');
         console.log('post_status', post_status);
         var input_data = 'page=' + page_num + '&createdBy=' + createdBy + '&wtitle=' + wtitle + '&date_from=' +
@@ -459,14 +497,14 @@ console.log('archived',archived);
         });
     }
 
-  
+
     $(document).ready(function() {
-       // console.log("refresh doc ready", refresh_interval);
+        // console.log("refresh doc ready", refresh_interval);
         setInterval(RefreshData, refresh_interval);
-        if(go_live){
+        if (go_live) {
             document.querySelector('#stop_live').style.display = "block";
             document.querySelector('#live').style.display = "none";
-        }else{
+        } else {
             document.querySelector('#stop_live').style.display = "none";
             document.querySelector('#live').style.display = "block";
         }
@@ -479,7 +517,10 @@ console.log('archived',archived);
         go_live = true;
         document.querySelector('#stop_live').style.display = "block";
         document.querySelector('#live').style.display = "none";
-        $.ajax({ url: '<?=base_url()?>go_live', type: 'POST'});
+        $.ajax({
+            url: '<?=base_url()?>go_live',
+            type: 'POST'
+        });
     }
 
     function StopLive() {
@@ -489,7 +530,10 @@ console.log('archived',archived);
         go_live = false;
         document.querySelector('#stop_live').style.display = "none";
         document.querySelector('#live').style.display = "block";
-        $.ajax({ url: '<?=base_url()?>stop_live', type: 'POST'});
+        $.ajax({
+            url: '<?=base_url()?>stop_live',
+            type: 'POST'
+        });
     }
 
 
@@ -566,45 +610,45 @@ console.log('archived',archived);
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, archive it!'
-            }).then((result) => {
-               if (result.value) {
-                     $.ajax({
-                            url: '<?=base_url()?>archive_post/' + id,
-                            type: 'POST',
-                            // postId: id,
-                            processData: false,
-                            contentType: false,
-                            success: function(data) {
-                                var dataJ = jQuery.parseJSON(data);
-                                //  console.log('dataJ',dataJ);
-                                if (!dataJ.error) {
-                                    if (dataJ.warning) {
-                                        Swal.fire(
-                                            "Warning",
-                                            dataJ.message,
-                                            'info'
-                                        );
-                                    } else {
-                                        Swal.fire(
-                                            "Well done!",
-                                            dataJ.message,
-                                            'success'
-                                        ); //.then(() => {location.reload();});
-                                    }
-
-                                } else {
-                                    Swal.fire(
-                                        "Error!",
-                                        dataJ.message,
-                                        'error'
-                                    );
-                                    console.log('dataJ.error je true', JSON.stringify(dataJ));
-                                }
-
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: '<?=base_url()?>archive_post/' + id,
+                    type: 'POST',
+                    // postId: id,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        var dataJ = jQuery.parseJSON(data);
+                        //  console.log('dataJ',dataJ);
+                        if (!dataJ.error) {
+                            if (dataJ.warning) {
+                                Swal.fire(
+                                    "Warning",
+                                    dataJ.message,
+                                    'info'
+                                );
+                            } else {
+                                Swal.fire(
+                                    "Well done!",
+                                    dataJ.message,
+                                    'success'
+                                ); //.then(() => {location.reload();});
                             }
-                        }); 
+
+                        } else {
+                            Swal.fire(
+                                "Error!",
+                                dataJ.message,
+                                'error'
+                            );
+                            console.log('dataJ.error je true', JSON.stringify(dataJ));
+                        }
+
                     }
                 });
+            }
+        });
     }
 
     function SetAsDraft(id) {
@@ -619,46 +663,46 @@ console.log('archived',archived);
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, save it as draf!'
-            }).then((result) => {
-               if (result.value) {
-                    $.ajax({
-                        url: '<?=base_url()?>set_draft/' + id,
-                        type: 'POST',
-                        // postId: id,
-                        processData: false,
-                        contentType: false,
-                        success: function(data) {
-                            var dataJ = jQuery.parseJSON(data);
-                            //  console.log('dataJ',dataJ);
-                            if (!dataJ.error) {
-                                if (dataJ.warning) {
-                                    Swal.fire(
-                                        "Warning",
-                                        dataJ.message,
-                                        'info'
-                                    );
-                                } else {
-                                    Swal.fire(
-                                        "Well done!",
-                                        dataJ.message,
-                                        'success'
-                                    ); //.then(() => {location.reload();});
-                                }
-
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: '<?=base_url()?>set_draft/' + id,
+                    type: 'POST',
+                    // postId: id,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        var dataJ = jQuery.parseJSON(data);
+                        //  console.log('dataJ',dataJ);
+                        if (!dataJ.error) {
+                            if (dataJ.warning) {
+                                Swal.fire(
+                                    "Warning",
+                                    dataJ.message,
+                                    'info'
+                                );
                             } else {
                                 Swal.fire(
-                                    "Error!",
+                                    "Well done!",
                                     dataJ.message,
-                                    'error'
-                                );
-                                console.log('dataJ.error je true', JSON.stringify(dataJ));
+                                    'success'
+                                ); //.then(() => {location.reload();});
                             }
 
+                        } else {
+                            Swal.fire(
+                                "Error!",
+                                dataJ.message,
+                                'error'
+                            );
+                            console.log('dataJ.error je true', JSON.stringify(dataJ));
                         }
-                    });
-                   }
+
+                    }
                 });
-      }
+            }
+        });
+    }
 
     function dellData(id, url) {
         event.preventDefault(); // prevent form submit
@@ -713,11 +757,12 @@ console.log('archived',archived);
     }
 
 
-    function EditRedirection(posting_id){
+    function EditRedirection(posting_id) {
         var ps = $('#post_status').val();
-        window.location.replace('<?=base_url()?>edit_post/'+ posting_id + '/' + ps);
+        window.location.replace('<?=base_url()?>edit_post/' + posting_id + '/' + ps);
     }
-    function CopyRedirection(posting_id){
+
+    function CopyRedirection(posting_id) {
         var ps = $('#post_status').val();
         window.location.replace('<?=base_url()?>copy_post/' + posting_id + '/' + ps);
     }

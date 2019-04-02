@@ -78,51 +78,59 @@ function searchFilter(page_num) {
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Posts in last 72h</label>
                     <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['p72']; ?></p>
-                    <?php if($global['postDiff']>0): ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
-                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
-                    <?php else: ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
-                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                    <?php if($global['postDiff'] != ""): ?>
+                        <?php if($global['postDiff']>0): ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                        <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                        <?php else: ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                        <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                        <?php endif; ?>
+                        <?php echo $global['postDiff']; ?></span></p>
                     <?php endif; ?>
-                    <?php echo $global['postDiff']; ?></span></p>
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Reactions in last 72h</label>
                     <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['r72']; ?></p>
-                    <?php if($global['reactDiff']>0): ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
-                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
-                    <?php else: ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
-                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
-                    <?php endif; ?>
-                    <?php echo $global['reactDiff']; ?></span></p>
+                    <?php if($global['reactDiff'] != ""): ?>
+                        <?php if($global['reactDiff']>0): ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                        <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                        <?php else: ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                        <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                        <?php endif; ?>
+                        <?php echo $global['reactDiff']; ?></span></p>
+                    <?php endif; ?>    
                 </div>
                 <div class="bd-r pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'> &nbsp;Comments in last 72h</label>
                     <p class="tx-lato tx-inverse tx-bold tx-24">&nbsp;<span
                             style="text-size: 24px"><?php echo $global['c72']; ?></span></p>
+                    <?php if($global['commentDiff'] != ""): ?>
                         <?php if($global['commentDiff']>0): ?>
                         <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
-                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
-                    <?php else: ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
-                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                        <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                        <?php else: ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                        <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                        <?php endif; ?>
+                        <?php echo $global['commentDiff']; ?></span></p>
                     <?php endif; ?>
-                    <?php echo $global['commentDiff']; ?></span></p>
                 </div>
                 <div class="pd-x-10">
                     <label class="tx-18" style='color: #3b6998;'>Shares in last 72h</label>
                     <p class="tx-lato tx-inverse tx-bold tx-24"><?php echo $global['s72']; ?></p>
-                    <?php if($global['sharesDiff']>0): ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
-                    <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
-                    <?php else: ?>
-                    <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
-                    <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
-                    <?php endif; ?>
+                    <?php if($global['sharesDiff'] != ""): ?>
+                        <?php if($global['sharesDiff']>0): ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-success">
+                        <i class="fa fa-arrow-circle-o-up" style="font-size: 2em;"></i> 
+                        <?php else: ?>
+                        <p class="tx-lato tx-inverse tx-bold"><span class="tx-danger">
+                        <i class="fa fa-arrow-circle-o-down" style="font-size: 2em;"></i>
+                        <?php endif; ?>
                         <?php echo $global['sharesDiff']; ?></span></p>
+                    <?php endif; ?>   
                 </div>
 
                 <div>

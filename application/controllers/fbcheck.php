@@ -16,56 +16,78 @@ class FBCheck extends CI_Controller {
         if (!isset($_SESSION))
         {
             session_start();
-        }   
-    
-        
-        if($this->Users_model->isLoggedIn()){
-
-            $user_id = $this->session->userdata('user')['user_id'];
-
-             
+        }    
+        if($this->Users_model->isLoggedIn()){ 
+            $user_id = $this->session->userdata('user')['user_id']; 
             $fb = new \Facebook\Facebook([
                 'app_id' => FB_APP_ID,
                 'app_secret' => FB_APP_SECRET,
                 'default_graph_version' => FB_API_VERSION,
             'persistent_data_handler' => new FacebookPersistentDataInterface(),
             
-            ]);
-
-         // Use one of the helper classes to get a Facebook\Authentication\AccessToken entity.
-            $helper = $fb->getRedirectLoginHelper();
-            //   $helper = $fb->getJavaScriptHelper();
-            //   $helper = $fb->getCanvasHelper();
-            //   $helper = $fb->getPageTabHelper();
-            //pages_messaging, pages_messaging_subscriptions
+            ]); 
+            $helper = $fb->getRedirectLoginHelper(); 
             $permissions = ['email', 'user_likes', 'manage_pages', 'publish_pages' , 'read_insights', 'read_page_mailboxes', 'user_posts']; // optional
             $loginUrl = $helper->getLoginUrl(base_url() . 'LoginCallback', $permissions);
-
-            $data = array('loginUrl' => $loginUrl);
-            $data['title'] = 'FB chack page';    
-            $this->load->view('users/fbcheck', $data);
-            
-            //   TO REVOKE  PERMISSIONS, with user AT
-                            /* PHP SDK v5.0.0 */
-                    /* make the API call */
-                    /*try {
-                        // Returns a `Facebook\FacebookResponse` object
-                        $response = $fb->delete(
-                        '/104189817385560/permissions',['instagram_basic','email', 'user_likes', 'manage_pages', 'publish_pages' , 'read_insights', 'read_page_mailboxes', 'user_posts'],
-                        'EAAHKRllr1hkBAK9CRL4G3pzu1uHL1tyKkZAXhzenUKwQSCEdHwcoQcB3xxleH4ZB3DhX5tQDHZCQc7c06g477o3uZA7ZBED9t3JCrE3TINebalxO1eOKL3ZBjmsBZBjddZAVVK5pImyhs18CkFMxXZAiDLjt99819aXeg3pKwpKsd1g3asp6XMyDP'
-                        );
-                    } catch(Facebook\Exceptions\FacebookResponseException $e) {
-                        echo 'Graph returned an error: ' . $e->getMessage();
-                        exit;
-                    } catch(Facebook\Exceptions\FacebookSDKException $e) {
-                        echo 'Facebook SDK returned an error: ' . $e->getMessage();
-                        exit;
+            $alert = 0;
+            $alert_type = '';
+            $fb_large_message = '';
+            $fb_message = '';
+            $fb_check_user_add_update_error = $this->session->userdata('fb_check_user_add_update_error');
+            $fb_different_login_warning = $this->session->userdata('fb_different_login_warning');
+            $fb_no_new_pages_info = $this->session->userdata('fb_no_new_pages_info');
+            $fb_graph_error = $this->session->userdata('fb_graph_error');
+            $fb_sdk_error =  $this->session->userdata('fb_sdk_error'); 
+            if($fb_check_user_add_update_error!=null ||  $fb_different_login_warning!=null ||
+               $fb_no_new_pages_info!=null ||  $fb_graph_error!=null || $fb_sdk_error!=null){
+                $alert = 1;
+            }
+            if($fb_check_user_add_update_error!=null ||   $fb_graph_error!=null || $fb_sdk_error!=null){
+                $alert_type = 'danger';
+                if($fb_check_user_add_update_error!=null){
+                    $fb_large_message = 'Unexpected error';
+                    $fb_message = $fb_check_user_add_update_error ;
+                }
+                else{
+                    if($fb_graph_error!=null){
+                        $fb_large_message = 'Facebook Graph API error';
+                        $fb_message = $fb_graph_error ;
                     }
-                    $graphNode = $response->getGraphNode();
-                    /* handle the result */
+                    if($fb_sdk_error!=null){
+                        $fb_large_message = 'Facebook SDK error';
+                        $fb_message = $fb_sdk_error ;
+                    }
+                }
+                
+            }
+            elseif($fb_different_login_warning!=null){
+                $alert_type = 'warning';
+                $fb_large_message = 'Wrong facebook login';
+                $fb_message = $fb_different_login_warning;
+            }
+            elseif($fb_no_new_pages_info!=null){
+                $alert_type = 'info';
+                $fb_large_message = 'No new facebook pages';
+                $fb_message = $fb_no_new_pages_info;
+            }
 
-                    //echo $graphNode;
-                    //}
+
+            $data = array('loginUrl' => $loginUrl,
+            'fb_large_message'=>$fb_large_message,
+            'fb_message'=>$fb_message,
+            'alert'=>$alert,
+            'alert_type'=>$alert_type
+            );
+
+            $data['title'] = 'FB check page';
+            
+            $this->session->set_userdata('fb_check_user_add_update_error',null);
+            $this->session->set_userdata('fb_different_login_warning',null);
+            $this->session->set_userdata('fb_no_new_pages_info',null);
+            $this->session->set_userdata('fb_graph_error',null);
+            $this->session->set_userdata('fb_sdk_error',null); 
+            $this->load->view('users/fbcheck', $data);
+          
         } else {
             (redirect('/login'));
         }         

@@ -20,6 +20,7 @@ class Pages_model extends CI_Model{
         $this->db->join('users', 'users.id = pages.userId');
         $this->db->join('pages_groups', 'pages_groups.pageId = pages.id', 'left outer');
         $this->db->join('groups', 'pages_groups.groupId = groups.id', 'left outer');
+        $this->db->join('page_dashboard_statistic', 'pages.id = page_dashboard_statistic.page_id', 'left outer');
 
         // $wtitle = $this->input->post('pagename');
         // $group = $this->input->post('group');
@@ -29,6 +30,22 @@ class Pages_model extends CI_Model{
         }
         if(!empty($params['search']['group'])){
             $this->db->where('groups.id = ',$params['search']['group']);
+        }
+        if(!empty($params['search']['automaticgroup'])){
+            if($params['search']['automaticgroup'] == 1){
+                $this->db->where('page_dashboard_statistic.pageLikes < 1000');
+            }
+            elseif($params['search']['automaticgroup'] == 2){
+                $this->db->where('page_dashboard_statistic.pageLikes > 1000');
+                $this->db->where('page_dashboard_statistic.pageLikes < 10000');
+            }
+            elseif($params['search']['automaticgroup'] == 3){
+                $this->db->where('page_dashboard_statistic.pageLikes > 10000');
+                $this->db->where('page_dashboard_statistic.pageLikes < 100000');
+            }
+            elseif($params['search']['automaticgroup'] == 4){
+                $this->db->where('page_dashboard_statistic.pageLikes > 100000');
+            }
         }
         //filter data by page name        
         if(!empty($params['search']['pagename'])){

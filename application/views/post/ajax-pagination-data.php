@@ -53,7 +53,11 @@
                             <td><a onclick="ShowPostText('<?php echo $q['id']; ?>')" data-toggle="modal" data-target="#modalPostText" post-text="<?php echo htmlentities($q['content']); ?>"
                                     href="" id="post_text_<?php echo $q['id']; ?>"><?php echo (strlen($q['content']) > 60)? substr($q['content'], 0, 60)."..." : $q['content']; ?></a></td>
                             <td><?php echo $q['created_date'] ." /<br>" .$q['addedby'] ; ?></td>
-                            <td><?php echo $q['groups']; ?></td>
+                            <td>
+                            <a data-toggle="modal" data-target="#modaldemo_groups" group-text="<?php echo $q['modal_groups']; ?>"
+                                    href="" onclick="ShowModalGroups('<?php echo $q['id']; ?>')"
+                                    id="modalGroups_<?php echo $q['id']; ?>"><?php echo $q['groups']; ?></a>
+                            </td>
                             <td><a data-toggle="modal" data-target="#modaldemo3" dejo="<?php echo $q['pages']; ?>"
                                     href="" onclick="ShowPages('<?php echo $q['id']; ?>')"
                                     id="pages_<?php echo $q['id']; ?>"><?php echo (strlen($q['pages']) > 60)? substr($q['pages'], 0, 60)."..." : $q['pages']; ?></a></td>

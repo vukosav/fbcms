@@ -16,7 +16,8 @@ class Post_model extends CI_Model{
         PostPagesStatCount(posts.id, 4) as error,
         PostPagesStatCount(posts.id, 3) as sent,
         PostPagesStatCount(posts.id, 2) as inProgres,
-        posts.*, ErrorsForPost(posts.id) AS job_errors, PagesForPost(posts.id) AS pages, GroupsForPost(posts.id) AS groups, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
+        posts.*, ErrorsForPost(posts.id) AS job_errors, PagesForPost(posts.id) AS pages, GroupsForPost(posts.id) AS groups,
+        GroupsForModal(posts.id) AS modal_groups, users.username as addedby'); /*PagesForPost(posts.id) AS pages,*/
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.created_by');
         //$this->db->select('*');
@@ -110,7 +111,8 @@ class Post_model extends CI_Model{
         PostPagesArchStatCount(posts_archive.id, 4) as error,
         PostPagesArchStatCount(posts_archive.id, 3) as sent,
         PostPagesArchStatCount(posts_archive.id, 2) as inProgres,
-        posts_archive.*, ErrorsForPost_Archive(posts_archive.id) AS job_errors, GroupsForPost(posts_archive.id) AS groups, PagesForPostArchive(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
+        posts_archive.*, ErrorsForPost_Archive(posts_archive.id) AS job_errors, GroupsForPost(posts_archive.id) AS groups, 
+        GroupsForModal(posts_archive.id) AS modal_groups, PagesForPostArchive(posts_archive.id) AS pages, users.username as addedby'); /*PagesForPost(posts_archive.id) AS pages,*/
         $this->db->from('posts_archive');
         $this->db->join('users', 'users.id = posts_archive.created_by');
         //$this->db->select('*');

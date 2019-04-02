@@ -86,7 +86,7 @@ $route['updategroup'] = 'Groups/updategroup';
 // $route['default_controller'] = 'pages/view';
 
 //jelena start
-$route['insert_pages'] = 'Add_pages/insert_pages';
+$route['insert_pages'] = 'LoginCallback/insert_pages';
 // $route['insert_post'] = 'Post/insert_post';
 $route['send_post'] = 'Send_post';
 $route['send_post/index/(:any)'] = 'Send_post/index/$1';
