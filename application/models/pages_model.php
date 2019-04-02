@@ -36,15 +36,15 @@ class Pages_model extends CI_Model{
                 $this->db->where('page_dashboard_statistic.pageLikes < 1000');
             }
             elseif($params['search']['automaticgroup'] == 2){
-                $this->db->where('page_dashboard_statistic.pageLikes > 1000');
+                $this->db->where('page_dashboard_statistic.pageLikes >= 1000');
                 $this->db->where('page_dashboard_statistic.pageLikes < 10000');
             }
             elseif($params['search']['automaticgroup'] == 3){
-                $this->db->where('page_dashboard_statistic.pageLikes > 10000');
+                $this->db->where('page_dashboard_statistic.pageLikes >= 10000');
                 $this->db->where('page_dashboard_statistic.pageLikes < 100000');
             }
             elseif($params['search']['automaticgroup'] == 4){
-                $this->db->where('page_dashboard_statistic.pageLikes > 100000');
+                $this->db->where('page_dashboard_statistic.pageLikes >= 100000');
             }
         }
         //filter data by page name        

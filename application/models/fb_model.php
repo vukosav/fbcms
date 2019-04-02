@@ -625,6 +625,42 @@ class FB_model extends CI_Model{
             return (is_array($new_pages)) ? array_values($new_pages) : null;  
 
     }
+
+    public function list_removed_pages( $fb_pages, $user_id){
+        
+        $new_pages=$fb_pages['data'];
+        $list_of_fbids = '';
+
+        for ($i = 0; $i < count($new_pages); $i++) {
+            if($i==0){
+                $list_of_fbids = $list_of_fbids . $new_pages[$i]['id'];
+            }
+            else{
+                $list_of_fbids = $list_of_fbids . ',' . $new_pages[$i]['id'];
+            }
+        }
+        
+        if($list_of_fbids != ''){
+        $removed_pages=$this->db->query('SELECT fbPageId, fbPageName FROM pages  
+            WHERE fbPageId NOT IN ( ' .  $list_of_fbids . ') 
+            and isActive=1 and userId='. $user_id);  
+
+            $data = $this->db->query('UPDATE pages SET isActive=0 
+            WHERE fbPageId NOT IN ( ' .  $list_of_fbids . ') 
+            and isActive=1 and userId='. $user_id);   
+        }else{
+            $removed_pages=$this->db->query('SELECT fbPageId, fbPageName FROM pages  
+            WHERE isActive=1 and userId='. $user_id);
+
+            $data = $this->db->query('UPDATE pages SET isActive=0 
+            WHERE isActive=1 and userId='. $user_id);   
+        }   
+         
+        return $removed_pages->result_array();     
+    } 
+
+
+
     public function add_new_pages( $fb_pages, $user_id){
 
         $ins_num=0;
@@ -769,17 +805,19 @@ class FB_model extends CI_Model{
         $this->db->where('id', $user_id); 
         $queryResult = $this->db->get();
         $role_id =  $queryResult->row('roleId');
+
+        //admin can work with all groups
         if($role_id == 1){
             $this->db->select('id, name');
-            $this->db->where('isActive',true);
+            $this->db->where('isActive=',1);
             $query = $this->db->get('groups');
             return ($query->num_rows() > 0)?$query->result_array():array();
         } 
         else{
-            $this->db->select('id, name');
-            $this->db->where('userId',$user_id);
-            $this->db->where('isActive',true);
-            $query = $this->db->get('groups');
+            
+            $query= $this->db->query("select id, name 
+                                      from groups  
+                                      where  isActive=1 and (userId=0 or userId=' .  $user_id . ')'");
             return ($query->num_rows() > 0)?$query->result_array():array();
         }
     }
@@ -799,8 +837,47 @@ class FB_model extends CI_Model{
 
 
 
-    public function get_pages_for_group($group_id) {
-        $query= $this->db->query('select p.id, p.fbPageName from pages_groups  pg join pages p on pg.pageId = p.id where pg.groupId = ' . $group_id);
+    public function get_pages_for_group($group_id,$user_id) {
+
+
+        
+        if($group_id>0){
+                $query= $this->db->query('select p.id, p.fbPageName 
+                from pages_groups pg 
+                join pages p on pg.pageId = p.id 
+                where pg.groupId = ' . $group_id);
+        }
+        else {
+
+            if($group_id==-1){ $where_likes=' pageLikes < 1000 ';};
+            if($group_id==-2){ $where_likes=' pageLikes >= 1000 and pageLikes < 10000 ';};
+            if($group_id==-3){ $where_likes=' pageLikes >= 10000 and pageLikes < 100000 ';};
+            if($group_id==-4){ $where_likes=' pageLikes > 100000 ';};
+            
+            //admin can work with all pages
+            $this->db->from('users');
+            $this->db->where('id', $user_id); 
+            $queryResult = $this->db->get();            
+            $role_id =  $queryResult->row('roleId');
+
+            if($role_id==1){
+                $query= $this->db->query('select p.id, p.fbPageName 
+                from pages p 
+                where p.id in 
+                    (select page_id 
+                     from page_dashboard_statistic 
+                     where ' . $where_likes . ')');
+            }
+            else {
+                $query= $this->db->query('select p.id, p.fbPageName 
+                from pages p 
+                where p.id in 
+                    (select page_id 
+                     from page_dashboard_statistic 
+                     where ' . $where_likes . ') 
+                     and p.userId=' . $user_id );
+            }
+        }
         return ($query->num_rows() > 0)?$query->result_array():array();
     }
 

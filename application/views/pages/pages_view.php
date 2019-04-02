@@ -70,9 +70,9 @@ function searchFilter(page_num) {
                     <select id="automaticgroup" class="form-control" onchange="searchFilter()">
                         <option value="">Filter By automatic group</option>
                         <option value="1">1.000 > Page likes</option>
-                        <option value="2">10.000 > Page likes > 1000</option>
-                        <option value="3">100.000 > Page likes > 10.000</option>
-                        <option value="4">Page likes >100.000</option>
+                        <option value="2">10.000 > Page likes >= 1000</option>
+                        <option value="3">100.000 > Page likes >= 10.000</option>
+                        <option value="4">Page likes >= 100.000</option>
                     </select>
                 </div>
                 <div class="col col-sm-1">

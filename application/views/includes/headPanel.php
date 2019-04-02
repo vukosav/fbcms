@@ -41,7 +41,7 @@
       <nav class="breadcrumb2">
        <?php
             $fb_uat = $this->session->userdata('FB_UAT');
-            
+            if($fb_uat != null){
              $count_page_invalid = $fb_uat['count_page_invalid'];
              $count_page_expires = $fb_uat['count_page_expires'];
              $user_AT_is_valid = $fb_uat['user_AT_is_valid'];
@@ -58,6 +58,7 @@
               echo '<p style="color:red; margin: 15px;">' . $message 
               . " Please go to <a  href='" . base_url() . "fbcheck' style='color: red;text-decoration: underline;'>FB CHECK</a> to update your Facebook access tokens.</p>";
            }
+          }
            
         ?>
         <!-- <span class="breadcrumb-item active">Dashboard</span> -->
